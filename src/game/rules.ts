@@ -1,3 +1,12 @@
+// =============================================================================
+// Primitive mutations — the ONLY functions allowed to change influence,
+// money, cards-in-hand or scores. Every legality rule (empty supply, scored/
+// locked cards, The Wall / Untouchable / Firewall / Bouncer protections) is
+// enforced HERE, so effects and matches get them for free: a blocked change
+// "fizzles" (returns false, logs, counts in telemetry) instead of erroring.
+// If you're writing an effect, call these — never poke pl.inf / money raw.
+// =============================================================================
+
 import { CONFIG } from "../data/config";
 import { def } from "./cards";
 import type { GameState, Placed } from "./types";

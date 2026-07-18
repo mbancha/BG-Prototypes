@@ -1,3 +1,10 @@
+// =============================================================================
+// Playtest telemetry export: buildDump() flattens the interesting parts of
+// GameState (+ the live CONFIG so dumps are self-describing) into one JSON
+// object; downloadJson() hands it to the browser as a file download.
+// Reached from the STATS tab and the game-over screen.
+// =============================================================================
+
 import { CONFIG } from "../data/config";
 import type { GameState } from "../game/types";
 
@@ -10,6 +17,7 @@ export function buildDump(s: GameState) {
     deckRemaining: s.deck.length,
     finalScores: s.players.map((p, i) => ({
       player: p.name,
+      bot: !!p.isBot,
       pts: p.pts,
       money: p.money,
       supplyLeft: p.supply,

@@ -65,85 +65,98 @@ describe("geometry", () => {
 });
 
 describe("matches", () => {
-  it("detects two matches for side-by-side same-symbol verticals", () => {
+  it("detects both edge matches for side-by-side same-type verticals", () => {
     const s = fresh();
-    // 22 Earmark favor/favor at origin (vertical)
+    // 22 Earmark (Senator: favor top / credit bottom) at origin, vertical
     forceSetup(s, 22);
-    // preview 24 Landslide favor/favor at (1,0) vertical: two touching edges
+    // preview 24 Landslide (also Senator) at (1,0) vertical: tops touch tops
+    // (favor=favor) and bottoms touch bottoms (credit=credit)
     const ms = matchesFor(s, 24, { x: 1, y: 0 }, 0);
     expect(ms.length).toBe(2);
-    expect(ms.every((m) => m.sym === "favor")).toBe(true);
+    expect(ms.map((m) => m.sym).sort()).toEqual(["credit", "favor"]);
   });
 
   it("skips the internal edge and non-matching symbols", () => {
     const s = fresh();
-    forceSetup(s, 1); // Silent Needle muscle/whisper
-    const ms = matchesFor(s, 22, { x: 1, y: 0 }, 0); // favor/favor next to it
+    forceSetup(s, 1); // Silent Needle (Assassin: muscle/whisper)
+    const ms = matchesFor(s, 22, { x: 1, y: 0 }, 0); // Senator favor/credit next to it
     expect(ms.length).toBe(0);
   });
 
-  it("resolves favor matches onto the placed card via the hub", () => {
+  it("resolves both matches via the hub and pays the double-match bonus", () => {
     const s = fresh();
     forceSetup(s, 22);
-    forcePlace(s, 1, 24, 1, 0, 0); // two favor matches
+    const before = s.players[1].money;
+    forcePlace(s, 1, 24, 1, 0, 0); // favor + credit match (both halves hit)
     // hub with 2 mandatory items -> pending; answer first, second auto-resolves
     expect(s.pending?.t).toBe("hub");
     applyAction(s, { a: "answer", ans: { i: 0 } });
     expect(s.pending).toBeNull();
     expect(s.exec.length).toBe(0);
-    // Landslide (24): baseline 1 + 2 favor = 3 influence for player B
-    expect(s.board[24].inf[1]).toBe(CONFIG.BASELINE_INFLUENCE + 2 * CONFIG.FAVOR_ADD);
-    expect(s.telem.matchesBySym.favor).toBe(2);
+    // Landslide (24): baseline 1 + 1 favor add for player B
+    expect(s.board[24].inf[1]).toBe(CONFIG.BASELINE_INFLUENCE + CONFIG.FAVOR_ADD);
+    // credit match $ + both-halves-matched bonus $
+    expect(s.players[1].money).toBe(
+      before + CONFIG.CREDIT_GAIN + CONFIG.DOUBLE_MATCH_BONUS,
+    );
+    expect(s.telem.moneyBySource["Double match"]).toBe(
+      CONFIG.DOUBLE_MATCH_BONUS,
+    );
+    expect(s.telem.matchesBySym.favor).toBe(1);
+    expect(s.telem.matchesBySym.credit).toBe(1);
   });
 
-  it("credit match pays the placing player", () => {
+  it("a single-edge credit match pays $ but NOT the double bonus", () => {
     const s = fresh();
-    forceSetup(s, 28); // Incumbent credit/credit
+    forceSetup(s, 28); // Incumbent (Senator): favor@(0,0), credit@(0,1)
     const before = s.players[1].money;
-    forcePlace(s, 1, 31, 1, 0, 0); // Margin Call credit/credit → 2 credit matches
-    applyAction(s, { a: "answer", ans: { i: 0 } });
-    expect(s.players[1].money).toBe(before + 2 * CONFIG.CREDIT_GAIN);
+    // Margin Call (Broker: credit top / intel bottom) horizontal below:
+    // credit@(0,2) touches credit@(0,1) — one match; intel end matches nothing
+    forcePlace(s, 1, 31, 0, 2, 3);
+    expect(s.pending).toBeNull(); // single mandatory match auto-resolved
+    expect(s.players[1].money).toBe(before + CONFIG.CREDIT_GAIN);
+    expect(s.telem.moneyBySource["Double match"]).toBeUndefined();
   });
 });
 
 describe("enclosure & scoring", () => {
   it("encloses a vertical domino once all 6 neighbors fill (no matches involved)", () => {
     const s = fresh();
-    forceSetup(s, 1); // target: Silent Needle (2 pts), P0 baseline 1
-    forcePlace(s, 1, 28, -1, 0, 0); // left, credit/credit
-    forcePlace(s, 0, 22, 1, 0, 0); // right, favor/favor (vs muscle/whisper: no match)
-    forcePlace(s, 1, 41, 0, -1, 3); // top horizontal, intel/intel
+    forceSetup(s, 1); // target: Silent Needle (Assassin, 5 pts), P0 baseline 1
+    forcePlace(s, 1, 28, -1, 0, 0); // left, Senator f/c vs m/w: no match
+    forcePlace(s, 0, 22, 1, 0, 0); // right, Senator f/c: no match
+    forcePlace(s, 1, 41, 0, -1, 3); // top horizontal, Hacker i/w: no match
     expect(findEnclosed(s)).toEqual([]);
-    forcePlace(s, 0, 30, 0, 2, 3); // bottom horizontal, intel/intel → encloses
+    forcePlace(s, 0, 11, 0, 2, 3); // bottom horizontal, Enforcer m/f → encloses
     expect(s.pending).toBeNull();
     expect(s.board[1].scored).toBe(true);
-    expect(s.players[0].pts).toBe(2); // sole influence
+    expect(s.players[0].pts).toBe(5); // sole influence, muscle+whisper = 5 VP
     expect(s.board[1].inf.every((v) => v === 0)).toBe(true);
     expect(s.telem.enclosures).toBe(1);
   });
 
   it("handles a placement that encloses two cards at once (order chosen)", () => {
     const s = fresh();
-    forceSetup(s, 1); // A at (0,0)/(0,1)
-    forcePlace(s, 1, 22, 1, 0, 0); // B at (1,0)/(1,1) favor/favor, no match vs A
-    forcePlace(s, 0, 28, -1, 0, 0); // left of A
-    forcePlace(s, 1, 30, 0, -1, 3); // top of A+B (intel/intel horizontal)
-    forcePlace(s, 0, 41, 2, 0, 0); // right of B (intel/intel vs favor: no match)
+    forceSetup(s, 1); // A at (0,0)/(0,1) — Assassin m/w
+    forcePlace(s, 1, 22, 1, 0, 0); // B at (1,0)/(1,1) — Senator f/c, no match vs A
+    forcePlace(s, 0, 28, -1, 0, 0); // left of A (Senator, no match)
+    forcePlace(s, 1, 30, 0, -1, 3); // top of A+B (Senator f/c horizontal, no match)
+    forcePlace(s, 0, 41, 2, 0, 0); // right of B (Hacker i/w vs f/c: no match)
     expect(findEnclosed(s)).toEqual([]);
-    forcePlace(s, 1, 31, 0, 2, 3); // bottom horizontal credit/credit → encloses A & B
+    forcePlace(s, 1, 31, 0, 2, 3); // bottom horizontal Broker c/i → encloses A & B
     expect(s.pending?.t).toBe("card");
     if (s.pending?.t === "card") expect(s.pending.ids.sort()).toEqual([1, 22]);
     applyAction(s, { a: "answer", ans: { card: 22 } }); // score B first, then A auto
     expect(s.board[22].scored).toBe(true);
     expect(s.board[1].scored).toBe(true);
-    expect(s.players[1].pts).toBe(1); // Earmark 1 pt to B's owner
-    expect(s.players[0].pts).toBe(2); // Silent Needle 2 pts to A's owner
+    expect(s.players[1].pts).toBe(2); // Earmark (favor+credit = 2) to B's owner
+    expect(s.players[0].pts).toBe(5); // Silent Needle (muscle+whisper = 5) to A's owner
     expect(s.telem.enclosures).toBe(2);
   });
 
   it("splits ties rounded down and returns tokens", () => {
     const s = fresh();
-    forceSetup(s, 24); // Landslide, 3 pts
+    forceSetup(s, 24); // Landslide (Senator, 2 pts) → floor(2/2) = 1 each
     const pl = s.board[24];
     pl.inf = [2, 2];
     const sup0 = s.players[0].supply;
@@ -161,7 +174,7 @@ describe("enclosure & scoring", () => {
     s.board[24].inf = [2, 2];
     s.players[1].tableau = [28]; // Incumbent
     scoreCard(s, 24);
-    expect(s.players[1].pts).toBe(3);
+    expect(s.players[1].pts).toBe(2); // full 2 pts, tie won alone
     expect(s.players[0].pts).toBe(0);
 
     const s2 = fresh();
@@ -169,7 +182,7 @@ describe("enclosure & scoring", () => {
     s2.board[24].inf = [3, 1];
     s2.players[0].tableau = [30]; // Kingmaker
     scoreCard(s2, 24);
-    expect(s2.players[0].pts).toBe(4); // 3 + 1 solo bonus
+    expect(s2.players[0].pts).toBe(3); // 2 + 1 solo bonus
   });
 
   it("scores no one when enclosed empty", () => {
@@ -253,22 +266,26 @@ describe("deploy", () => {
     expect(s.telem.deploys).toBe(1);
   });
 
-  it("Zero Day triggers both symbols of the chosen card", () => {
+  it("Zero Day triggers both symbols of the chosen card (no double bonus)", () => {
     const s = fresh();
-    forceSetup(s, 22); // favor/favor
+    forceSetup(s, 22); // Earmark — Senator: favor + credit edges
     s.turn.p = 0;
     s.turn.setup = false;
     s.turn.deployed = false;
     s.players[0].hand = [46];
     s.players[0].money = 5;
-    applyAction(s, { a: "deploy", card: 46 });
+    applyAction(s, { a: "deploy", card: 46 }); // Zero Day costs 3 → $2 left
     expect(s.pending?.t).toBe("card");
     applyAction(s, { a: "answer", ans: { card: 22 } });
-    expect(s.pending?.t).toBe("hub"); // two favor pseudo-matches
+    expect(s.pending?.t).toBe("hub"); // favor + credit pseudo-matches
     applyAction(s, { a: "answer", ans: { i: 0 } });
     expect(s.pending).toBeNull();
-    expect(s.board[22].inf[0]).toBe(1 + 2); // baseline + both favor adds
-    expect(s.telem.matchesBySym.favor).toBe(2);
+    expect(s.board[22].inf[0]).toBe(1 + CONFIG.FAVOR_ADD); // baseline + favor add
+    // credit pseudo-match pays $1; the $ double-match bonus is placement-only
+    expect(s.players[0].money).toBe(5 - 3 + CONFIG.CREDIT_GAIN);
+    expect(s.telem.matchesBySym.favor).toBe(1);
+    expect(s.telem.matchesBySym.credit).toBe(1);
+    expect(s.telem.moneyBySource["Double match"]).toBeUndefined();
   });
 });
 
@@ -314,6 +331,6 @@ describe("undo model", () => {
     }
     expect(s).toEqual(snapshot); // original untouched (undo = drop clone)
     expect(a).toEqual(b); // same actions → same state
-    expect(a.board[24].inf[1]).toBe(3);
+    expect(a.board[24].inf[1]).toBe(CONFIG.BASELINE_INFLUENCE + CONFIG.FAVOR_ADD);
   });
 });

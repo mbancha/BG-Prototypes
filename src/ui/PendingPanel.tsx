@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
-import { def, SYM_GLYPH, TYPE_ICON } from "../game/cards";
+import {
+  def,
+  KIND_GLYPH,
+  KIND_NAME,
+  SYM_GLYPH,
+  TYPE_ICON,
+} from "../game/cards";
 import type { GameState } from "../game/types";
 
-/** Renders the current pending decision (targeting, choices, ordering). */
+/**
+ * Renders the current pending decision (s.pending) as clickable options and
+ * feeds the pick back via props.answer — which dispatches {a:"answer"} into
+ * the engine. One branch per Pending variant (see types.ts). Hidden entirely
+ * on bot turns (GameScreen doesn't mount it; the bot answers directly).
+ */
 export default function PendingPanel(props: {
   s: GameState;
   answer: (ans: any) => void;
@@ -169,7 +180,9 @@ export default function PendingPanel(props: {
                   <div className="meta">
                     <span>${d.cost}</span>
                     <span>{d.pts}★</span>
-                    <span>{d.kind === "I" ? "INSTANT" : "ONGOING"}</span>
+                    <span title={KIND_NAME[d.kind]}>
+                      {KIND_GLYPH[d.kind]} {KIND_NAME[d.kind]}
+                    </span>
                   </div>
                   <div className="syms">
                     <span className="s">{SYM_GLYPH[d.top]}</span>

@@ -1,9 +1,18 @@
+// =============================================================================
+// Ongoing-card queries. Deployed ⟳ Ongoings sit in player tableaus as bare
+// card ids; this module answers "does player p currently have modifier X /
+// listener for event E / a start-of-turn trigger?" by scanning those specs.
+// Rule points elsewhere call these queries at the moment the rule applies —
+// there is no subscription machinery to keep in sync. Disabled cards
+// (cards.json `disabled: true`) never contribute.
+//
+// Adding a new modifier key: export a wrapper below, then call it from the
+// rule point it bends (see the HOW-TO in effects.ts, step 3).
+// =============================================================================
+
 import { CONFIG } from "../data/config";
 import { def, isDisabled } from "./cards";
 import type { GameState } from "./types";
-
-// Queries over players' tableaus. Disabled cards (cards.json `disabled: true`)
-// never contribute.
 
 function activeSpecs(s: GameState, p: number): { id: number; spec: any }[] {
   return s.players[p].tableau

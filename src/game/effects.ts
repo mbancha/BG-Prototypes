@@ -1,8 +1,47 @@
+// =============================================================================
 // Instant effect frames (e_*) and Ongoing trigger frames (t_*).
 // Frame names map from cards.json specs: spec.i = "removeOne" → handler
 // "e_removeOne"; ongoing spec.do = "peekTop" → handler "t_peekTop".
 // Custom, card-shaped ops (poisonKiss, zeroDay, …) live here too, keyed by
 // their spec op name (one per card).
+//
+// ---------------------------------------------------------------------------
+// HOW TO ADD A NEW CARD EFFECT (the whole recipe)
+// ---------------------------------------------------------------------------
+// 1. cards.json — give the card a machine-readable spec:
+//      Instant:            "spec": { "i": "bribe", "perToken": 1 }
+//      Ongoing modifier:   "spec": { "o": "modifier", "key": "myKey", "value": 2 }
+//      Ongoing listener:   "spec": { "o": "listen", "ev": "someEvent", "money": 1 }
+//      Ongoing trigger:    "spec": { "o": "startOfTurn"|"onPlace", "do": "bribe", ... }
+//    Prefer REUSING an existing parameterized op (removeOne, removeSpread,
+//    addInf, addPair, move, money, draw, taxAll, …) — then you're done.
+//
+// 2. New instant op → register("e_bribe", (s, f) => { ... }) below.
+//    Frame handler contract (full details in runtime.ts):
+//      • f.d  = the card's spec plus { card, by } (deployer's player index)
+//      • f.ph = your own phase counter, starts at 0; handlers are re-entered
+//        after every pause/child, so branch on f.ph
+//      • ask the player something: set s.pending = {...} (see Pending in
+//        types.ts), bump f.ph, return; next call reads takeAns(f)
+//      • need a standard "pick a card & remove/move one token" step? push the
+//        shared child frame (pickRemove / pickMove) and read s.ret after it
+//        pops — that inherits every protection/legality rule for free
+//      • mutate ONLY via rules.ts helpers (addToken/removeToken/moveToken/
+//        gainMoney/payMoney/drawCards) — they enforce supply, locks,
+//        protections, telemetry and logging
+//      • when finished: popFrame(s). Forgetting this trips the pump guard.
+//      • no legal target? fizzle(s, p, msg) + popFrame — never dead-end.
+//
+// 3. New ongoing MODIFIER (passively changes a rule): no frame at all. Add a
+//    query in ongoing.ts (modValue/hasMod wrapper) and call it at the rule
+//    point it bends — grep creditValue for the pattern end-to-end.
+//    New LISTENER event: fire listeners(s, "yourEvent") where it happens.
+//    New TRIGGER op: register("t_yourOp", ...) here; startOfTurn triggers are
+//    collected in turn.ts/actBeginTurn, onPlace triggers in actPlace.
+//
+// 4. Test it in tests/engine.test.ts with the forceSetup/forcePlace helpers;
+//    the random simulation (simulation.test.ts) will also exercise it.
+// =============================================================================
 
 import { def } from "./cards";
 import { adjacentCards, areAdjacent } from "./grid";

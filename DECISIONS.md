@@ -1,7 +1,9 @@
 # DECISIONS.md — judgment calls where the spec was silent
 
 Rulings the prototype enforces. Each is cheap to change; most live in one
-function. Numbers in **bold** are the cards involved.
+function. Numbers in **bold** are the cards involved. Rules changed in the
+second playtest round are listed at the bottom (§ "Round-2 rule changes") and
+in ARCHITECTURE.md §2.
 
 ## Matches & symbols
 
@@ -137,10 +139,41 @@ function. Numbers in **bold** are the cards involved.
 48. Baseline influence and entry bonuses (Union Boss, It Couple) land before
     match resolution, so matches see them.
 
+## Round-2 rule changes (2026-07) — and the calls they forced
+
+49. **Type-fixed symbol pairs.** The 6 pairs (of 10 possible) were chosen to
+    roughly preserve the old symbol ratio (favor/intel stay most common;
+    muscle/whisper/credit rarer) and for theme: Assassin muscle+whisper,
+    Enforcer muscle+favor, Hacker intel+whisper, Senator favor+credit,
+    Broker credit+intel, Socialite intel+favor. Stored ONCE in config
+    `TYPE_SYMBOLS`; cards.json no longer carries top/bottom.
+50. **VP from symbols** (credit/intel/favor 1, whisper 2, muscle 3) replaces
+    per-card pts; cards.json no longer carries pts. All cards of a type are
+    now worth the same (Assassin 5 … Socialite 2) — deliberate: the
+    disruptive types are the juicy enclosure targets.
+51. **Double-match bonus:** $1 when both halves of the *placed* card match at
+    least one neighbor each. Placement-time only — Zero Day's two pseudo-
+    matches do NOT earn it. Logged under money source "Double match".
+52. **Draw-to-5:** end of turn always refills to `HAND_REFILL` = 5 (starting
+    hand raised to 5 to match). `HAND_LIMIT` 6 remains the mid-turn ceiling,
+    so Insider Tip can still bank one extra card.
+53. **Bots:** any seat can be a bot (setup toggle). Bots use the same public
+    Action API as humans (src/game/bot.ts + driver in App.tsx); they answer
+    prompts semi-randomly, prefer opponents when choosing whose token to
+    remove, never reveal their hand, and pick the placement with the most
+    matches. Undo from a human seat skips back over bot moves. Answers a bot
+    owes during YOUR turn (e.g. Ransomware's pay-or-lose choice) resolve
+    automatically after a short delay.
+54. **Card face on the grid:** enlarged type icon centered = the card's
+    "art"; name runs along the side (spine style when vertical, top edge when
+    horizontal); each half's symbol sits at its OUTER end — the only edge
+    that can ever match; influence dots line the opposite side.
+
 ## Not built (out of scope for a playtest loop)
 
-- No AI, no networking, no save/load (a full game fits one sitting; the JSON
-  dump captures the numbers that matter).
+- No networking, no save/load (a full game fits one sitting; the JSON
+  dump captures the numbers that matter). Bots exist but are intentionally
+  shallow — sparring partners, not opponents to beat.
 - No animations; log + badges carry the information.
 - Disabled-by-default list: **none** — all 60 effects are implemented and
   enabled.

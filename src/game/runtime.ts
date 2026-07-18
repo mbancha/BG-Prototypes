@@ -1,7 +1,28 @@
-// Frame stack machine. Effects, matches and triggers run as frames on
-// s.exec; a frame either mutates state and pops, pushes children, or sets
-// s.pending and waits for the UI to call provideAnswer. Everything on the
-// stack is plain data so undo snapshots capture mid-effect state.
+// =============================================================================
+// Frame stack machine — the heart of effect execution.
+//
+// Why: card effects need multi-step player decisions (pick card → pick owner
+// → pick amount…), can nest (a match spawns a remove-picker), and must
+// survive undo snapshots mid-decision. So effects run as FRAMES on s.exec
+// (plain data: { h: handlerName, ph: phase, d: payload }) instead of async
+// code. pump() repeatedly calls the top frame's handler until either the
+// stack empties or a handler parks a question in s.pending.
+//
+// Handler protocol (every register()ed function follows this):
+//   • called with (s, f) where f is the TOP frame; runs synchronously
+//   • may: mutate state via rules.ts helpers; push child frames; set
+//     s.pending (pause) ; popFrame(s) when done. It will be RE-CALLED after
+//     any child pops or answer arrives — use f.ph to remember where it was.
+//   • answers: the UI calls provideAnswer → stored in f.d.ans → handler reads
+//     it once via takeAns(f).
+//   • child → parent results go through s.ret (pickRemove/pickMove set it;
+//     parent must read AND clear it).
+//
+// This file owns: pump/provideAnswer plumbing, the "hub" (player-ordered
+// list of pending matches + triggers), the shared pickRemove/pickMove child
+// frames, and the five symbol-match frames (m_muscle … m_whisper).
+// Effect frames (e_*/t_*) live in effects.ts; the enclosure frame in turn.ts.
+// =============================================================================
 
 import { CONFIG } from "../data/config";
 import { def, SYM_GLYPH, SYM_NAME } from "./cards";

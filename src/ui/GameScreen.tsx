@@ -1,6 +1,25 @@
+// =============================================================================
+// Main in-game layout: HUD (per-player status cards) on top, grid + side
+// panel in the middle, hand + action buttons at the bottom, plus the
+// pass-the-device and game-over overlays.
+//
+// All interaction funnels into props.dispatch(Action) — this component holds
+// only view state (which card is armed for placement). Bot turns: when the
+// pending decision belongs to a bot (isBotTurn), every control is disabled
+// and the bot banner is shown; App.tsx's driver advances the game.
+// =============================================================================
+
 import { useCallback, useEffect, useState } from "react";
 import { CONFIG } from "../data/config";
-import { def, isDisabled, SYM_GLYPH, TYPE_ICON } from "../game/cards";
+import {
+  def,
+  isDisabled,
+  KIND_GLYPH,
+  KIND_NAME,
+  SYM_GLYPH,
+  TYPE_ICON,
+} from "../game/cards";
+import { isBotTurn } from "../game/bot";
 import { placementCheck } from "../game/grid";
 import { deployDiscount, seesHands } from "../game/ongoing";
 import type { Action } from "../game/turn";
@@ -24,6 +43,7 @@ export default function GameScreen(props: {
 
   const busy = s.exec.length > 0 || s.pending !== null;
   const me = s.players[s.turn.p];
+  const botActing = isBotTurn(s); // a bot is on the clock — spectate mode
 
   // leave placement mode whenever the turn/pending situation changes under us
   useEffect(() => {
@@ -54,18 +74,26 @@ export default function GameScreen(props: {
     if (ok) setPlacing(null);
   };
 
-  const canPlaceNow = !busy && !s.passPending && !s.over && !s.turn.placed;
+  const canPlaceNow =
+    !busy && !s.passPending && !s.over && !s.turn.placed && !botActing;
   const canDeployNow =
-    !busy && !s.passPending && !s.over && !s.turn.setup && !s.turn.deployed;
+    !busy &&
+    !s.passPending &&
+    !s.over &&
+    !s.turn.setup &&
+    !s.turn.deployed &&
+    !botActing;
   const canEndTurn =
     !busy &&
     !s.passPending &&
     !s.over &&
     !s.turn.setup &&
+    !botActing &&
     (s.turn.placed || me.hand.length === 0);
 
-  const pendingIds = s.pending?.t === "card" ? s.pending.ids : [];
-  const showOpp = seesHands(s, s.turn.p) && !s.passPending;
+  // clickable grid targets for "choose a card" prompts (humans only)
+  const pendingIds = s.pending?.t === "card" && !botActing ? s.pending.ids : [];
+  const showOpp = seesHands(s, s.turn.p) && !s.passPending && !me.isBot;
 
   return (
     <div className="game">
@@ -75,7 +103,10 @@ export default function GameScreen(props: {
           <span className="big">
             {s.turn.setup ? "OPENING" : `TURN ${s.turn.n}`}
           </span>
-          <span style={{ color: me.color }}>{me.name}</span>
+          <span style={{ color: me.color }}>
+            {me.isBot ? "🤖 " : ""}
+            {me.name}
+          </span>
           <span style={{ color: "var(--dim)" }}>
             deck {s.deck.length} · discard {s.discard.length}
           </span>
@@ -91,7 +122,10 @@ export default function GameScreen(props: {
             className={"pcard" + (i === s.turn.p ? " active" : "")}
             style={{ ["--pc" as any]: p.color }}
           >
-            <div className="pname">{p.name}</div>
+            <div className="pname">
+              {p.isBot ? "🤖 " : ""}
+              {p.name}
+            </div>
             <div className="pstats">
               <span>${p.money}</span>
               <span>{p.pts} pts</span>
@@ -126,10 +160,16 @@ export default function GameScreen(props: {
             pendingIds={pendingIds}
             onPickCard={(id) => dispatch({ a: "answer", ans: { card: id } })}
           />
-          {!s.passPending && (
+          {/* humans get the interactive prompt panel; bots answer themselves */}
+          {!s.passPending && !botActing && (
             <PendingPanel s={s} answer={(ans) => dispatch({ a: "answer", ans })} />
           )}
-          {s.turn.setup && !s.passPending && (
+          {!s.passPending && botActing && !s.over && (
+            <div className="botbanner">
+              🤖 {s.players[s.turn.p].name} is playing…
+            </div>
+          )}
+          {s.turn.setup && !s.passPending && !botActing && (
             <div
               className="placebox"
               style={{ top: 10, bottom: "auto", borderColor: "var(--ok)" }}
@@ -163,69 +203,78 @@ export default function GameScreen(props: {
             </div>
           )}
           <div className="handlabel">
-            HAND — {me.name} ({me.hand.length}/{CONFIG.HAND_LIMIT})
+            HAND — {me.name} ({me.hand.length} · refills to{" "}
+            {CONFIG.HAND_REFILL})
           </div>
-          <div className="hand">
-            {me.hand.map((id) => {
-              const d = def(id);
-              const cost = Math.max(0, d.cost - deployDiscount(s, s.turn.p));
-              const off = isDisabled(id);
-              return (
-                <div
-                  key={id}
-                  className={
-                    "hcard" + (placing?.card === id ? " selected" : "")
-                  }
-                >
-                  {off && <span className="offbadge">EFFECT OFF</span>}
-                  <div className="hd">
-                    <span className="nm">
-                      {TYPE_ICON[d.type]} {d.name}
-                    </span>
+          {me.isBot && !s.passPending ? (
+            // never reveal a bot's hand to the humans at the table
+            <div className="botthinking">
+              🤖 {me.name}'s hand is hidden — the bot takes its turn
+              automatically.
+            </div>
+          ) : (
+            <div className="hand">
+              {me.hand.map((id) => {
+                const d = def(id);
+                const cost = Math.max(0, d.cost - deployDiscount(s, s.turn.p));
+                const off = isDisabled(id);
+                return (
+                  <div
+                    key={id}
+                    className={
+                      "hcard" + (placing?.card === id ? " selected" : "")
+                    }
+                  >
+                    {off && <span className="offbadge">EFFECT OFF</span>}
+                    <div className="hd">
+                      <span className="nm">
+                        {TYPE_ICON[d.type]} {d.name}
+                      </span>
+                    </div>
+                    <div className="meta">
+                      <span>{d.type}</span>
+                      <span>${d.cost}</span>
+                      <span>{d.pts}★</span>
+                      <span title={KIND_NAME[d.kind]}>{KIND_GLYPH[d.kind]}</span>
+                    </div>
+                    <div className="syms">
+                      <span className="s" title="top half symbol">
+                        {SYM_GLYPH[d.top]}
+                      </span>
+                      <span className="s" title="bottom half symbol">
+                        {SYM_GLYPH[d.bottom]}
+                      </span>
+                    </div>
+                    <div className="fx">{d.text}</div>
+                    <div className="btns">
+                      <button
+                        disabled={!canPlaceNow}
+                        onClick={() =>
+                          setPlacing((p) =>
+                            p?.card === id ? null : { card: id, rot: 0 },
+                          )
+                        }
+                      >
+                        {placing?.card === id ? "✕ cancel" : "⌗ place"}
+                      </button>
+                      <button
+                        disabled={!canDeployNow || off || me.money < cost}
+                        title={off ? "Effect disabled in cards.json" : d.text}
+                        onClick={() => dispatch({ a: "deploy", card: id })}
+                      >
+                        ▲ deploy ${cost}
+                      </button>
+                    </div>
                   </div>
-                  <div className="meta">
-                    <span>{d.type}</span>
-                    <span>${d.cost}</span>
-                    <span>{d.pts}★</span>
-                    <span>{d.kind === "I" ? "INST" : "ONGO"}</span>
-                  </div>
-                  <div className="syms">
-                    <span className="s" title="top half symbol">
-                      {SYM_GLYPH[d.top]}
-                    </span>
-                    <span className="s" title="bottom half symbol">
-                      {SYM_GLYPH[d.bottom]}
-                    </span>
-                  </div>
-                  <div className="fx">{d.text}</div>
-                  <div className="btns">
-                    <button
-                      disabled={!canPlaceNow}
-                      onClick={() =>
-                        setPlacing((p) =>
-                          p?.card === id ? null : { card: id, rot: 0 },
-                        )
-                      }
-                    >
-                      {placing?.card === id ? "✕ cancel" : "⌗ place"}
-                    </button>
-                    <button
-                      disabled={!canDeployNow || off || me.money < cost}
-                      title={off ? "Effect disabled in cards.json" : d.text}
-                      onClick={() => dispatch({ a: "deploy", card: id })}
-                    >
-                      ⚡ deploy ${cost}
-                    </button>
-                  </div>
+                );
+              })}
+              {me.hand.length === 0 && (
+                <div style={{ color: "var(--dim)", padding: 20 }}>
+                  hand empty — placement is skipped
                 </div>
-              );
-            })}
-            {me.hand.length === 0 && (
-              <div style={{ color: "var(--dim)", padding: 20 }}>
-                hand empty — placement is skipped
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="actionstack">
           {placing && <button onClick={rotate}>⟳ rotate (R)</button>}
@@ -262,17 +311,27 @@ export default function GameScreen(props: {
           <div style={{ color: "var(--dim)", letterSpacing: 6 }}>
             {s.turn.setup ? "OPENING PLACEMENT" : `TURN ${s.turn.n}`}
           </div>
-          <div className="whom">→ {me.name}</div>
-          <div style={{ color: "var(--dim)" }}>
-            pass the device, then continue
+          <div className="whom">
+            → {me.isBot ? "🤖 " : ""}
+            {me.name}
           </div>
-          <button
-            className="primary"
-            style={{ fontSize: 16, padding: "10px 30px" }}
-            onClick={() => dispatch({ a: "beginTurn" })}
-          >
-            I'M {me.name.toUpperCase()} — CONTINUE
-          </button>
+          {me.isBot ? (
+            // the bot driver clears this screen by itself after a beat
+            <div style={{ color: "var(--dim)" }}>bot turn — no need to pass</div>
+          ) : (
+            <>
+              <div style={{ color: "var(--dim)" }}>
+                pass the device, then continue
+              </div>
+              <button
+                className="primary"
+                style={{ fontSize: 16, padding: "10px 30px" }}
+                onClick={() => dispatch({ a: "beginTurn" })}
+              >
+                I'M {me.name.toUpperCase()} — CONTINUE
+              </button>
+            </>
+          )}
           <button disabled={!props.canUndo} onClick={props.undo}>
             ⎌ undo last action
           </button>
@@ -295,7 +354,10 @@ export default function GameScreen(props: {
                   style={{ ["--pc" as any]: p.color }}
                 >
                   <span className="rk">#{rank + 1}</span>
-                  <span className="gpname">{p.name}</span>
+                  <span className="gpname">
+                    {p.isBot ? "🤖 " : ""}
+                    {p.name}
+                  </span>
                   <span>
                     <b>{p.pts} pts</b>
                   </span>

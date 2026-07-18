@@ -1,8 +1,16 @@
-// Core types for the SPYPUNK engine. All state is plain serializable data so
-// structuredClone can snapshot it for undo.
+// =============================================================================
+// Core types for the SPYPUNK engine.
+//
+// Design constraint: ALL game state is plain serializable data (no classes,
+// functions, Maps or Sets inside GameState) so structuredClone can snapshot it
+// for undo and JSON.stringify can dump it for telemetry. Keep it that way.
+// Module map + how the pieces connect: see ARCHITECTURE.md at the repo root.
+// =============================================================================
 
+/** The five edge symbols. Match rules per symbol live in runtime.ts (m_*). */
 export type Sym = "muscle" | "intel" | "favor" | "credit" | "whisper";
 
+/** The six card types. Each type has a fixed symbol pair (config TYPE_SYMBOLS). */
 export type CType =
   | "Assassin"
   | "Enforcer"
@@ -11,18 +19,24 @@ export type CType =
   | "Hacker"
   | "Socialite";
 
+/**
+ * One card. cards.json supplies everything EXCEPT top/bottom/pts, which are
+ * derived from `type` at load time in cards.ts:
+ *   top/bottom = TYPE_SYMBOLS[type] (always two different symbols)
+ *   pts        = SYMBOL_VP[top] + SYMBOL_VP[bottom]
+ */
 export interface CardDef {
   id: number;
   name: string;
   type: CType;
-  cost: number;
-  pts: number;
-  top: Sym;
-  bottom: Sym;
-  kind: "I" | "O";
-  text: string;
+  cost: number; // $ to deploy
+  pts: number; // DERIVED — value when scored by enclosure
+  top: Sym; // DERIVED — symbol on the top half of the domino
+  bottom: Sym; // DERIVED — symbol on the bottom half
+  kind: "I" | "O"; // Instant (⚡ one-shot) or Ongoing (⟳ sits in tableau)
+  text: string; // rules text shown in the UI
   spec: any; // machine-readable effect descriptor (see cards.json _readme)
-  disabled?: boolean;
+  disabled?: boolean; // bench a broken effect mid-playtest (cards.json flag)
 }
 
 export interface Cell {
@@ -47,6 +61,7 @@ export interface Placed {
 export interface PlayerState {
   name: string;
   color: string;
+  isBot?: boolean; // true → src/game/bot.ts plays this seat automatically
   money: number;
   pts: number;
   supply: number; // influence tokens remaining in personal supply

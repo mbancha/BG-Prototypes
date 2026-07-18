@@ -1,6 +1,21 @@
-// Turn flow and the public action API. The UI calls applyAction on a fresh
-// structuredClone of the previous state; a non-null return is a rejection
-// reason and the clone is discarded.
+// =============================================================================
+// Turn flow and the PUBLIC ACTION API — the only entry points the UI (and the
+// bot driver) ever call:
+//
+//   newGame(players)        → fresh GameState
+//   applyAction(s, action)  → mutates s in place; returns null on success or a
+//                             human-readable rejection string (s must then be
+//                             discarded — the UI applies actions to a fresh
+//                             structuredClone and keeps the old state on error,
+//                             which is also how undo works).
+//
+// A turn is: beginTurn (dismiss pass screen, start-of-turn triggers) →
+// optional deploy (once) → mandatory place (once) → endTurn (draw back up to
+// CONFIG.HAND_REFILL, advance turn.p). Placement resolution — symbol matches,
+// on-place triggers, then enclosure scoring — runs on the frame stack (see
+// runtime.ts); whenever a frame needs player input it parks a question in
+// s.pending and applyAction({a:"answer"}) feeds the reply back in.
+// =============================================================================
 
 import { CONFIG } from "../data/config";
 import { CARDS, def, isDisabled } from "./cards";
@@ -68,7 +83,7 @@ function freshTelemetry(): Telemetry {
 }
 
 export function newGame(
-  playersIn: { name: string; color: string }[],
+  playersIn: { name: string; color: string; isBot?: boolean }[],
 ): GameState {
   const n = playersIn.length;
   if (n < CONFIG.MIN_PLAYERS || n > CONFIG.MAX_PLAYERS)
@@ -82,6 +97,7 @@ export function newGame(
     players: playersIn.map((p) => ({
       name: p.name,
       color: p.color,
+      isBot: !!p.isBot,
       money: CONFIG.STARTING_MONEY,
       pts: 0,
       supply: CONFIG.INFLUENCE_SUPPLY,
@@ -292,9 +308,18 @@ function actPlace(
     return null;
   }
 
+  const ms = matchesFor(s, cardId, at, rot);
+  // Double-match rule: if BOTH halves of the placed domino matched at least
+  // one neighbor each, the placer gains $CONFIG.DOUBLE_MATCH_BONUS once.
+  // Placement-time only — Zero Day pseudo-matches don't qualify.
+  const topHit = ms.some((m) => m.myCell.x === ca.x && m.myCell.y === ca.y);
+  const bottomHit = ms.some((m) => m.myCell.x === cb.x && m.myCell.y === cb.y);
+  if (topHit && bottomHit && CONFIG.DOUBLE_MATCH_BONUS > 0)
+    gainMoney(s, p, CONFIG.DOUBLE_MATCH_BONUS, "Double match");
+
   // resolution: enclosure check runs after the match/trigger hub drains
   pushFrame(s, "encl", {});
-  const items: HubItem[] = matchesFor(s, cardId, at, rot).map((m) =>
+  const items: HubItem[] = ms.map((m) =>
     matchItem(m.sym as Sym, cardId, m.other),
   );
   for (const { id } of onPlaceTriggers(s, p, d.type))
@@ -317,6 +342,7 @@ function actEndTurn(s: GameState): string | null {
   if (!s.turn.placed && s.players[p].hand.length > 0)
     return "You must place a card (placement is mandatory)";
 
+  // Rule: you ALWAYS draw back up to your hand size at the end of your turn.
   drawUpTo(s, p, CONFIG.HAND_REFILL);
   s.telem.turns = s.turn.n;
 

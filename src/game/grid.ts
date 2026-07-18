@@ -1,3 +1,10 @@
+// =============================================================================
+// Domino geometry over the unbounded grid. Pure queries — nothing in here
+// mutates GameState. The board is sparse: s.board (card id → Placed) plus
+// s.cellOwner ("x,y" → card id) kept in sync by turn.ts/actPlace.
+// Everything match- and enclosure-related starts from these functions.
+// =============================================================================
+
 import type { Cell, GameState, Placed, Sym } from "./types";
 import { cellKey } from "./types";
 import { def } from "./cards";

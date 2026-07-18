@@ -1,3 +1,22 @@
+// =============================================================================
+// The shared tableau: an unbounded pan/zoom grid of placed dominoes.
+//
+// Interactions handled here:
+//   drag        → pan the view          wheel → zoom about the cursor
+//   click cell  → place the armed card (placement mode, ghost preview shows
+//                 legality + the symbol matches the spot would trigger)
+//   click card  → answer a "choose a card" prompt (highlighted targets)
+//
+// Card face layout ("the picture is the type icon"):
+//   • enlarged type icon centered across the whole domino
+//   • card name in a thin plate along the side (left edge when vertical,
+//     top edge when horizontal)
+//   • each half's edge symbol pushed to its OUTER end (that's the edge that
+//     can match a neighbor; the inner seam never matches)
+//   • influence dots stacked on the opposite side from the nameplate
+// Pure presentation — geometry/legality all comes from src/game/grid.ts.
+// =============================================================================
+
 import { useEffect, useRef, useState } from "react";
 import { def, SYM_GLYPH, SYM_NAME, TYPE_ICON } from "../game/cards";
 import { cellsFor, matchesFor, placementCheck } from "../game/grid";
@@ -5,7 +24,7 @@ import { creditValue, muscleCount, whisperMax } from "../game/ongoing";
 import type { Cell, GameState, Placed, Sym } from "../game/types";
 import { cellKey } from "../game/types";
 
-export const CS = 84; // grid cell size in px
+export const CS = 84; // grid cell size in px (world units; zoom scales it)
 
 function matchDesc(s: GameState, by: number, sym: Sym, otherName: string) {
   switch (sym) {
@@ -22,6 +41,7 @@ function matchDesc(s: GameState, by: number, sym: Sym, otherName: string) {
   }
 }
 
+/** One placed domino. See the file header for the face layout. */
 function GCard(props: {
   s: GameState;
   p: Placed;
@@ -34,6 +54,8 @@ function GCard(props: {
   const y0 = Math.min(p.a.y, p.b.y);
   const w = (Math.abs(p.a.x - p.b.x) + 1) * CS;
   const h = (Math.abs(p.a.y - p.b.y) + 1) * CS;
+  const vert = p.a.x === p.b.x; // false → the domino lies sideways
+
   return (
     <div
       className={
@@ -41,29 +63,43 @@ function GCard(props: {
         (p.scored ? " scored" : "") +
         (props.target ? " target" : "")
       }
+      data-o={vert ? "v" : "h"}
       style={{ left: x0 * CS, top: y0 * CS, width: w - 2, height: h - 2 }}
       onClick={props.target ? props.onPick : undefined}
     >
       {[
-        { c: p.a, sym: d.top },
-        { c: p.b, sym: d.bottom },
-      ].map((half, i) => (
-        <div
-          key={i}
-          className="half"
-          style={{
-            left: (half.c.x - x0) * CS,
-            top: (half.c.y - y0) * CS,
-            width: CS - 2,
-            height: CS - 2,
-          }}
-        >
-          <span className="sym">{SYM_GLYPH[half.sym]}</span>
-        </div>
-      ))}
-      <div className="ticon">{TYPE_ICON[d.type]}</div>
+        { c: p.a, o: p.b, sym: d.top },
+        { c: p.b, o: p.a, sym: d.bottom },
+      ].map((half, i) => {
+        // push each half's symbol toward its OUTER edge (away from the seam)
+        const ox = Math.sign(half.c.x - half.o.x);
+        const oy = Math.sign(half.c.y - half.o.y);
+        return (
+          <div
+            key={i}
+            className="half"
+            style={{
+              left: (half.c.x - x0) * CS,
+              top: (half.c.y - y0) * CS,
+              width: CS - 2,
+              height: CS - 2,
+              justifyContent:
+                ox < 0 ? "flex-start" : ox > 0 ? "flex-end" : "center",
+              alignItems: oy < 0 ? "flex-start" : oy > 0 ? "flex-end" : "center",
+            }}
+          >
+            <span className="sym" title={`${SYM_NAME[half.sym]} edge`}>
+              {SYM_GLYPH[half.sym]}
+            </span>
+          </div>
+        );
+      })}
+      {/* enlarged type icon = the card's "art" */}
+      <div className="bigicon" title={d.type}>
+        {TYPE_ICON[d.type]}
+      </div>
+      <div className="nameplate">{d.name}</div>
       <div className="pts">{d.pts}★</div>
-      <div className="cname">{d.name}</div>
       {p.lockBy !== undefined && (
         <div className="lock" title={`Locked by ${s.players[p.lockBy].name} (Filibuster)`}>
           🔒
@@ -179,7 +215,7 @@ export default function GridView(props: {
     const d = dragRef.current;
     dragRef.current = null;
     setDragging(false);
-    if (d && d.moved) return;
+    if (d && d.moved) return; // it was a pan, not a click
     const cell = toCell(e);
     const id = s.cellOwner[cellKey(cell)];
     if (props.pendingIds.length > 0) {
@@ -189,7 +225,7 @@ export default function GridView(props: {
     if (placing) props.onPlaceAt(cell);
   };
 
-  // ghost preview
+  // ghost preview of the armed card at the hovered cell
   let ghost: { cells: [Cell, Cell]; ok: boolean; reason?: string } | null = null;
   let previewMatches: ReturnType<typeof matchesFor> = [];
   if (placing && hover) {

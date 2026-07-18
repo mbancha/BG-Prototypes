@@ -1,3 +1,9 @@
+// =============================================================================
+// Pre-game lobby: player count, names, colors, and human/bot toggle per seat.
+// Emits the players array that App feeds straight into newGame(). Purely
+// presentational — no game rules here.
+// =============================================================================
+
 import { useState } from "react";
 import { CONFIG } from "../data/config";
 
@@ -13,10 +19,11 @@ export const NEON_COLORS = [
 const DEFAULT_NAMES = ["Cipher", "Vesper", "Halcyon", "Marrow"];
 
 export default function SetupScreen(props: {
-  onStart: (players: { name: string; color: string }[]) => void;
+  onStart: (players: { name: string; color: string; isBot: boolean }[]) => void;
 }) {
   const [count, setCount] = useState(2);
   const [names, setNames] = useState<string[]>([...DEFAULT_NAMES]);
+  const [bots, setBots] = useState<boolean[]>([false, false, false, false]);
   const [colors, setColors] = useState<string[]>([
     NEON_COLORS[0],
     NEON_COLORS[1],
@@ -72,6 +79,23 @@ export default function SetupScreen(props: {
                 })
               }
             />
+            <button
+              className={"bottoggle" + (bots[i] ? " on" : "")}
+              title={
+                bots[i]
+                  ? "Played automatically by a simple bot — click for human"
+                  : "Played by a human at this device — click for bot"
+              }
+              onClick={() =>
+                setBots((prev) => {
+                  const next = [...prev];
+                  next[i] = !next[i];
+                  return next;
+                })
+              }
+            >
+              {bots[i] ? "🤖 BOT" : "👤 HUMAN"}
+            </button>
             <div className="swatches">
               {NEON_COLORS.map((c) => (
                 <div
@@ -91,6 +115,7 @@ export default function SetupScreen(props: {
               Array.from({ length: count }, (_, i) => ({
                 name: names[i].trim() || `Player ${i + 1}`,
                 color: colors[i],
+                isBot: bots[i],
               })),
             )
           }
@@ -99,7 +124,8 @@ export default function SetupScreen(props: {
         </button>
         <div style={{ color: "var(--dim)", fontSize: 11 }}>
           Hotseat: pass the device between turns. Player 1 opens by placing one
-          card on the origin, then play proceeds clockwise from Player 2.
+          card on the origin, then play proceeds clockwise from Player 2. Seats
+          marked 🤖 play themselves — their hands stay hidden.
         </div>
       </div>
     </div>
