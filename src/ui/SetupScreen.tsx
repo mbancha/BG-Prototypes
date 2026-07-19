@@ -1,11 +1,13 @@
 // =============================================================================
-// Pre-game lobby: player count, names, colors, and human/bot toggle per seat.
-// Emits the players array that App feeds straight into newGame(). Purely
-// presentational — no game rules here.
+// Pre-game lobby: game MODE (classic abilities vs color-groups core),
+// color-mode variant toggles, then player count / names / colors / bot
+// toggles. Emits a SetupResult that App feeds into the right engine's
+// newGame. Purely presentational — no game rules here.
 // =============================================================================
 
 import { useState } from "react";
 import { CONFIG } from "../data/config";
+import type { ColorVariant } from "../color/engine";
 
 export const NEON_COLORS = [
   "#00e5ff",
@@ -18,9 +20,21 @@ export const NEON_COLORS = [
 
 const DEFAULT_NAMES = ["Cipher", "Vesper", "Halcyon", "Marrow"];
 
+export interface SetupResult {
+  mode: "classic" | "colors";
+  players: { name: string; color: string; isBot: boolean }[];
+  variant?: ColorVariant;
+}
+
 export default function SetupScreen(props: {
-  onStart: (players: { name: string; color: string; isBot: boolean }[]) => void;
+  onStart: (r: SetupResult) => void;
 }) {
+  const [mode, setMode] = useState<"classic" | "colors">("classic");
+  const [variant, setVariant] = useState<ColorVariant>({
+    scoring: "size",
+    specials: false,
+    powers: false,
+  });
   const [count, setCount] = useState(2);
   const [names, setNames] = useState<string[]>([...DEFAULT_NAMES]);
   const [bots, setBots] = useState<boolean[]>([false, false, false, false]);
@@ -53,6 +67,65 @@ export default function SetupScreen(props: {
         </div>
       </div>
       <div className="setup-card">
+        <div className="countbtns">
+          <button
+            className={mode === "classic" ? "primary" : ""}
+            onClick={() => setMode("classic")}
+            title="The full game: 60 unique cards with deploy abilities, money, symbol matches, per-card enclosure scoring"
+          >
+            ♠ CLASSIC
+          </button>
+          <button
+            className={mode === "colors" ? "primary" : ""}
+            onClick={() => setMode("colors")}
+            title="Stripped-down core: color dominoes form groups; a group scores only when fully sealed"
+          >
+            ◼ COLOR GROUPS
+          </button>
+        </div>
+
+        {mode === "colors" && (
+          <div className="variantbox">
+            <div className="vrow">
+              <span className="vlabel">group value</span>
+              <button
+                className={"bottoggle" + (variant.scoring === "size" ? " on" : "")}
+                title="A group is worth 1 point per cell it spans"
+                onClick={() => setVariant((v) => ({ ...v, scoring: "size" }))}
+              >
+                BY SIZE
+              </button>
+              <button
+                className={"bottoggle" + (variant.scoring === "fixed" ? " on" : "")}
+                title="Every group is worth the same flat value regardless of size"
+                onClick={() => setVariant((v) => ({ ...v, scoring: "fixed" }))}
+              >
+                FIXED
+              </button>
+            </div>
+            <div className="vrow">
+              <span className="vlabel">★ bonus tiles</span>
+              <button
+                className={"bottoggle" + (variant.specials ? " on" : "")}
+                title="Colorless tiles that add points to any group they touch (no influence)"
+                onClick={() => setVariant((v) => ({ ...v, specials: !v.specials }))}
+              >
+                {variant.specials ? "ON" : "OFF"}
+              </button>
+            </div>
+            <div className="vrow">
+              <span className="vlabel">color powers</span>
+              <button
+                className={"bottoggle" + (variant.powers ? " on" : "")}
+                title="Each color gets a qualitative rule: red steals, green adds 2, gold scores +2, violet hides influence, cyan pays the runner-up"
+                onClick={() => setVariant((v) => ({ ...v, powers: !v.powers }))}
+              >
+                {variant.powers ? "ON" : "OFF"}
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="countbtns">
           {counts.map((n) => (
             <button
@@ -111,21 +184,24 @@ export default function SetupScreen(props: {
         <button
           className="primary"
           onClick={() =>
-            props.onStart(
-              Array.from({ length: count }, (_, i) => ({
+            props.onStart({
+              mode,
+              variant: mode === "colors" ? variant : undefined,
+              players: Array.from({ length: count }, (_, i) => ({
                 name: names[i].trim() || `Player ${i + 1}`,
                 color: colors[i],
                 isBot: bots[i],
               })),
-            )
+            })
           }
         >
           ▶ START GAME
         </button>
         <div style={{ color: "var(--dim)", fontSize: 11 }}>
-          Hotseat: pass the device between turns. Player 1 opens by placing one
-          card on the origin, then play proceeds clockwise from Player 2. Seats
-          marked 🤖 play themselves — their hands stay hidden.
+          Hotseat: pass the device between turns. Player 1 opens on the origin.
+          Seats marked 🤖 play themselves — their hands stay hidden.
+          {mode === "colors" &&
+            " COLOR GROUPS: match a side to add influence to that group; a group only scores once every side of it is sealed."}
         </div>
       </div>
     </div>

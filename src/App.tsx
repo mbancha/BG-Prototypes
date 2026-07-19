@@ -1,14 +1,16 @@
 // =============================================================================
-// App shell: owns the ONLY mutable state in the app — `history`, an array of
-// immutable GameState snapshots (undo = drop the last one). Every UI event
-// becomes an Action dispatched here; dispatch clones the latest state, runs
-// applyAction on the clone, and either appends it (success) or shows the
-// rejection reason as a toast (state unchanged).
+// App shell: owns the ONLY mutable state in the app — a `session`, which is
+// the chosen game MODE plus an array of immutable state snapshots (undo =
+// drop the last one). Two modes share this shell:
+//   "classic" — the full 60-card ability game   (src/game/*,  GameScreen)
+//   "colors"  — the stripped color-groups core  (src/color/*, ColorScreen)
+// Every UI event becomes an action dispatched here; dispatch clones the
+// latest snapshot, runs the mode's apply function on the clone, and either
+// appends it (success) or shows the rejection reason as a toast.
 //
-// The bot driver also lives here: whenever the newest state is waiting on a
-// bot player (isBotTurn), a short timer dispatches botDecide(state). Any
-// state change re-arms the timer, so bots chain through their whole turn —
-// including answering prompts that other players' effects aim at them.
+// The bot driver also lives here: whenever the newest snapshot is waiting on
+// a bot player, a short timer dispatches that mode's botDecide. Undo from a
+// human seat pops back over bot moves entirely.
 // =============================================================================
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,11 +18,30 @@ import { CONFIG } from "./data/config";
 import { botDecide, isBotTurn } from "./game/bot";
 import type { GameState } from "./game/types";
 import { applyAction, newGame, type Action } from "./game/turn";
-import SetupScreen from "./ui/SetupScreen";
+import {
+  applyColor,
+  colorBotDecide,
+  isColorBotTurn,
+  newColorGame,
+  type ColorAction,
+  type ColorState,
+  type ColorVariant,
+} from "./color/engine";
+import SetupScreen, { type SetupResult } from "./ui/SetupScreen";
 import GameScreen from "./ui/GameScreen";
+import ColorScreen from "./ui/ColorScreen";
+
+type Session =
+  | { mode: "classic"; hist: GameState[] }
+  | { mode: "colors"; hist: ColorState[] };
+
+const botWaiting = (s: Session): boolean =>
+  s.mode === "classic"
+    ? isBotTurn(s.hist[s.hist.length - 1])
+    : isColorBotTurn(s.hist[s.hist.length - 1]);
 
 export default function App() {
-  const [history, setHistory] = useState<GameState[] | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
 
@@ -31,72 +52,95 @@ export default function App() {
   }, []);
 
   const dispatch = useCallback(
-    (action: Action) => {
-      setHistory((h) => {
-        if (!h) return h;
-        const cur = h[h.length - 1];
+    (action: Action | ColorAction) => {
+      setSession((sess) => {
+        if (!sess) return sess;
+        const cur = sess.hist[sess.hist.length - 1];
         const next = structuredClone(cur);
         let err: string | null = null;
         try {
-          err = applyAction(next, action);
+          err =
+            sess.mode === "classic"
+              ? applyAction(next as GameState, action as Action)
+              : applyColor(next as ColorState, action as ColorAction);
         } catch (e) {
           err = e instanceof Error ? e.message : String(e);
         }
         if (err) {
           showToast(err);
-          return h;
+          return sess;
         }
-        const out = [...h, next];
-        while (out.length > CONFIG.MAX_UNDO_STEPS) out.shift();
-        return out;
+        const hist = [...sess.hist, next];
+        while (hist.length > CONFIG.MAX_UNDO_STEPS) hist.shift();
+        return { ...sess, hist } as Session;
       });
     },
     [showToast],
   );
 
   // Undo, skipping back over bot moves: landing on a state where a bot acts
-  // next is pointless (the driver would instantly replay), so pop until a
-  // human is on the clock again (or history runs out).
+  // next is pointless (the driver would instantly replay it).
   const undo = useCallback(() => {
-    setHistory((h) => {
-      if (!h || h.length <= 1) return h;
-      let i = h.length - 2;
-      while (i > 0 && isBotTurn(h[i])) i--;
-      return h.slice(0, i + 1);
+    setSession((sess) => {
+      if (!sess || sess.hist.length <= 1) return sess;
+      let i = sess.hist.length - 2;
+      const bot = (k: number) =>
+        sess.mode === "classic"
+          ? isBotTurn(sess.hist[k] as GameState)
+          : isColorBotTurn(sess.hist[k] as ColorState);
+      while (i > 0 && bot(i)) i--;
+      return { ...sess, hist: sess.hist.slice(0, i + 1) } as Session;
     });
   }, []);
 
-  // Bot driver. Runs after every state change; no-op unless the newest state
-  // is waiting on a bot. The timeout keeps bot play watchable, and its
-  // cleanup cancels stale timers if the user undoes mid-bot-turn.
+  // Bot driver — mode-agnostic: whichever engine is live, ask its bot.
   useEffect(() => {
-    if (!history) return;
-    const s = history[history.length - 1];
-    if (!isBotTurn(s)) return;
-    const t = window.setTimeout(() => dispatch(botDecide(s)), CONFIG.BOT_DELAY_MS);
+    if (!session || !botWaiting(session)) return;
+    const t = window.setTimeout(() => {
+      const cur = session.hist[session.hist.length - 1];
+      dispatch(
+        session.mode === "classic"
+          ? botDecide(cur as GameState)
+          : colorBotDecide(cur as ColorState),
+      );
+    }, CONFIG.BOT_DELAY_MS);
     return () => window.clearTimeout(t);
-  }, [history, dispatch]);
+  }, [session, dispatch]);
 
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
-  if (!history) {
-    return (
-      <SetupScreen
-        onStart={(players) => setHistory([newGame(players)])}
-      />
-    );
-  }
+  const start = (r: SetupResult) => {
+    if (r.mode === "classic")
+      setSession({ mode: "classic", hist: [newGame(r.players)] });
+    else
+      setSession({
+        mode: "colors",
+        hist: [newColorGame(r.players, r.variant as ColorVariant)],
+      });
+  };
 
-  const s = history[history.length - 1];
+  if (!session) return <SetupScreen onStart={start} />;
+
+  const cur = session.hist[session.hist.length - 1];
   return (
     <>
-      <GameScreen
-        s={s}
-        dispatch={dispatch}
-        undo={undo}
-        canUndo={history.length > 1}
-        onNewGame={() => setHistory(null)}
-      />
+      {session.mode === "classic" ? (
+        <GameScreen
+          s={cur as GameState}
+          dispatch={dispatch}
+          undo={undo}
+          canUndo={session.hist.length > 1}
+          onNewGame={() => setSession(null)}
+        />
+      ) : (
+        <ColorScreen
+          s={cur as ColorState}
+          dispatch={dispatch}
+          undo={undo}
+          canUndo={session.hist.length > 1}
+          onNewGame={() => setSession(null)}
+        />
+      )}
       {toast && <div className="toast">{toast}</div>}
     </>
   );

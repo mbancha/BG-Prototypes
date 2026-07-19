@@ -72,3 +72,63 @@ export const SYMBOL_VP: Record<Sym, number> = {
   whisper: 2,
   muscle: 3,
 };
+
+// =============================================================================
+// COLOR-GROUPS MODE (the stripped-down core experiment; engine in
+// src/color/engine.ts, screen in src/ui/ColorScreen.tsx). No card abilities,
+// no money, no deploys: dominoes carry two COLORS, same-colored halves that
+// touch form contiguous GROUPS, matching a side adds influence to the group,
+// and a group scores only once its ENTIRE perimeter is sealed.
+// Variants are chosen per game on the setup screen; numbers live here.
+// =============================================================================
+
+/** The five colors. key/hex/glyph are display; the names echo the classic
+ *  symbols so the color-powers variant feels familiar. */
+export const COLOR_DEFS = [
+  { key: "red", name: "Muscle", hex: "#ff4d5e", glyph: "✊" },
+  { key: "cyan", name: "Intel", hex: "#00e5ff", glyph: "👁" },
+  { key: "green", name: "Favor", hex: "#b4ff39", glyph: "🤝" },
+  { key: "gold", name: "Credit", hex: "#ffb020", glyph: "¤" },
+  { key: "violet", name: "Whisper", hex: "#a78bfa", glyph: "🎭" },
+] as const;
+
+export const COLOR_CFG = {
+  // deck: one tile per unordered color pair (all-different halves → 10 pairs)
+  // × COPIES_PER_PAIR, plus the special tiles below when that variant is on
+  COPIES_PER_PAIR: 3, // 10 pairs × 3 = 30 color tiles
+
+  MATCH_INFLUENCE: 1, // influence added per half that joins an existing group
+
+  // ---- scoring variants (setup-screen toggle picks one) ----
+  GROUP_SCORE_FIXED: 4, // "FIXED": every group is worth this, regardless of size
+  GROUP_SCORE_PER_TILE: 1, // "SIZE": group is worth (number of halves) × this
+
+  // ---- special tiles variant: colorless ★ tiles; each half carries bonus
+  // points added to any group it TOUCHES when that group scores. They join
+  // no group and add no influence, but they do occupy cells (and so can
+  // help seal a perimeter). One inner array = one tile [bonusA, bonusB].
+  SPECIAL_TILES: [
+    [1, 1],
+    [1, 1],
+    [2, 1],
+    [2, 2],
+  ],
+
+  // ---- color powers variant: one qualitative rule per color (promptless).
+  // Implemented in src/color/engine.ts; listed here for the tuner:
+  //   red    Muscle  — your match REMOVES 1 influence from the group's
+  //                    leading opponent instead of adding (adds if none)
+  //   green  Favor   — your match adds 2 influence instead of 1
+  //   gold   Credit  — the group scores +2 bonus points
+  //   violet Whisper — per-player influence on the group is hidden until
+  //                    it scores (UI shows only the total)
+  //   cyan   Intel   — when the group scores, the runner-up also scores
+  //                    half value (rounded down)
+  POWER_GREEN_ADD: 2,
+  POWER_GOLD_BONUS: 2,
+
+  // ---- game end ----
+  // Groups still open (not fully sealed) when the tiles run out score:
+  // "none" (they die unscored — pressure to seal), "half" value, or "full".
+  ENDGAME_OPEN_GROUPS: "none" as "none" | "half" | "full",
+} as const;

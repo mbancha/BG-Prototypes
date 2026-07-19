@@ -189,6 +189,31 @@ in ARCHITECTURE.md §2.
     the jitter tiebreak). Match influence changes are ignored by the
     heuristic (it's a guess, not a simulation).
 
+## COLOR GROUPS mode (core experiment) — rulings
+
+58. **Match = joining.** A placed half "matches" when it becomes adjacent to
+    an existing group of its color; only then is influence added. A half
+    that starts a new singleton group adds nothing (else every placement
+    would mint influence). A half bridging several groups merges them all
+    (pools combine) but still counts as ONE match.
+59. **Sealing = full perimeter.** A group scores the instant no empty cell
+    is orthogonally adjacent to any of its cells — the sealer can be any
+    tile, any color, either player. The internal edge between a tile's own
+    two halves can connect same-color halves for grouping but never counts
+    as a match.
+60. **Turns auto-advance** after the mandatory placement (no deploys, no
+    prompts exist), and players whose hands are empty late-game are
+    skipped; the game ends when every hand is empty.
+61. **Open groups at game end score nothing** by default (pressure to
+    seal); `COLOR_CFG.ENDGAME_OPEN_GROUPS` offers "half" and "full".
+62. **★ tiles** touch-test per ★ half (each counted once per group), pay
+    into every group they border, join no group, and never hold influence.
+63. **Color powers are promptless by design** — red's steal auto-targets
+    the leading opponent; violet's hiding is UI-only (bots technically
+    "see" it; acceptable for a playtest); cyan's runner-up payout reuses
+    the tie divisor. Powers live in resolveMatch/groupValue/scoreGroup in
+    src/color/engine.ts.
+
 ## Not built (out of scope for a playtest loop)
 
 - No networking, no save/load (a full game fits one sitting; the JSON

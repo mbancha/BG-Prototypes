@@ -744,6 +744,107 @@ input[type="text"] {
   width: 100%;
 }
 
+/* ---------- color-groups mode ---------- */
+.variantbox {
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.vrow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.vlabel {
+  color: var(--dim);
+  font-size: 11px;
+  width: 110px;
+  letter-spacing: 1px;
+}
+.powerkey {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  font-size: 10px;
+  padding: 0 10px;
+  border-left: 1px solid var(--line);
+  cursor: help;
+}
+.chalf {
+  position: absolute;
+  border: 1px solid var(--ch);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ch) 22%, #0d1420);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: var(--ch);
+  text-shadow: 0 1px 4px #000;
+}
+.chalf.scored {
+  opacity: 0.35;
+  filter: saturate(0.4);
+}
+.gbadge {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  background: rgba(3, 6, 10, 0.88);
+  border: 1px solid var(--ch);
+  border-radius: 9px;
+  padding: 1px 5px;
+  font-size: 10px;
+  color: var(--ch);
+  cursor: help;
+  max-width: 240px;
+}
+.gbadge.done {
+  opacity: 0.75;
+  border-color: var(--ok);
+  color: var(--ok);
+  font-size: 9px;
+}
+.gbadge .gv {
+  font-weight: bold;
+}
+.gbadge .gopen {
+  color: var(--dim);
+}
+.ctile {
+  min-width: 74px;
+  max-width: 74px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel2);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.ctile.selected {
+  border-color: var(--ok);
+  box-shadow: 0 0 12px rgba(180, 255, 57, 0.4);
+}
+.cthalf {
+  height: 44px;
+  border: 1px solid var(--ch);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ch) 22%, #0d1420);
+  color: var(--ch);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
 /* ---------- bots ---------- */
 .bottoggle {
   min-width: 92px;

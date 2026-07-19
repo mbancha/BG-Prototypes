@@ -14,6 +14,15 @@ single-page app; no backend, no persistence — all state is in-memory
 snapshots. It exists so the designer can play, tweak numbers, and export
 telemetry between sessions. Code favors *editability over polish*.
 
+It now contains **two selectable game modes** (setup screen):
+
+- **CLASSIC** — the full ability game described in §2 below.
+- **COLOR GROUPS** — a stripped-down core experiment described in §2b:
+  no abilities/money/prompts; color dominoes form contiguous groups that
+  score only when fully sealed. Its whole engine is `src/color/engine.ts`
+  and its whole UI is `src/ui/ColorScreen.tsx`, deliberately isolated so
+  either mode can be forked or deleted without touching the other.
+
 ## 2. The game, as implemented
 
 - **Deck:** 60 unique cards (`src/data/cards.json`), one copy each, shuffled
@@ -69,6 +78,36 @@ If a doc/test/comment contradicts this list, the list wins:
    avoid gifting opponents a score, and sometimes seal neutral cards to
    deny them (more eagerly in 2-player). See `src/game/bot.ts`.
 
+## 2b. COLOR GROUPS mode (the core experiment)
+
+Rules: tiles are dominoes with a **color** per half (5 colors; every tile
+two *different* colors; deck = all 10 pairs × `COPIES_PER_PAIR`). Same-color
+halves that touch form contiguous **groups** (merging freely). When a
+placed half joins an existing group, the placer adds influence to that
+GROUP (`MATCH_INFLUENCE`); fresh singleton halves add nothing. A group
+scores the moment **every cell around it is occupied** — most influence
+takes the value, ties split, influence returns to supply. Turns are just
+"place one tile" (auto-advance); groups left open when tiles run out score
+per `ENDGAME_OPEN_GROUPS` (default: nothing).
+
+Variant toggles (chosen per game on the setup screen, numbers in
+`COLOR_CFG`):
+
+1. **Group value: BY SIZE** — worth cells × `GROUP_SCORE_PER_TILE`.
+2. **Group value: FIXED** — every group worth `GROUP_SCORE_FIXED`.
+3. **★ bonus tiles** — colorless tiles whose halves add points to any
+   group they touch when it scores; no influence, no group membership,
+   but they occupy cells (can seal perimeters).
+4. **Color powers** — one promptless rule per color:
+   red steals a leading opponent's influence on match (adds if none) ·
+   green adds 2 · gold groups score +2 · violet's per-player influence is
+   hidden until scored (UI only) · cyan pays the runner-up half value.
+
+There are **no decision prompts** in this mode, so there is no frame
+machine — `applyColor` resolves everything synchronously. Bots share the
+same greedy philosophy (match + seal-what-you'd-win, avoid gifting,
+sometimes deny neutral groups; all in `colorBotDecide`).
+
 ## 3. Module map
 
 ```
@@ -90,13 +129,19 @@ src/game/effects.ts    one handler per instant effect op (e_*) and per
 src/game/turn.ts       newGame + applyAction (beginTurn/deploy/place/endTurn/
                        answer), double-match bonus, enclosure frame, game end
 src/game/bot.ts        botDecide(state) → next Action; decisionOwner helper
-src/App.tsx            state = array of snapshots (undo), dispatch, bot driver
-src/ui/*.tsx           SetupScreen / GameScreen / GridView / PendingPanel /
-                       SidePanel (log + stats + dump) — presentation only
-tests/engine.test.ts   targeted rules tests (forceSetup/forcePlace helpers)
+src/color/engine.ts    ENTIRE color-groups mode: rules + bot (see §2b)
+src/App.tsx            session = mode + snapshot array (undo), dispatch,
+                       mode-agnostic bot driver
+src/ui/*.tsx           SetupScreen (mode/variants/players) / GameScreen /
+                       GridView / PendingPanel / SidePanel — classic UI —
+                       plus ColorScreen (whole color-mode UI in one file)
+tests/engine.test.ts   targeted classic rules tests (forcePlace helpers)
 tests/simulation.test.ts  24 seeded random full games, invariants each step
-tests/bots.test.ts     all-bot seeded games run to completion
+tests/bots.test.ts     all-bot seeded classic games + enclosure behavior
+tests/colors.test.ts   color mode: grouping/merges/sealing/variants/powers
+                       + all-bot games with token conservation
 scripts/smoke.mjs      headless-Chromium boot-and-click check (needs build)
+scripts/colorsmoke.mjs same for color mode: all-bot game, board fills up
 ```
 
 ## 4. How state flows

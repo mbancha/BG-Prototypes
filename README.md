@@ -4,6 +4,14 @@ Hotseat (2–4 players, one device) prototype of the SPYPUNK domino-placement
 card game. Any seat can be a 🤖 bot (simple, functional AI for solo testing).
 Vite + React + TypeScript, no backend, all state in memory.
 
+Two game modes on the setup screen:
+
+- **♠ CLASSIC** — the full 60-card ability game.
+- **◼ COLOR GROUPS** — stripped-down core experiment: color dominoes form
+  contiguous groups; matching a side adds influence to the group; a group
+  scores only when every cell around it is sealed. Variant toggles at
+  setup: group value BY SIZE vs FIXED, ★ bonus tiles, per-color powers.
+
 **New here (or an AI picking this up cold)? Read `ARCHITECTURE.md` first** —
 it summarizes the game rules as built, every module, and the recipes for
 common edits. `DECISIONS.md` holds the rules judgment calls.

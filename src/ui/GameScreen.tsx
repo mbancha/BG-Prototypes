@@ -206,7 +206,7 @@ export default function GameScreen(props: {
             HAND — {me.name} ({me.hand.length} · refills to{" "}
             {CONFIG.HAND_REFILL})
           </div>
-          {me.isBot && !s.passPending ? (
+          {me.isBot ? (
             // never reveal a bot's hand to the humans at the table
             <div className="botthinking">
               🤖 {me.name}'s hand is hidden — the bot takes its turn
@@ -306,32 +306,24 @@ export default function GameScreen(props: {
       </div>
 
       {/* ------------- OVERLAYS ------------- */}
-      {s.passPending && !s.over && (
+      {/* pass screen for humans only — bot handoffs keep the board visible
+          (the driver begins the bot's turn by itself) */}
+      {s.passPending && !s.over && !me.isBot && (
         <div className="passover" style={{ ["--pc" as any]: me.color }}>
           <div style={{ color: "var(--dim)", letterSpacing: 6 }}>
             {s.turn.setup ? "OPENING PLACEMENT" : `TURN ${s.turn.n}`}
           </div>
-          <div className="whom">
-            → {me.isBot ? "🤖 " : ""}
-            {me.name}
+          <div className="whom">→ {me.name}</div>
+          <div style={{ color: "var(--dim)" }}>
+            pass the device, then continue
           </div>
-          {me.isBot ? (
-            // the bot driver clears this screen by itself after a beat
-            <div style={{ color: "var(--dim)" }}>bot turn — no need to pass</div>
-          ) : (
-            <>
-              <div style={{ color: "var(--dim)" }}>
-                pass the device, then continue
-              </div>
-              <button
-                className="primary"
-                style={{ fontSize: 16, padding: "10px 30px" }}
-                onClick={() => dispatch({ a: "beginTurn" })}
-              >
-                I'M {me.name.toUpperCase()} — CONTINUE
-              </button>
-            </>
-          )}
+          <button
+            className="primary"
+            style={{ fontSize: 16, padding: "10px 30px" }}
+            onClick={() => dispatch({ a: "beginTurn" })}
+          >
+            I'M {me.name.toUpperCase()} — CONTINUE
+          </button>
           <button disabled={!props.canUndo} onClick={props.undo}>
             ⎌ undo last action
           </button>
