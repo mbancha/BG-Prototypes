@@ -12,10 +12,14 @@
 //
 // Strategy in one paragraph: answer prompts mostly at random (preferring
 // opponents' tokens when an owner must be chosen), sometimes deploy an
-// affordable card, and place the hand card at the spot that triggers the most
-// symbol matches (with a small bonus for hitting both halves = $1 rule).
-// Improve it by sharpening scorePlacement() or botAnswer() — everything else
-// can stay untouched.
+// affordable card, and place the hand card at the spot with the best
+// score = symbol matches (+ a bonus for hitting both halves = $1 rule)
+// + enclosure value: strongly seek placements that enclose cards the bot
+// itself would score, avoid placements that hand an opponent a score, and
+// mildly favor sealing neutral (zero-influence) cards to deny future scores
+// — the denial urge is stronger in 2-player where it always hurts the sole
+// opponent. Improve it by sharpening scorePlacement() / enclosureValue() /
+// botAnswer() — everything else can stay untouched.
 //
 // IMPORTANT: botDecide must ALWAYS return a legal action. An illegal action
 // would be rejected by applyAction, the state would not change, and the
@@ -122,6 +126,43 @@ function candidateAnchors(s: GameState): Cell[] {
   return out;
 }
 
+/**
+ * Value of the enclosures this placement would complete, from the bot's
+ * seat (p). Positive when the bot scores (or ties on) the sealed card,
+ * negative when it would gift an opponent the score, small positive for
+ * sealing a neutral card nobody scores (denial — worth more in 2-player).
+ * Influence changes from the placement's own matches are ignored: this is
+ * a heuristic, not a simulation.
+ */
+function enclosureValue(s: GameState, p: number, at: Cell, rot: number): number {
+  const [ca, cb] = cellsFor(at, rot);
+  const filled = (c: Cell) =>
+    s.cellOwner[cellKey(c)] !== undefined ||
+    (c.x === ca.x && c.y === ca.y) ||
+    (c.x === cb.x && c.y === cb.y);
+  let v = 0;
+  for (const pl of Object.values(s.board)) {
+    if (pl.scored || !surroundingCells(pl).every(filled)) continue;
+    // pl would be enclosed and score now
+    const pts = def(pl.id).pts;
+    const top = Math.max(...pl.inf);
+    if (top === 0) {
+      v += s.players.length === 2 ? 0.8 : 0.3; // seal a neutral: deny it
+    } else if (pl.inf[p] === top) {
+      const tied = pl.inf.filter((n) => n === top).length;
+      v += tied === 1 ? 2 + pts : pts / 2; // we score it (or split a tie)
+    } else {
+      v -= 1 + pts; // gifting an opponent the score — steer away
+    }
+  }
+  // The placed domino itself can be born enclosed; it holds only our
+  // baseline influence, so we would score it immediately.
+  const own = { a: ca, b: cb } as Parameters<typeof surroundingCells>[0];
+  if (surroundingCells(own).every((c) => s.cellOwner[cellKey(c)] !== undefined))
+    v += 2; // + its pts, but any self-scored card is a win; keep it simple
+  return v;
+}
+
 function scorePlacement(
   s: GameState,
   card: number,
@@ -132,8 +173,13 @@ function scorePlacement(
   const [ca, cb] = cellsFor(at, rot);
   const topHit = ms.some((m) => m.myCell.x === ca.x && m.myCell.y === ca.y);
   const bottomHit = ms.some((m) => m.myCell.x === cb.x && m.myCell.y === cb.y);
-  // one point per match, near-one for the double-match $ bonus
-  return ms.length + (topHit && bottomHit ? 0.9 : 0);
+  // one point per match, near-one for the double-match $ bonus, plus the
+  // (dominant when present) enclosure term
+  return (
+    ms.length +
+    (topHit && bottomHit ? 0.9 : 0) +
+    enclosureValue(s, s.turn.p, at, rot)
+  );
 }
 
 function bestPlacement(s: GameState, rnd: () => number): Action | null {

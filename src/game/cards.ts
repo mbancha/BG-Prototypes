@@ -1,33 +1,27 @@
 // =============================================================================
 // Card database loader + display glyphs.
 //
-// cards.json stores only what is unique per card (name, type, cost, kind,
-// rules text, effect spec, disabled flag). This module fills in the fields
-// that are DERIVED from the card's type at load time:
-//   top / bottom  ← TYPE_SYMBOLS[type]   (every card of a type has the same
-//                                          two, always-different edge symbols)
-//   pts           ← SYMBOL_VP[top] + SYMBOL_VP[bottom]
-// So to retune symbols or point values, edit src/data/config.ts — never
-// cards.json. See ARCHITECTURE.md § "Symbols & scoring".
+// cards.json stores each card's identity INCLUDING its two edge symbols
+// (top/bottom — hand-picked per card to fit the card's name/flavor; the same
+// symbol on both halves is allowed). The one field this module DERIVES at
+// load time is the score value:
+//   pts = SYMBOL_VP[top] + SYMBOL_VP[bottom]      (SYMBOL_VP in config.ts)
+// So: to change a card's symbols, edit cards.json; to change what a symbol
+// is worth, edit config.ts — pts follows automatically either way.
 // =============================================================================
 
-import { SYMBOL_VP, TYPE_SYMBOLS } from "../data/config";
+import { SYMBOL_VP } from "../data/config";
 import rawCards from "../data/cards.json";
 import type { CardDef, CType, Sym } from "./types";
 
-/** Shape of a cards.json entry (derived fields absent). */
-type RawCard = Omit<CardDef, "top" | "bottom" | "pts">;
+/** Shape of a cards.json entry (pts is derived, so absent there). */
+type RawCard = Omit<CardDef, "pts">;
 
 export const CARDS: CardDef[] = ((rawCards as any).cards as RawCard[]).map(
-  (raw) => {
-    const pair = TYPE_SYMBOLS[raw.type];
-    return {
-      ...raw,
-      top: pair.top,
-      bottom: pair.bottom,
-      pts: SYMBOL_VP[pair.top] + SYMBOL_VP[pair.bottom],
-    };
-  },
+  (raw) => ({
+    ...raw,
+    pts: SYMBOL_VP[raw.top] + SYMBOL_VP[raw.bottom],
+  }),
 );
 
 const byId = new Map<number, CardDef>();

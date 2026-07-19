@@ -10,7 +10,7 @@
 /** The five edge symbols. Match rules per symbol live in runtime.ts (m_*). */
 export type Sym = "muscle" | "intel" | "favor" | "credit" | "whisper";
 
-/** The six card types. Each type has a fixed symbol pair (config TYPE_SYMBOLS). */
+/** The six card types (flavor + type-referencing effects like Union Boss). */
 export type CType =
   | "Assassin"
   | "Enforcer"
@@ -20,10 +20,10 @@ export type CType =
   | "Socialite";
 
 /**
- * One card. cards.json supplies everything EXCEPT top/bottom/pts, which are
- * derived from `type` at load time in cards.ts:
- *   top/bottom = TYPE_SYMBOLS[type] (always two different symbols)
- *   pts        = SYMBOL_VP[top] + SYMBOL_VP[bottom]
+ * One card. cards.json supplies everything EXCEPT pts, which cards.ts
+ * derives at load time: pts = SYMBOL_VP[top] + SYMBOL_VP[bottom].
+ * Symbols are hand-picked per card (thematic to the name; same symbol on
+ * both halves is allowed).
  */
 export interface CardDef {
   id: number;
@@ -31,8 +31,8 @@ export interface CardDef {
   type: CType;
   cost: number; // $ to deploy
   pts: number; // DERIVED — value when scored by enclosure
-  top: Sym; // DERIVED — symbol on the top half of the domino
-  bottom: Sym; // DERIVED — symbol on the bottom half
+  top: Sym; // symbol on the top half of the domino (from cards.json)
+  bottom: Sym; // symbol on the bottom half (from cards.json)
   kind: "I" | "O"; // Instant (⚡ one-shot) or Ongoing (⟳ sits in tableau)
   text: string; // rules text shown in the UI
   spec: any; // machine-readable effect descriptor (see cards.json _readme)

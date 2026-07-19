@@ -1,17 +1,16 @@
 // =============================================================================
 // SPYPUNK — all tunable numbers live HERE. Edit freely between playtests.
 // Nothing game-numeric is hardcoded elsewhere; the engine reads these constants.
-// Card-specific numbers (costs, per-card effect magnitudes) live in
-// src/data/cards.json next to the card that owns them.
+// Card-specific data (costs, per-card effect magnitudes, and each card's two
+// edge symbols) lives in src/data/cards.json next to the card that owns it.
 //
-// NOTE for editors (human or AI): a card's edge symbols and point value are
-// NOT stored per card. They derive from the card's TYPE via TYPE_SYMBOLS and
-// SYMBOL_VP below (see src/game/cards.ts, which applies them at load time).
-// Changing a type's symbol pair here re-symbols all 10 cards of that type at
-// once. See ARCHITECTURE.md for the full design rationale.
+// NOTE for editors (human or AI): a card's POINT VALUE is not stored anywhere.
+// It derives from the card's two symbols via SYMBOL_VP below
+// (src/game/cards.ts applies it at load time): change a symbol's worth here,
+// or a card's symbols in cards.json, and pts follows automatically.
 // =============================================================================
 
-import type { CType, Sym } from "../game/types";
+import type { Sym } from "../game/types";
 
 export const CONFIG = {
   // ---- players ----
@@ -61,7 +60,10 @@ export type Config = typeof CONFIG;
 // -----------------------------------------------------------------------------
 // Symbol → point value. A card is worth SYMBOL_VP[top] + SYMBOL_VP[bottom]
 // when scored (computed in src/game/cards.ts; there is no pts field in
-// cards.json). Rule of thumb: the disruptive symbols are worth more.
+// cards.json). Symbols themselves are per-card in cards.json, hand-picked to
+// fit each card's name; duplicates (favor/favor…) are allowed. Rule of
+// thumb: the disruptive symbols are worth more, so e.g. a muscle/whisper
+// Assassin scores 5 while a favor/favor Senator scores 2.
 // -----------------------------------------------------------------------------
 export const SYMBOL_VP: Record<Sym, number> = {
   credit: 1,
@@ -69,29 +71,4 @@ export const SYMBOL_VP: Record<Sym, number> = {
   favor: 1,
   whisper: 2,
   muscle: 3,
-};
-
-// -----------------------------------------------------------------------------
-// Type → edge symbol pair. EVERY card of a type shows the same two symbols,
-// top and bottom are always DIFFERENT, and each of the 6 types uses a distinct
-// pair (6 of the 10 possible two-symbol combinations).
-//
-// Chosen to keep the pre-rework symbol ratio roughly intact
-// (old half-slot counts: favor 34, intel 28, credit 22, whisper 20, muscle 16;
-//  new: favor 30, intel 30, credit 20, whisper 20, muscle 20)
-// and to be thematic:
-//   Assassin  muscle+whisper  (violence from the shadows)      → 5 VP
-//   Enforcer  muscle+favor    (force backed by loyalty)        → 4 VP
-//   Hacker    intel+whisper   (data and covert access)         → 3 VP
-//   Senator   favor+credit    (political favors, pork money)   → 2 VP
-//   Broker    credit+intel    (money and market information)   → 2 VP
-//   Socialite intel+favor     (knows everyone, trades favors)  → 2 VP
-// -----------------------------------------------------------------------------
-export const TYPE_SYMBOLS: Record<CType, { top: Sym; bottom: Sym }> = {
-  Assassin: { top: "muscle", bottom: "whisper" },
-  Enforcer: { top: "muscle", bottom: "favor" },
-  Senator: { top: "favor", bottom: "credit" },
-  Broker: { top: "credit", bottom: "intel" },
-  Hacker: { top: "intel", bottom: "whisper" },
-  Socialite: { top: "intel", bottom: "favor" },
 };

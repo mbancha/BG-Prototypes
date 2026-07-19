@@ -25,18 +25,20 @@ default unless you loosen its execution policy).
 
 - **`src/data/config.ts`** — every global number: starting money, hand size
   (refill-to-5), influence supply, symbol match values, double-match bonus,
-  tie divisor, final-turn count, bot pacing — **plus** `TYPE_SYMBOLS` (which
-  symbol pair each card type shows) and `SYMBOL_VP` (what each symbol scores).
-- **`src/data/cards.json`** — the 60 cards: costs, effect parameters, rules
-  text. Symbols and point values are NOT here — they derive from the card's
-  type (config). Set `"disabled": true` on any card to bench its effect
-  mid-playtest (stays in the deck; can't be deployed; Ongoing stops working).
+  tie divisor, final-turn count, bot pacing — **plus** `SYMBOL_VP` (what
+  each symbol scores).
+- **`src/data/cards.json`** — the 60 cards: costs, **edge symbols**
+  (per-card, thematic to the name, doubles allowed), effect parameters,
+  rules text. Point values are NOT stored — a card is worth the sum of its
+  two symbols' `SYMBOL_VP`. Set `"disabled": true` on any card to bench its
+  effect mid-playtest (stays in the deck; can't be deployed; Ongoing stops
+  working).
 
 ## Rules cheat-sheet (current build)
 
 - Card VP = its two symbols: credit/intel/favor **1**, whisper **2**,
-  muscle **3** (so Assassin 5, Enforcer 4, Hacker 3, others 2).
-- Symbol pairs are fixed per type; top ≠ bottom always.
+  muscle **3** (muscle/whisper cards are 5-point prizes; favor/favor is 2).
+- Symbols are per-card, matched to the card's name; doubles are common.
 - Both halves of your placement matching ⇒ **+$1**.
 - End of turn: always draw back up to **5**.
 - ⚡ = Instant (resolves on deploy) · ⟳ = Ongoing (sits in your tableau).
@@ -61,3 +63,5 @@ enclosures, turn count, live scores. **⬇ DUMP JSON** downloads the full dump
 - Grid: drag to pan, wheel to zoom. Grid cards: big icon = type, name runs
   along the card's side, edge symbols sit at the two outer ends.
 - 🤖 seats play themselves after a short delay; their hands stay hidden.
+  Bots chase matches and enclosures (sealing cards they'd score, denying
+  neutral ones) but stay intentionally beatable.

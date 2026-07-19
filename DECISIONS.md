@@ -169,6 +169,26 @@ in ARCHITECTURE.md §2.
     horizontal); each half's symbol sits at its OUTER end — the only edge
     that can ever match; influence dots line the opposite side.
 
+## Round-3 rule changes (2026-07, later the same day)
+
+55. **Symbols reverted to per-card** (supersedes #49): the type-fixed pair
+    experiment is out. Each card's top/bottom lives in cards.json again,
+    hand-picked to fit the card's *name* (the original thematic assignment
+    was restored); same-symbol doubles (favor/favor…) are back. Card type is
+    flavor + a hook for type-referencing effects only.
+56. **Symbol-derived VP survives the revert** (#50 still stands): pts =
+    SYMBOL_VP[top] + SYMBOL_VP[bottom], now varying card-by-card — e.g.
+    Silent Needle (muscle/whisper) 5, Rumor Mill (whisper/whisper) 4,
+    Kneecapper (muscle/favor) 4, Earmark (favor/favor) 2. Watch scoring
+    balance: the removal-heavy cards are now also the juiciest targets.
+57. **Bots seek enclosures** (extends #53): placement scoring adds an
+    enclosure term — big bonus for sealing a card the bot would score
+    (2 + pts), half-pts for a tie it's in, a penalty (1 + pts) for handing
+    an opponent the score, and a small denial bonus for sealing a
+    zero-influence card (0.8 in 2-player, 0.3 otherwise — "sometimes", via
+    the jitter tiebreak). Match influence changes are ignored by the
+    heuristic (it's a guess, not a simulation).
+
 ## Not built (out of scope for a playtest loop)
 
 - No networking, no save/load (a full game fits one sitting; the JSON

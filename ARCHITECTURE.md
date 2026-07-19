@@ -19,22 +19,15 @@ telemetry between sessions. Code favors *editability over polish*.
 - **Deck:** 60 unique cards (`src/data/cards.json`), one copy each, shuffled
   once. No reshuffle. Each card is a **domino**: two grid cells, top half and
   bottom half, each half showing one edge **symbol**.
-- **Types & symbols:** every card has one of 6 types, and the TYPE fixes the
-  symbol pair (top/bottom, always two *different* symbols — see
-  `TYPE_SYMBOLS` in `src/data/config.ts`):
-
-  | Type      | Top    | Bottom  | VP |
-  |-----------|--------|---------|----|
-  | Assassin  | muscle | whisper | 5  |
-  | Enforcer  | muscle | favor   | 4  |
-  | Hacker    | intel  | whisper | 3  |
-  | Senator   | favor  | credit  | 2  |
-  | Broker    | credit | intel   | 2  |
-  | Socialite | intel  | favor   | 2  |
-
+- **Symbols are per-card**, stored in cards.json and hand-picked to fit the
+  card's *name* (Silent Needle = muscle/whisper, Margin Call =
+  credit/credit, …). The same symbol on both halves is common; the card's
+  *type* is flavor plus a hook for type-referencing effects (Union Boss,
+  Wingman) — it does NOT determine symbols.
 - **Card points are derived, not stored:** `pts = SYMBOL_VP[top] +
   SYMBOL_VP[bottom]` where credit/intel/favor = 1, whisper = 2, muscle = 3
-  (`SYMBOL_VP` in config.ts, applied in `src/game/cards.ts`).
+  (`SYMBOL_VP` in config.ts, applied in `src/game/cards.ts`). Editing a
+  card's symbols in cards.json therefore also changes its score value.
 - **Turn:** optional **deploy** (pay cost; ⚡ Instant resolves once, ⟳ Ongoing
   sits in your tableau), mandatory **place** one card from hand onto the grid
   (must touch an existing card; the very first card covers the origin), then
@@ -56,29 +49,34 @@ telemetry between sessions. Code favors *editability over polish*.
 - **Influence is conserved:** each player owns `INFLUENCE_SUPPLY` (15)
   tokens total, on-grid + in-supply. Adds fizzle when the supply is empty.
 
-### Rule changes made in playtest round 2 (2026-07)
+### Rule changes from playtest rounds 2–3 (2026-07)
 
 If a doc/test/comment contradicts this list, the list wins:
 
-1. Top and bottom symbols are never the same on a card.
-2. Symbols are **type-consistent** (table above) — chosen from the 10
-   possible pairs to roughly preserve the old symbol ratio and match theme.
-3. Matching **both** of your placed card's symbols pays **$1**.
-4. End of turn **always refills to hand size 5** (starting hand also 5).
-5. ⚡ / ⟳ glyphs replace the words Instant / Ongoing in the UI.
-6. **Card VP comes from its symbols** (1/1/1, whisper 2, muscle 3).
-7. Grid cards render as: name along the side, enlarged type icon in the
+1. **Symbols are per-card and thematic to the card's name** (round 3 —
+   this *reverted* round 2's type-fixed symbol pairs). Roughly random
+   distribution; same-symbol doubles allowed.
+2. Matching **both** of your placed card's symbols pays **$1**.
+3. End of turn **always refills to hand size 5** (starting hand also 5).
+4. ⚡ / ⟳ glyphs replace the words Instant / Ongoing in the UI.
+5. **Card VP comes from its symbols** (1/1/1, whisper 2, muscle 3) — kept
+   through the round-3 revert, so per-card symbols now mean per-card VP
+   (muscle/whisper cards are 5-point targets, favor/favor cards are 2).
+6. Grid cards render as: name along the side, enlarged type icon in the
    center (serves as the card's art), edge symbols at the outer ends.
-8. **Bot seats**: any player can be a bot (setup screen toggle). Bots are
-   deliberately simple — see `src/game/bot.ts` header.
+7. **Bot seats**: any player can be a bot (setup screen toggle). Bots place
+   for matches AND actively play enclosures: they seek seals they'd score,
+   avoid gifting opponents a score, and sometimes seal neutral cards to
+   deny them (more eagerly in 2-player). See `src/game/bot.ts`.
 
 ## 3. Module map
 
 ```
-src/data/config.ts     every tunable number + SYMBOL_VP + TYPE_SYMBOLS
-src/data/cards.json    the 60 cards: name/type/cost/kind/text/spec/disabled
+src/data/config.ts     every tunable number + SYMBOL_VP (symbol → points)
+src/data/cards.json    the 60 cards: name/type/cost/top/bottom symbols/
+                       kind/text/spec/disabled
 src/game/types.ts      all state & data types; GameState is pure JSON-able data
-src/game/cards.ts      loads cards.json, derives top/bottom/pts; UI glyph maps
+src/game/cards.ts      loads cards.json, derives pts from symbols; glyph maps
 src/game/grid.ts       domino geometry: rotations, matches, adjacency,
                        placement legality, enclosure detection
 src/game/rules.ts      primitive mutations with ALL legality baked in:
@@ -125,8 +123,9 @@ data (no classes/Maps/functions) — undo and the JSON dump depend on it.
 
 - **Tune a number** → `src/data/config.ts`. Card costs / effect magnitudes →
   `cards.json` spec fields. Dev server hot-reloads.
-- **Change a type's symbols or a symbol's VP** → `TYPE_SYMBOLS` /
-  `SYMBOL_VP` in config.ts. Nothing else to touch (pts recompute at load).
+- **Change a card's symbols** → its `top`/`bottom` in cards.json (its VP
+  follows automatically). **Change what a symbol scores** → `SYMBOL_VP` in
+  config.ts.
 - **Bench a misbehaving card mid-playtest** → `"disabled": true` in
   cards.json (stays in deck, effect off — DECISIONS 45).
 - **Add a new card** → new entry in cards.json (unique id). Reuse an
@@ -135,7 +134,8 @@ data (no classes/Maps/functions) — undo and the JSON dump depend on it.
 - **Add a new effect** → follow the step-by-step guide at the top of
   `src/game/effects.ts`. New ongoing *modifiers* instead get a key in
   `ongoing.ts` plus a query call at the rule point they alter.
-- **Make bots smarter** → `scorePlacement` / `botAnswer` in bot.ts only.
+- **Make bots smarter** → `scorePlacement` / `enclosureValue` / `botAnswer`
+  in bot.ts only.
 - **Verify** → `npm test` (unit + random sims + bot games), `npm run build`
   (typecheck), `npm run smoke` after a build for a real-browser pass.
 

@@ -65,21 +65,20 @@ describe("geometry", () => {
 });
 
 describe("matches", () => {
-  it("detects both edge matches for side-by-side same-type verticals", () => {
+  it("detects two matches for side-by-side same-symbol verticals", () => {
     const s = fresh();
-    // 22 Earmark (Senator: favor top / credit bottom) at origin, vertical
+    // 22 Earmark (favor/favor) at origin, vertical
     forceSetup(s, 22);
-    // preview 24 Landslide (also Senator) at (1,0) vertical: tops touch tops
-    // (favor=favor) and bottoms touch bottoms (credit=credit)
+    // preview 24 Landslide (favor/favor) at (1,0) vertical: two touching edges
     const ms = matchesFor(s, 24, { x: 1, y: 0 }, 0);
     expect(ms.length).toBe(2);
-    expect(ms.map((m) => m.sym).sort()).toEqual(["credit", "favor"]);
+    expect(ms.every((m) => m.sym === "favor")).toBe(true);
   });
 
   it("skips the internal edge and non-matching symbols", () => {
     const s = fresh();
-    forceSetup(s, 1); // Silent Needle (Assassin: muscle/whisper)
-    const ms = matchesFor(s, 22, { x: 1, y: 0 }, 0); // Senator favor/credit next to it
+    forceSetup(s, 1); // Silent Needle (muscle/whisper)
+    const ms = matchesFor(s, 22, { x: 1, y: 0 }, 0); // favor/favor next to it
     expect(ms.length).toBe(0);
   });
 
@@ -87,31 +86,30 @@ describe("matches", () => {
     const s = fresh();
     forceSetup(s, 22);
     const before = s.players[1].money;
-    forcePlace(s, 1, 24, 1, 0, 0); // favor + credit match (both halves hit)
+    forcePlace(s, 1, 24, 1, 0, 0); // two favor matches (both halves hit)
     // hub with 2 mandatory items -> pending; answer first, second auto-resolves
     expect(s.pending?.t).toBe("hub");
     applyAction(s, { a: "answer", ans: { i: 0 } });
     expect(s.pending).toBeNull();
     expect(s.exec.length).toBe(0);
-    // Landslide (24): baseline 1 + 1 favor add for player B
-    expect(s.board[24].inf[1]).toBe(CONFIG.BASELINE_INFLUENCE + CONFIG.FAVOR_ADD);
-    // credit match $ + both-halves-matched bonus $
-    expect(s.players[1].money).toBe(
-      before + CONFIG.CREDIT_GAIN + CONFIG.DOUBLE_MATCH_BONUS,
+    // Landslide (24): baseline 1 + 2 favor adds for player B
+    expect(s.board[24].inf[1]).toBe(
+      CONFIG.BASELINE_INFLUENCE + 2 * CONFIG.FAVOR_ADD,
     );
+    // both halves matched → the $ bonus (favor matches themselves pay nothing)
+    expect(s.players[1].money).toBe(before + CONFIG.DOUBLE_MATCH_BONUS);
     expect(s.telem.moneyBySource["Double match"]).toBe(
       CONFIG.DOUBLE_MATCH_BONUS,
     );
-    expect(s.telem.matchesBySym.favor).toBe(1);
-    expect(s.telem.matchesBySym.credit).toBe(1);
+    expect(s.telem.matchesBySym.favor).toBe(2);
   });
 
   it("a single-edge credit match pays $ but NOT the double bonus", () => {
     const s = fresh();
-    forceSetup(s, 28); // Incumbent (Senator): favor@(0,0), credit@(0,1)
+    forceSetup(s, 28); // Incumbent (credit/credit): credit@(0,0), credit@(0,1)
     const before = s.players[1].money;
-    // Margin Call (Broker: credit top / intel bottom) horizontal below:
-    // credit@(0,2) touches credit@(0,1) — one match; intel end matches nothing
+    // Margin Call (credit/credit) horizontal below: credit@(0,2) touches
+    // credit@(0,1) — one match; the (1,2) half touches nothing
     forcePlace(s, 1, 31, 0, 2, 3);
     expect(s.pending).toBeNull(); // single mandatory match auto-resolved
     expect(s.players[1].money).toBe(before + CONFIG.CREDIT_GAIN);
@@ -122,12 +120,12 @@ describe("matches", () => {
 describe("enclosure & scoring", () => {
   it("encloses a vertical domino once all 6 neighbors fill (no matches involved)", () => {
     const s = fresh();
-    forceSetup(s, 1); // target: Silent Needle (Assassin, 5 pts), P0 baseline 1
-    forcePlace(s, 1, 28, -1, 0, 0); // left, Senator f/c vs m/w: no match
-    forcePlace(s, 0, 22, 1, 0, 0); // right, Senator f/c: no match
-    forcePlace(s, 1, 41, 0, -1, 3); // top horizontal, Hacker i/w: no match
+    forceSetup(s, 1); // target: Silent Needle (muscle/whisper, 5 pts), P0 baseline 1
+    forcePlace(s, 1, 28, -1, 0, 0); // left, credit/credit: no match
+    forcePlace(s, 0, 22, 1, 0, 0); // right, favor/favor: no match
+    forcePlace(s, 1, 41, 0, -1, 3); // top horizontal, intel/intel: no match
     expect(findEnclosed(s)).toEqual([]);
-    forcePlace(s, 0, 11, 0, 2, 3); // bottom horizontal, Enforcer m/f → encloses
+    forcePlace(s, 0, 30, 0, 2, 3); // bottom horizontal, intel/intel → encloses
     expect(s.pending).toBeNull();
     expect(s.board[1].scored).toBe(true);
     expect(s.players[0].pts).toBe(5); // sole influence, muscle+whisper = 5 VP
@@ -137,19 +135,19 @@ describe("enclosure & scoring", () => {
 
   it("handles a placement that encloses two cards at once (order chosen)", () => {
     const s = fresh();
-    forceSetup(s, 1); // A at (0,0)/(0,1) — Assassin m/w
-    forcePlace(s, 1, 22, 1, 0, 0); // B at (1,0)/(1,1) — Senator f/c, no match vs A
-    forcePlace(s, 0, 28, -1, 0, 0); // left of A (Senator, no match)
-    forcePlace(s, 1, 30, 0, -1, 3); // top of A+B (Senator f/c horizontal, no match)
-    forcePlace(s, 0, 41, 2, 0, 0); // right of B (Hacker i/w vs f/c: no match)
+    forceSetup(s, 1); // A at (0,0)/(0,1) — muscle/whisper
+    forcePlace(s, 1, 22, 1, 0, 0); // B at (1,0)/(1,1) — favor/favor, no match vs A
+    forcePlace(s, 0, 28, -1, 0, 0); // left of A (credit/credit, no match)
+    forcePlace(s, 1, 30, 0, -1, 3); // top of A+B (intel/intel horizontal, no match)
+    forcePlace(s, 0, 41, 2, 0, 0); // right of B (intel/intel vs favor: no match)
     expect(findEnclosed(s)).toEqual([]);
-    forcePlace(s, 1, 31, 0, 2, 3); // bottom horizontal Broker c/i → encloses A & B
+    forcePlace(s, 1, 31, 0, 2, 3); // bottom horizontal credit/credit → encloses A & B
     expect(s.pending?.t).toBe("card");
     if (s.pending?.t === "card") expect(s.pending.ids.sort()).toEqual([1, 22]);
     applyAction(s, { a: "answer", ans: { card: 22 } }); // score B first, then A auto
     expect(s.board[22].scored).toBe(true);
     expect(s.board[1].scored).toBe(true);
-    expect(s.players[1].pts).toBe(2); // Earmark (favor+credit = 2) to B's owner
+    expect(s.players[1].pts).toBe(2); // Earmark (favor+favor = 2) to B's owner
     expect(s.players[0].pts).toBe(5); // Silent Needle (muscle+whisper = 5) to A's owner
     expect(s.telem.enclosures).toBe(2);
   });
@@ -268,7 +266,7 @@ describe("deploy", () => {
 
   it("Zero Day triggers both symbols of the chosen card (no double bonus)", () => {
     const s = fresh();
-    forceSetup(s, 22); // Earmark — Senator: favor + credit edges
+    forceSetup(s, 22); // Earmark — favor/favor
     s.turn.p = 0;
     s.turn.setup = false;
     s.turn.deployed = false;
@@ -277,14 +275,13 @@ describe("deploy", () => {
     applyAction(s, { a: "deploy", card: 46 }); // Zero Day costs 3 → $2 left
     expect(s.pending?.t).toBe("card");
     applyAction(s, { a: "answer", ans: { card: 22 } });
-    expect(s.pending?.t).toBe("hub"); // favor + credit pseudo-matches
+    expect(s.pending?.t).toBe("hub"); // two favor pseudo-matches
     applyAction(s, { a: "answer", ans: { i: 0 } });
     expect(s.pending).toBeNull();
-    expect(s.board[22].inf[0]).toBe(1 + CONFIG.FAVOR_ADD); // baseline + favor add
-    // credit pseudo-match pays $1; the $ double-match bonus is placement-only
-    expect(s.players[0].money).toBe(5 - 3 + CONFIG.CREDIT_GAIN);
-    expect(s.telem.matchesBySym.favor).toBe(1);
-    expect(s.telem.matchesBySym.credit).toBe(1);
+    expect(s.board[22].inf[0]).toBe(1 + 2 * CONFIG.FAVOR_ADD); // baseline + both adds
+    // the $ double-match bonus is placement-only — no money from Zero Day here
+    expect(s.players[0].money).toBe(5 - 3);
+    expect(s.telem.matchesBySym.favor).toBe(2);
     expect(s.telem.moneyBySource["Double match"]).toBeUndefined();
   });
 });
@@ -331,6 +328,8 @@ describe("undo model", () => {
     }
     expect(s).toEqual(snapshot); // original untouched (undo = drop clone)
     expect(a).toEqual(b); // same actions → same state
-    expect(a.board[24].inf[1]).toBe(CONFIG.BASELINE_INFLUENCE + CONFIG.FAVOR_ADD);
+    expect(a.board[24].inf[1]).toBe(
+      CONFIG.BASELINE_INFLUENCE + 2 * CONFIG.FAVOR_ADD,
+    );
   });
 });
