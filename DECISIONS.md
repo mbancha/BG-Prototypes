@@ -206,13 +206,19 @@ in ARCHITECTURE.md §2.
     skipped; the game ends when every hand is empty.
 61. **Open groups at game end score nothing** by default (pressure to
     seal); `COLOR_CFG.ENDGAME_OPEN_GROUPS` offers "half" and "full".
-62. **★ tiles** touch-test per ★ half (each counted once per group), pay
-    into every group they border, join no group, and never hold influence.
+62. **★ bonus tiles (amended):** one ★+1 and one ★+2 per color pair (20
+    when the variant is on). They are COLORED and extend/merge groups like
+    any tile — but a ★ half matching a group adds NO influence and does not
+    count as a match; instead each ★ half adds its value to whichever group
+    it ends up a member of, evaluated at scoring. A ★ tile spanning two
+    groups pays each of them its value.
 63. **Color powers are promptless by design** — red's steal auto-targets
-    the leading opponent; violet's hiding is UI-only (bots technically
-    "see" it; acceptable for a playtest); cyan's runner-up payout reuses
-    the tie divisor. Powers live in resolveMatch/groupValue/scoreGroup in
-    src/color/engine.ts.
+    the leading opponent; violet's spread (amended: the match influence
+    goes to every unscored group orthogonally adjacent to the violet
+    group, and none to the violet group itself — it fizzles with a log
+    when the violet group has no neighbors) auto-targets everything at
+    once; cyan's runner-up payout reuses the tie divisor. Powers live in
+    resolveMatch/groupValue/scoreGroup in src/color/engine.ts.
 
 ## Not built (out of scope for a playtest loop)
 

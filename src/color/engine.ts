@@ -7,7 +7,10 @@
 //
 // Rules implemented (variants in ColorVariant, numbers in config COLOR_CFG):
 //   • Tiles are dominoes with a COLOR on each half (always two different
-//     colors; special ★ tiles have no color, just bonus points per half).
+//     colors). ★ BONUS tiles (variant) are colored like any other tile but
+//     carry a point value: their halves extend/merge groups normally, add
+//     NO influence when they match, and add their points to the value of
+//     whichever group each half ends up part of.
 //   • Same-colored halves that touch orthogonally form contiguous GROUPS
 //     (groups freely span tiles and merge when a placement connects them).
 //   • MATCH: when a placed half joins an existing group, the placer adds
@@ -17,11 +20,11 @@
 //     orthogonally adjacent to any of its cells) is occupied — by anything,
 //     any color. Most influence takes the value; ties split (TIE_DIVISOR);
 //     zero influence scores no one. Influence returns to supplies.
-//   • Value = FIXED or SIZE×per-tile (variant), + adjacent ★ bonuses
+//   • Value = FIXED or SIZE×per-tile (variant), + member ★ bonuses
 //     (variant), + gold's bonus (powers variant).
 //   • Color powers (variant, all promptless): red steals instead of adds,
-//     green adds double, gold scores bonus, violet hides the breakdown until
-//     scored (UI-only — engine stores real numbers), cyan pays the runner-up.
+//     green adds double, gold scores bonus, violet spreads the influence
+//     into every ADJACENT group instead of its own, cyan pays the runner-up.
 //
 // Shape mirrors the classic engine: newColorGame() → ColorState,
 // applyColor(s, action) mutates in place and returns null | rejection
@@ -42,13 +45,14 @@ export interface ColorVariant {
   powers: boolean; // variation 5: per-color qualitative rules
 }
 
-/** One physical tile. Color tiles: a/b are colors. Special tiles: a/b null,
- *  bonus holds the two halves' point bonuses. */
+/** One physical tile. `bonus` marks a ★ bonus tile: same two colors as any
+ *  tile, but its halves add `bonus` points to their group's score value and
+ *  never add influence when they match. */
 export interface ColorTile {
   id: number;
-  a: ColorKey | null;
-  b: ColorKey | null;
-  bonus?: [number, number];
+  a: ColorKey;
+  b: ColorKey;
+  bonus?: number;
 }
 
 export interface ColorPlaced {
@@ -140,7 +144,8 @@ export function newColorGame(
       `Player count must be ${CONFIG.MIN_PLAYERS}–${CONFIG.MAX_PLAYERS}`,
     );
 
-  // deck: every unordered pair of two DIFFERENT colors × copies (+ specials)
+  // deck: every unordered pair of two DIFFERENT colors × copies, plus (when
+  // the variant is on) one ★ bonus tile per pair per BONUS_TILE_VALUES entry
   const tiles: Record<number, ColorTile> = {};
   let id = 0;
   for (let i = 0; i < COLOR_DEFS.length; i++)
@@ -150,10 +155,12 @@ export function newColorGame(
         tiles[id] = { id, a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key };
       }
   if (variant.specials)
-    for (const [ba, bb] of COLOR_CFG.SPECIAL_TILES) {
-      id++;
-      tiles[id] = { id, a: null, b: null, bonus: [ba, bb] };
-    }
+    for (let i = 0; i < COLOR_DEFS.length; i++)
+      for (let j = i + 1; j < COLOR_DEFS.length; j++)
+        for (const bonus of COLOR_CFG.BONUS_TILE_VALUES) {
+          id++;
+          tiles[id] = { id, a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key, bonus };
+        }
 
   const deck = Object.keys(tiles).map(Number);
   for (let i = deck.length - 1; i > 0; i--) {
@@ -277,21 +284,8 @@ export function groupValue(s: ColorState, g: ColorGroup): number {
     s.variant.scoring === "fixed"
       ? COLOR_CFG.GROUP_SCORE_FIXED
       : g.cells.length * COLOR_CFG.GROUP_SCORE_PER_TILE;
-  if (s.variant.specials) {
-    // each ★ half touching the group adds its bonus (each ★ cell once)
-    const counted = new Set<string>();
-    for (const ck of g.cells) {
-      const [x, y] = ck.split(",").map(Number);
-      for (const o of ORTHO) {
-        const k = cellKey({ x: x + o.x, y: y + o.y });
-        if (counted.has(k)) continue;
-        if (s.cellBonus[k]) {
-          counted.add(k);
-          v += s.cellBonus[k];
-        }
-      }
-    }
-  }
+  // ★ bonus halves that are MEMBERS of the group add their points
+  for (const ck of g.cells) v += s.cellBonus[ck] ?? 0;
   if (s.variant.powers && g.color === "gold") v += COLOR_CFG.POWER_GOLD_BONUS;
   return v;
 }
@@ -328,6 +322,20 @@ function addInf(s: ColorState, g: ColorGroup, p: number, n: number) {
   log(s, p, `adds ${n} influence to the ${colorName(g.color)} group (${g.cells.length})`);
 }
 
+/** Distinct unscored groups orthogonally adjacent to g (never g itself). */
+function neighborGroups(s: ColorState, g: ColorGroup): ColorGroup[] {
+  const ids = new Set<number>();
+  for (const ck of g.cells) {
+    const [x, y] = ck.split(",").map(Number);
+    for (const o of ORTHO) {
+      const gid = s.cellGroup[cellKey({ x: x + o.x, y: y + o.y })];
+      if (gid !== undefined && gid !== g.id && !s.groups[gid].scored)
+        ids.add(gid);
+    }
+  }
+  return [...ids].map((gid) => s.groups[gid]);
+}
+
 /** The one influence event of the game: a placed half joined group g. */
 function resolveMatch(s: ColorState, g: ColorGroup, p: number) {
   s.telem.matchesByColor[g.color]++;
@@ -348,6 +356,18 @@ function resolveMatch(s: ColorState, g: ColorGroup, p: number) {
       );
       return;
     }
+  }
+  if (s.variant.powers && g.color === "violet") {
+    // Whisper: the influence spreads — none to the violet group itself,
+    // POWER_VIOLET_SPREAD into every group adjacent to it
+    const around = neighborGroups(s, g);
+    if (around.length === 0) {
+      log(s, p, `WHISPER match: no adjacent groups — the whisper fades`);
+      return;
+    }
+    log(s, p, `WHISPER match: influence spreads to ${around.length} adjacent group(s)`);
+    for (const ng of around) addInf(s, ng, p, COLOR_CFG.POWER_VIOLET_SPREAD);
+    return;
   }
   const n =
     s.variant.powers && g.color === "green"
@@ -444,27 +464,24 @@ function actPlaceC(
   s.cellColor[cellKey(ca)] = tile.a;
   s.cellColor[cellKey(cb)] = tile.b;
   if (tile.bonus) {
-    s.cellBonus[cellKey(ca)] = tile.bonus[0];
-    s.cellBonus[cellKey(cb)] = tile.bonus[1];
+    s.cellBonus[cellKey(ca)] = tile.bonus;
+    s.cellBonus[cellKey(cb)] = tile.bonus;
   }
   s.telem.placements++;
   log(
     s,
     p,
-    tile.a
-      ? `places ${colorName(tile.a)}/${colorName(tile.b!)} at (${ca.x},${ca.y})`
-      : `places a ★ tile (+${tile.bonus![0]}/+${tile.bonus![1]}) at (${ca.x},${ca.y})`,
+    `places ${colorName(tile.a)}/${colorName(tile.b)}${tile.bonus ? ` ★+${tile.bonus}` : ""} at (${ca.x},${ca.y})`,
   );
 
-  // group each colored half in: join/merge same-color neighbors, then the
-  // MATCH rule — joining an existing group adds influence (a fresh
-  // singleton group does not)
-  const halves: { cell: Cell; color: ColorKey | null; partner: Cell }[] = [
+  // group each half in: join/merge same-color neighbors, then the MATCH
+  // rule — joining an existing group adds influence (a fresh singleton
+  // group does not, and ★ bonus halves never do — they only add value)
+  const halves: { cell: Cell; color: ColorKey; partner: Cell }[] = [
     { cell: ca, color: tile.a, partner: cb },
     { cell: cb, color: tile.b, partner: ca },
   ];
   for (const h of halves) {
-    if (!h.color) continue; // ★ halves join no group
     const joined = adjacentGroups(s, h.cell, h.color, h.partner);
     // the internal edge can also connect (future same-color pairs): include
     // the partner's group for MERGING but never for the match reward
@@ -496,7 +513,15 @@ function actPlaceC(
     main.cells.push(cellKey(h.cell));
     s.cellGroup[cellKey(h.cell)] = main.id;
     const matched = adjacentGroups(s, h.cell, h.color, h.partner).length > 0;
-    if (matched) resolveMatch(s, main, p);
+    if (matched) {
+      if (tile.bonus)
+        log(
+          s,
+          p,
+          `★ extends the ${colorName(h.color)} group (+${tile.bonus} value, no influence)`,
+        );
+      else resolveMatch(s, main, p);
+    }
   }
 
   // seal check: any unscored group with no open perimeter scores now
@@ -640,14 +665,14 @@ function scoreColorPlacement(
   const tile = s.tiles[tileId];
   const [ca, cb] = cellsFor(at, rot);
   let v = 0;
-  const joins: Record<number, boolean> = {}; // group id → my half matches it
+  const infMatch = !tile.bonus; // ★ halves extend groups but add no influence
+  const joins: Record<number, boolean> = {}; // group id → my half joins it
   for (const h of [
     { cell: ca, color: tile.a, partner: cb },
     { cell: cb, color: tile.b, partner: ca },
   ]) {
-    if (!h.color) continue;
     const gs = adjacentGroups(s, h.cell, h.color, h.partner);
-    if (gs.length > 0) v += 1; // a match = influence gained
+    if (gs.length > 0) v += infMatch ? 1 : 0.5; // influence vs value-only
     for (const gid of gs) joins[gid] = true;
   }
   // sealing evaluation: which groups end with zero open perimeter once the
@@ -664,7 +689,7 @@ function scoreColorPlacement(
     const open = openPerimeter(s, cells).filter((k) => k !== kA && k !== kB);
     if (open.length > 0) continue; // stays open
     const value = groupValue(s, g);
-    const myInf = g.inf[p] + (joins[g.id] ? 1 : 0);
+    const myInf = g.inf[p] + (joins[g.id] && infMatch ? 1 : 0);
     const top = Math.max(...g.inf.map((n, q) => (q === p ? myInf : n)));
     const leaders = g.inf
       .map((n, q) => (q === p ? myInf : n))

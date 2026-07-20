@@ -122,8 +122,6 @@ export default function ColorScreen(props: {
     return { g, ax, ay, open: g.scored ? 0 : openPerimeter(s, g.cells).length };
   });
 
-  const hidden = (c: ColorKey) => s.variant.powers && c === "violet";
-
   return (
     <div className="game">
       {/* ---- HUD ---- */}
@@ -218,12 +216,10 @@ export default function ColorScreen(props: {
               {Object.values(s.board).map((pl) => {
                 const t = s.tiles[pl.id];
                 return [
-                  { c: pl.cellA, color: t.a, bonus: t.bonus?.[0] },
-                  { c: pl.cellB, color: t.b, bonus: t.bonus?.[1] },
+                  { c: pl.cellA, color: t.a },
+                  { c: pl.cellB, color: t.b },
                 ].map((h, i) => {
-                  const scored =
-                    h.color !== null &&
-                    s.groups[s.cellGroup[cellKey(h.c)]]?.scored;
+                  const scored = s.groups[s.cellGroup[cellKey(h.c)]]?.scored;
                   return (
                     <div
                       key={pl.id + ":" + i}
@@ -233,10 +229,11 @@ export default function ColorScreen(props: {
                         top: h.c.y * CS,
                         width: CS - 2,
                         height: CS - 2,
-                        ["--ch" as any]: h.color ? DEF[h.color].hex : "#8fa3bf",
+                        ["--ch" as any]: DEF[h.color].hex,
                       }}
                     >
-                      {h.color ? DEF[h.color].glyph : `★+${h.bonus}`}
+                      {DEF[h.color].glyph}
+                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
                     </div>
                   );
                 });
@@ -257,18 +254,12 @@ export default function ColorScreen(props: {
                   ) : (
                     <>
                       <span className="gv">={groupValue(s, g)}</span>
-                      {hidden(g.color) ? (
-                        <span className="dot" style={{ ["--pc" as any]: DEF.violet.hex }}>
-                          ?{g.inf.reduce((a, b) => a + b, 0)}
-                        </span>
-                      ) : (
-                        s.players.map((p, q) =>
-                          g.inf[q] > 0 ? (
-                            <span key={q} className="dot" style={{ ["--pc" as any]: p.color }}>
-                              {g.inf[q]}
-                            </span>
-                          ) : null,
-                        )
+                      {s.players.map((p, q) =>
+                        g.inf[q] > 0 ? (
+                          <span key={q} className="dot" style={{ ["--pc" as any]: p.color }}>
+                            {g.inf[q]}
+                          </span>
+                        ) : null,
                       )}
                       <span className="gopen" title="empty cells still open around this group">
                         ◌{open}
@@ -278,6 +269,7 @@ export default function ColorScreen(props: {
                 </div>
               ))}
               {ghost &&
+                pt &&
                 ghost.cells.map((c, i) => (
                   <div
                     key={i}
@@ -287,12 +279,10 @@ export default function ColorScreen(props: {
                       top: c.y * CS,
                       width: CS - 2,
                       height: CS - 2,
-                      color: pt && (i === 0 ? pt.a : pt.b) ? DEF[(i === 0 ? pt.a : pt.b)!].hex : undefined,
+                      color: DEF[i === 0 ? pt.a : pt.b].hex,
                     }}
                   >
-                    {pt && (i === 0 ? pt.a : pt.b)
-                      ? DEF[(i === 0 ? pt.a : pt.b)!].glyph
-                      : "★"}
+                    {DEF[i === 0 ? pt.a : pt.b].glyph}
                     {(i === 0 ? pv.a : pv.b) ? "+" : ""}
                   </div>
                 ))}
@@ -302,9 +292,8 @@ export default function ColorScreen(props: {
               <div className="placebox">
                 <div>
                   <b>
-                    {pt.a
-                      ? `${DEF[pt.a].name}/${DEF[pt.b!].name}`
-                      : `★ +${pt.bonus![0]}/+${pt.bonus![1]}`}
+                    {DEF[pt.a].name}/{DEF[pt.b].name}
+                    {pt.bonus ? ` ★+${pt.bonus}` : ""}
                   </b>{" "}
                   — <b>R</b> rotates · click to place · Esc cancels
                 </div>
@@ -312,7 +301,9 @@ export default function ColorScreen(props: {
                 {ghost?.ok && (
                   <div style={{ color: "var(--dim)" }}>
                     {pv.a || pv.b
-                      ? `matches ${[pv.a, pv.b].filter(Boolean).length} group(s) → influence`
+                      ? pt.bonus
+                        ? `extends ${[pv.a, pv.b].filter(Boolean).length} group(s) — adds +${pt.bonus} value, no influence`
+                        : `matches ${[pv.a, pv.b].filter(Boolean).length} group(s) → influence`
                       : "no matches here — no influence"}
                   </div>
                 )}
@@ -388,15 +379,17 @@ export default function ColorScreen(props: {
                   >
                     <div
                       className="cthalf"
-                      style={{ ["--ch" as any]: t.a ? DEF[t.a].hex : "#8fa3bf" }}
+                      style={{ ["--ch" as any]: DEF[t.a].hex }}
                     >
-                      {t.a ? DEF[t.a].glyph : `★+${t.bonus![0]}`}
+                      {DEF[t.a].glyph}
+                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
                     </div>
                     <div
                       className="cthalf"
-                      style={{ ["--ch" as any]: t.b ? DEF[t.b].hex : "#8fa3bf" }}
+                      style={{ ["--ch" as any]: DEF[t.b].hex }}
                     >
-                      {t.b ? DEF[t.b].glyph : `★+${t.bonus![1]}`}
+                      {DEF[t.b].glyph}
+                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
                     </div>
                   </div>
                 );
@@ -483,7 +476,7 @@ function powerText(key: ColorKey): string {
     case "gold":
       return "Credit: the group scores +2 bonus points";
     case "violet":
-      return "Whisper: influence breakdown hidden until the group scores";
+      return "Whisper: your match adds 1 influence to each group ADJACENT to the violet group (none to the violet group itself)";
     case "cyan":
       return "Intel: when the group scores, the runner-up also scores half";
   }

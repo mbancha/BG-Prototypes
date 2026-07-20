@@ -95,13 +95,16 @@ Variant toggles (chosen per game on the setup screen, numbers in
 
 1. **Group value: BY SIZE** — worth cells × `GROUP_SCORE_PER_TILE`.
 2. **Group value: FIXED** — every group worth `GROUP_SCORE_FIXED`.
-3. **★ bonus tiles** — colorless tiles whose halves add points to any
-   group they touch when it scores; no influence, no group membership,
-   but they occupy cells (can seal perimeters).
+3. **★ bonus tiles** — one ★+1 and one ★+2 tile per color pair (20 tiles,
+   `BONUS_TILE_VALUES`). Colored like normal tiles, so their halves
+   EXTEND/merge groups — but they never add influence; instead each ★
+   half adds its points to the value of the group it is part of when
+   that group scores.
 4. **Color powers** — one promptless rule per color:
    red steals a leading opponent's influence on match (adds if none) ·
-   green adds 2 · gold groups score +2 · violet's per-player influence is
-   hidden until scored (UI only) · cyan pays the runner-up half value.
+   green adds 2 · gold groups score +2 · violet spreads the match
+   influence into every group ADJACENT to the violet group (none to the
+   violet group itself) · cyan pays the runner-up half value.
 
 There are **no decision prompts** in this mode, so there is no frame
 machine — `applyColor` resolves everything synchronously. Bots share the

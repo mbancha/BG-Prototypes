@@ -2,7 +2,9 @@
 // shuffle): pairs in COLOR_DEFS order — red/cyan 1-3, red/green 4-6,
 // red/gold 7-9, red/violet 10-12, cyan/green 13-15, cyan/gold 16-18,
 // cyan/violet 19-21, green/gold 22-24, green/violet 25-27, gold/violet
-// 28-30; specials (when on) 31-34 with bonuses [1,1],[1,1],[2,1],[2,2].
+// 28-30. With the ★ variant on, bonus tiles follow as 31-50: per pair one
+// tile per BONUS_TILE_VALUES entry ([1,2]) in the same pair order — so
+// red/cyan ★+1 = 31, red/cyan ★+2 = 32, red/green ★+1 = 33, and so on.
 
 import { describe, expect, it } from "vitest";
 import { COLOR_CFG, CONFIG } from "../src/data/config";
@@ -112,14 +114,19 @@ describe("sealing & scoring", () => {
     expect(s.players[1].pts).toBe(COLOR_CFG.GROUP_SCORE_FIXED);
   });
 
-  it("★ tiles add their touching bonus to a group's value (no influence)", () => {
+  it("★ tiles extend groups with value instead of influence", () => {
     const s = freshC(V({ specials: true }));
     forcePlaceC(s, 0, 1, 0, 0, 0); // red@(0,0), cyan@(0,1)
-    forcePlaceC(s, 1, 33, 1, 0, 3); // ★+2@(1,0) touches red, ★+1@(2,0)
+    forcePlaceC(s, 1, 32, 1, 0, 0); // ★+2 red/cyan — extends BOTH groups
     const red = groupOf(s, "0,0");
-    expect(red.inf).toEqual([0, 0]); // ★ never adds influence
-    expect(groupValue(s, red)).toBe(1 + 2); // size 1 + touching ★+2
-    expect(groupValue(s, groupOf(s, "0,1"))).toBe(1); // cyan touches no ★
+    const cyan = groupOf(s, "0,1");
+    expect(red.cells.sort()).toEqual(["0,0", "1,0"]); // member, not neighbor
+    expect(cyan.cells.sort()).toEqual(["0,1", "1,1"]);
+    expect(red.inf).toEqual([0, 0]); // ★ halves never add influence
+    expect(cyan.inf).toEqual([0, 0]);
+    expect(s.telem.matchesByColor.red).toBe(0); // and don't count as matches
+    expect(groupValue(s, red)).toBe(2 + 2); // size 2 + member ★+2
+    expect(groupValue(s, cyan)).toBe(2 + 2);
   });
 });
 
@@ -149,6 +156,18 @@ describe("color powers", () => {
     expect(groupValue(s, groupOf(s, "0,1"))).toBe(
       2 + COLOR_CFG.POWER_GOLD_BONUS,
     );
+  });
+
+  it("violet spreads influence to adjacent groups instead of its own", () => {
+    const s = freshC(V({ powers: true }));
+    forcePlaceC(s, 0, 10, 0, 0, 0); // red@(0,0), violet@(0,1)
+    forcePlaceC(s, 1, 25, 1, 0, 0); // green@(1,0), violet@(1,1) — violet match
+    const violet = groupOf(s, "0,1");
+    expect(violet.cells.length).toBe(2);
+    expect(violet.inf).toEqual([0, 0]); // nothing lands on the violet group
+    expect(groupOf(s, "0,0").inf).toEqual([0, 1]); // red neighbor seeded
+    expect(groupOf(s, "1,0").inf).toEqual([0, 1]); // green neighbor seeded
+    expect(s.players[1].supply).toBe(CONFIG.INFLUENCE_SUPPLY - 2);
   });
 
   it("cyan pays the runner-up half value when the group seals", () => {

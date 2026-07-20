@@ -103,16 +103,13 @@ export const COLOR_CFG = {
   GROUP_SCORE_FIXED: 4, // "FIXED": every group is worth this, regardless of size
   GROUP_SCORE_PER_TILE: 1, // "SIZE": group is worth (number of halves) × this
 
-  // ---- special tiles variant: colorless ★ tiles; each half carries bonus
-  // points added to any group it TOUCHES when that group scores. They join
-  // no group and add no influence, but they do occupy cells (and so can
-  // help seal a perimeter). One inner array = one tile [bonusA, bonusB].
-  SPECIAL_TILES: [
-    [1, 1],
-    [1, 1],
-    [2, 1],
-    [2, 2],
-  ],
+  // ---- bonus tiles variant: for EVERY color pair the deck gains one tile
+  // per value below (so [1,2] → 10 one-point + 10 two-point tiles). Bonus
+  // tiles are COLORED: their halves extend/merge groups exactly like normal
+  // halves — but matching with them adds NO influence; instead each bonus
+  // half adds its points to the value of the group it is part of when that
+  // group scores.
+  BONUS_TILE_VALUES: [1, 2],
 
   // ---- color powers variant: one qualitative rule per color (promptless).
   // Implemented in src/color/engine.ts; listed here for the tuner:
@@ -120,12 +117,13 @@ export const COLOR_CFG = {
   //                    leading opponent instead of adding (adds if none)
   //   green  Favor   — your match adds 2 influence instead of 1
   //   gold   Credit  — the group scores +2 bonus points
-  //   violet Whisper — per-player influence on the group is hidden until
-  //                    it scores (UI shows only the total)
+  //   violet Whisper — your match spreads: instead of the violet group,
+  //                    you add 1 influence to EACH group adjacent to it
   //   cyan   Intel   — when the group scores, the runner-up also scores
   //                    half value (rounded down)
   POWER_GREEN_ADD: 2,
   POWER_GOLD_BONUS: 2,
+  POWER_VIOLET_SPREAD: 1, // influence added per adjacent group
 
   // ---- game end ----
   // Groups still open (not fully sealed) when the tiles run out score:

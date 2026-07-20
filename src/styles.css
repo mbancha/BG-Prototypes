@@ -790,6 +790,20 @@ input[type="text"] {
   opacity: 0.35;
   filter: saturate(0.4);
 }
+.bchip {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--ch);
+  border-radius: 4px;
+  padding: 0 3px;
+  line-height: 1.4;
+}
+.cthalf {
+  position: relative;
+}
 .gbadge {
   position: absolute;
   z-index: 5;

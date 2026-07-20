@@ -107,7 +107,7 @@ export default function SetupScreen(props: {
               <span className="vlabel">★ bonus tiles</span>
               <button
                 className={"bottoggle" + (variant.specials ? " on" : "")}
-                title="Colorless tiles that add points to any group they touch (no influence)"
+                title="One ★+1 and one ★+2 tile per color pair. Colored like normal tiles, so they EXTEND groups — but they add no influence; each ★ half adds its points to its group's value when it scores"
                 onClick={() => setVariant((v) => ({ ...v, specials: !v.specials }))}
               >
                 {variant.specials ? "ON" : "OFF"}
@@ -117,7 +117,7 @@ export default function SetupScreen(props: {
               <span className="vlabel">color powers</span>
               <button
                 className={"bottoggle" + (variant.powers ? " on" : "")}
-                title="Each color gets a qualitative rule: red steals, green adds 2, gold scores +2, violet hides influence, cyan pays the runner-up"
+                title="Each color gets a qualitative rule: red steals, green adds 2, gold scores +2, violet spreads influence to every adjacent group, cyan pays the runner-up"
                 onClick={() => setVariant((v) => ({ ...v, powers: !v.powers }))}
               >
                 {variant.powers ? "ON" : "OFF"}
