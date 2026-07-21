@@ -1,10 +1,13 @@
 // COLOR-GROUPS MODE tests. Tile ids are deterministic (deck built before the
-// shuffle): pairs in COLOR_DEFS order — red/cyan 1-3, red/green 4-6,
-// red/gold 7-9, red/violet 10-12, cyan/green 13-15, cyan/gold 16-18,
-// cyan/violet 19-21, green/gold 22-24, green/violet 25-27, gold/violet
-// 28-30. With the ★ variant on, bonus tiles follow as 31-50: per pair one
-// tile per BONUS_TILE_VALUES entry ([1,2]) in the same pair order — so
-// red/cyan ★+1 = 31, red/cyan ★+2 = 32, red/green ★+1 = 33, and so on.
+// shuffle): base pairs in COLOR_DEFS order (red,cyan,green,gold,violet) ×3 —
+// red/cyan 1-3, red/green 4-6, red/gold 7-9, red/violet 10-12, cyan/green
+// 13-15, cyan/gold 16-18, cyan/violet 19-21, green/gold 22-24, green/violet
+// 25-27, gold/violet 28-30. With the ★ variant on, the bonus tiles follow:
+// per pair two +1 tiles (bonus on the first color, then on the second) in
+// pair order → red/cyan {red+1}=31 {cyan+1}=32, red/green {red+1}=33
+// {green+1}=34, …, gold/violet {gold+1}=49 {violet+1}=50; then one same-color
+// +2 tile per color → red/red 51, cyan/cyan 52, green/green 53, gold/gold 54,
+// violet/violet 55.
 
 import { describe, expect, it } from "vitest";
 import { COLOR_CFG, CONFIG } from "../src/data/config";
@@ -114,60 +117,95 @@ describe("sealing & scoring", () => {
     expect(s.players[1].pts).toBe(COLOR_CFG.GROUP_SCORE_FIXED);
   });
 
-  it("★ tiles extend groups with value instead of influence", () => {
+  it("★ tiles match like normal tiles (base +1) AND add member bonus value", () => {
     const s = freshC(V({ specials: true }));
     forcePlaceC(s, 0, 1, 0, 0, 0); // red@(0,0), cyan@(0,1)
-    forcePlaceC(s, 1, 32, 1, 0, 0); // ★+2 red/cyan — extends BOTH groups
+    // tile 51 = red/red ★+2 (bonus on half a). Place vertical at (1,0):
+    // red@(1,0) matches the red group; red@(1,1) is its same-color partner.
+    forcePlaceC(s, 1, 51, 1, 0, 0);
     const red = groupOf(s, "0,0");
-    const cyan = groupOf(s, "0,1");
-    expect(red.cells.sort()).toEqual(["0,0", "1,0"]); // member, not neighbor
-    expect(cyan.cells.sort()).toEqual(["0,1", "1,1"]);
-    expect(red.inf).toEqual([0, 0]); // ★ halves never add influence
-    expect(cyan.inf).toEqual([0, 0]);
-    expect(s.telem.matchesByColor.red).toBe(0); // and don't count as matches
-    expect(groupValue(s, red)).toBe(2 + 2); // size 2 + member ★+2
-    expect(groupValue(s, cyan)).toBe(2 + 2);
+    expect(red.cells.sort()).toEqual(["0,0", "1,0", "1,1"]); // all merged
+    expect(red.inf).toEqual([0, 1]); // base +1 influence from the match
+    expect(s.telem.matchesByColor.red).toBe(1);
+    expect(groupValue(s, red)).toBe(3 + 2); // size 3 + the one ★+2 half
+    // the +2 lives on exactly one half
+    expect(s.cellBonus["1,0"]).toBe(2);
+    expect(s.cellBonus["1,1"]).toBeUndefined();
+  });
+
+  it("+1 bonus tiles are two colors with the bonus on one half", () => {
+    const s = freshC(V({ specials: true }));
+    expect(s.tiles[31].bonus).toEqual([1, 0]); // red(+1)/cyan
+    expect(s.tiles[31].a).toBe("red");
+    expect(s.tiles[31].b).toBe("cyan");
+    expect(s.tiles[32].bonus).toEqual([1, 0]); // cyan(+1)/red
+    expect(s.tiles[32].a).toBe("cyan");
+    expect(s.tiles[51].a).toBe("red"); // +2 tiles are same color
+    expect(s.tiles[51].b).toBe("red");
+    expect(s.tiles[51].bonus).toEqual([2, 0]);
   });
 });
 
 describe("color powers", () => {
-  it("red steals from the leading opponent instead of adding", () => {
+  it("red match adds +1 AND removes a chosen influence from an adjacent group", () => {
     const s = freshC(V({ powers: true }));
-    forcePlaceC(s, 0, 1, 0, 0, 0); // red@(0,0)
-    forcePlaceC(s, 1, 4, 0, -1, 2); // red@(0,-1) match: no opp inf → adds P1
-    expect(groupOf(s, "0,0").inf).toEqual([0, 1]);
-    forcePlaceC(s, 0, 10, 1, 0, 3); // red@(1,0) match: steals P1's token
-    expect(groupOf(s, "0,0").inf).toEqual([0, 0]);
-    expect(s.players[1].supply).toBe(CONFIG.INFLUENCE_SUPPLY);
+    forcePlaceC(s, 0, 4, 0, 0, 0); // red@(0,0), green@(0,1)  [opening]
+    // P1 grows the green group so it holds influence (green power → +2)
+    forcePlaceC(s, 1, 13, 0, 3, 2); // cyan@(0,3), green@(0,2) matches green
+    const green = groupOf(s, "0,1");
+    const beforeGreen = green.inf[1];
+    expect(beforeGreen).toBeGreaterThan(0);
+    // P0 matches the red group; the green group is adjacent (via 0,0–0,1)
+    forcePlaceC(s, 0, 7, 0, -1, 2); // red@(0,-1) matches red; gold@(0,-2)
+    expect(groupOf(s, "0,0").inf[0]).toBe(1); // base +1 to red for P0
+    expect(s.pending?.t).toBe("redRemove"); // removal choice parked
+    const opt = s.pending!.options.find(
+      (o) => o.owner === 1 && s.groups[o.group].color === "green",
+    )!;
+    expect(opt).toBeTruthy();
+    expect(applyColor(s, { a: "answer", group: opt.group, owner: 1 })).toBeNull();
+    expect(groupOf(s, "0,1").inf[1]).toBe(beforeGreen - 1); // P1 token removed
     expect(s.telem.infRemoved).toBe(1);
+    expect(s.pending).toBeNull(); // resolved → turn advanced
   });
 
-  it("green matches add double influence", () => {
+  it("red power fizzles (no prompt) when no adjacent group holds influence", () => {
+    const s = freshC(V({ powers: true }));
+    forcePlaceC(s, 0, 1, 0, 0, 0); // red@(0,0), cyan@(0,1)
+    forcePlaceC(s, 1, 4, 0, -1, 2); // red@(0,-1) matches red; green@(0,-2)
+    // red group now has P1 +1 but no *adjacent* group holds influence
+    expect(s.pending).toBeNull(); // nothing to remove → no choice
+    expect(groupOf(s, "0,0").inf).toEqual([0, 1]);
+  });
+
+  it("green match adds the base +1 plus one extra (net +2)", () => {
     const s = freshC(V({ powers: true }));
     forcePlaceC(s, 0, 4, 0, 0, 0); // red@(0,0), green@(0,1)
-    forcePlaceC(s, 1, 22, 1, 1, 0); // green@(1,1) match → +POWER_GREEN_ADD
-    expect(groupOf(s, "0,1").inf).toEqual([0, COLOR_CFG.POWER_GREEN_ADD]);
+    forcePlaceC(s, 1, 22, 1, 1, 0); // green@(1,1) matches green group
+    expect(groupOf(s, "0,1").inf).toEqual([
+      0,
+      COLOR_CFG.MATCH_INFLUENCE + COLOR_CFG.POWER_GREEN_EXTRA,
+    ]);
   });
 
-  it("gold groups are worth bonus points", () => {
+  it("gold groups are worth bonus points (and still get the base +1)", () => {
     const s = freshC(V({ powers: true }));
     forcePlaceC(s, 0, 7, 0, 0, 0); // red@(0,0), gold@(0,1)
-    forcePlaceC(s, 1, 28, 0, 2, 0); // gold@(0,2) match, violet@(0,3)
+    forcePlaceC(s, 1, 28, 0, 2, 0); // gold@(0,2) matches gold; violet@(0,3)
+    expect(groupOf(s, "0,1").inf).toEqual([0, 1]); // base influence
     expect(groupValue(s, groupOf(s, "0,1"))).toBe(
       2 + COLOR_CFG.POWER_GOLD_BONUS,
     );
   });
 
-  it("violet spreads influence to adjacent groups instead of its own", () => {
+  it("violet match adds +1 to its own group AND +1 to each adjacent group", () => {
     const s = freshC(V({ powers: true }));
     forcePlaceC(s, 0, 10, 0, 0, 0); // red@(0,0), violet@(0,1)
     forcePlaceC(s, 1, 25, 1, 0, 0); // green@(1,0), violet@(1,1) — violet match
-    const violet = groupOf(s, "0,1");
-    expect(violet.cells.length).toBe(2);
-    expect(violet.inf).toEqual([0, 0]); // nothing lands on the violet group
+    expect(groupOf(s, "0,1").inf).toEqual([0, 1]); // base +1 to violet itself
     expect(groupOf(s, "0,0").inf).toEqual([0, 1]); // red neighbor seeded
     expect(groupOf(s, "1,0").inf).toEqual([0, 1]); // green neighbor seeded
-    expect(s.players[1].supply).toBe(CONFIG.INFLUENCE_SUPPLY - 2);
+    expect(s.players[1].supply).toBe(CONFIG.INFLUENCE_SUPPLY - 3);
   });
 
   it("cyan pays the runner-up half value when the group seals", () => {

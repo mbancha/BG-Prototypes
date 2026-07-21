@@ -95,21 +95,24 @@ Variant toggles (chosen per game on the setup screen, numbers in
 
 1. **Group value: BY SIZE** — worth cells × `GROUP_SCORE_PER_TILE`.
 2. **Group value: FIXED** — every group worth `GROUP_SCORE_FIXED`.
-3. **★ bonus tiles** — one ★+1 and one ★+2 tile per color pair (20 tiles,
-   `BONUS_TILE_VALUES`). Colored like normal tiles, so their halves
-   EXTEND/merge groups — but they never add influence; instead each ★
-   half adds its points to the value of the group it is part of when
-   that group scores.
-4. **Color powers** — one promptless rule per color:
-   red steals a leading opponent's influence on match (adds if none) ·
-   green adds 2 · gold groups score +2 · violet spreads the match
-   influence into every group ADJACENT to the violet group (none to the
-   violet group itself) · cyan pays the runner-up half value.
+3. **★ bonus tiles** — colored tiles carrying bonus points on ONE half.
+   +1 tiles are two different colors (both orientations per pair); +2
+   tiles are one color on both halves (`BONUS_PLUS1`/`BONUS_PLUS2`). They
+   match, merge and add the normal +1 influence like any tile; the bonus
+   half additionally adds its points to its group's value at scoring.
+   The deck is kept color-balanced (see `newColorGame`).
+4. **Color powers** — a match ALWAYS adds the base +1; the color's rule
+   then layers on top: green +1 more (net 2) · gold +2 value · violet also
+   +1 to each group adjacent to the violet group · cyan pays the runner-up
+   half · red also removes 1 (placer's choice) from a group adjacent to
+   the matched red group.
 
-There are **no decision prompts** in this mode, so there is no frame
-machine — `applyColor` resolves everything synchronously. Bots share the
-same greedy philosophy (match + seal-what-you'd-win, avoid gifting,
-sometimes deny neutral groups; all in `colorBotDecide`).
+Red is the one power that needs a choice, so it is the only thing in this
+mode that parks an `s.pending` decision (`redQueue` holds pending red
+groups; the placement finishes via `continuePlacement`/`finishPlacement`
+once every removal is answered). Everything else resolves synchronously.
+Bots answer red prompts and place greedily (match + seal-what-you'd-win,
+avoid gifting, sometimes deny neutral groups) in `colorBotDecide`.
 
 ## 3. Module map
 

@@ -4,9 +4,11 @@
 // Pan/zoom interaction is a lightly trimmed copy of GridView's (kept
 // separate so the two modes can't break each other).
 //
-// Turn shape here: pass screen → click a hand tile → click a cell. That's
-// the whole turn — matches, merges, sealing and scoring resolve instantly
-// and the game auto-advances to the next pass screen. No prompts exist.
+// Turn shape here: pass screen → click a hand tile → click a cell. That
+// resolves matches/merges/sealing instantly and auto-advances — UNLESS the
+// red color power fires, which parks a "remove 1 from an adjacent group"
+// choice (s.pending) that the player answers via the red panel before the
+// turn passes.
 // =============================================================================
 
 import { useEffect, useRef, useState } from "react";
@@ -43,6 +45,7 @@ export default function ColorScreen(props: {
   const { s, dispatch } = props;
   const me = s.players[s.turn.p];
   const botActing = isColorBotTurn(s);
+  const redPending = s.pending?.t === "redRemove" ? s.pending : null;
   const [placing, setPlacing] = useState<{ tile: number; rot: number } | null>(
     null,
   );
@@ -53,8 +56,8 @@ export default function ColorScreen(props: {
   const logRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (s.passPending || s.over) setPlacing(null);
-  }, [s.passPending, s.over, s.turn.p]);
+    if (s.passPending || s.over || s.pending) setPlacing(null);
+  }, [s.passPending, s.over, s.pending, s.turn.p]);
   useEffect(() => {
     const el = vpRef.current;
     if (el)
@@ -192,7 +195,7 @@ export default function ColorScreen(props: {
               const d = dragRef.current;
               dragRef.current = null;
               if (d && d.moved) return;
-              if (placing && !botActing) {
+              if (placing && !botActing && !s.pending) {
                 const cell = toCell(e);
                 const ok = placementCheckC(s, cell, placing.rot).ok;
                 dispatch({ a: "place", tile: placing.tile, at: cell, rot: placing.rot });
@@ -216,8 +219,8 @@ export default function ColorScreen(props: {
               {Object.values(s.board).map((pl) => {
                 const t = s.tiles[pl.id];
                 return [
-                  { c: pl.cellA, color: t.a },
-                  { c: pl.cellB, color: t.b },
+                  { c: pl.cellA, color: t.a, bonus: t.bonus?.[0] },
+                  { c: pl.cellB, color: t.b, bonus: t.bonus?.[1] },
                 ].map((h, i) => {
                   const scored = s.groups[s.cellGroup[cellKey(h.c)]]?.scored;
                   return (
@@ -233,7 +236,7 @@ export default function ColorScreen(props: {
                       }}
                     >
                       {DEF[h.color].glyph}
-                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
+                      {!!h.bonus && <span className="bchip">★+{h.bonus}</span>}
                     </div>
                   );
                 });
@@ -293,7 +296,7 @@ export default function ColorScreen(props: {
                 <div>
                   <b>
                     {DEF[pt.a].name}/{DEF[pt.b].name}
-                    {pt.bonus ? ` ★+${pt.bonus}` : ""}
+                    {pt.bonus ? ` ★+${pt.bonus[0] || pt.bonus[1]}` : ""}
                   </b>{" "}
                   — <b>R</b> rotates · click to place · Esc cancels
                 </div>
@@ -301,16 +304,44 @@ export default function ColorScreen(props: {
                 {ghost?.ok && (
                   <div style={{ color: "var(--dim)" }}>
                     {pv.a || pv.b
-                      ? pt.bonus
-                        ? `extends ${[pv.a, pv.b].filter(Boolean).length} group(s) — adds +${pt.bonus} value, no influence`
-                        : `matches ${[pv.a, pv.b].filter(Boolean).length} group(s) → influence`
+                      ? `matches ${[pv.a, pv.b].filter(Boolean).length} group(s) → +1 influence each` +
+                        (pt.bonus ? ` · ★ adds +${pt.bonus[0] || pt.bonus[1]} value` : "")
                       : "no matches here — no influence"}
                   </div>
                 )}
               </div>
             )}
+            {/* red power: pick which adjacent influence to remove */}
+            {redPending && !botActing && (
+              <div className="pendbox">
+                <div className="prompt">
+                  {DEF.red.glyph} MUSCLE — remove 1 influence from a group next
+                  to the {DEF[s.groups[redPending.redGroup].color].name} group
+                </div>
+                <div className="opts">
+                  {redPending.options.map((o, i) => (
+                    <button
+                      key={i}
+                      style={{ ["--pc" as any]: s.players[o.owner].color }}
+                      onClick={() =>
+                        dispatch({ a: "answer", group: o.group, owner: o.owner })
+                      }
+                    >
+                      remove 1 of{" "}
+                      <b style={{ color: s.players[o.owner].color }}>
+                        {s.players[o.owner].name}
+                      </b>{" "}
+                      from the {DEF[s.groups[o.group].color].name} group
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             {botActing && !s.passPending && !s.over && (
-              <div className="botbanner">🤖 {me.name} is playing…</div>
+              <div className="botbanner">
+                🤖 {s.players[redPending ? redPending.who : s.turn.p].name} is
+                playing…
+              </div>
             )}
           </div>
         </div>
@@ -374,6 +405,7 @@ export default function ColorScreen(props: {
                     onClick={() =>
                       !botActing &&
                       !s.passPending &&
+                      !s.pending &&
                       setPlacing((p) => (p?.tile === id ? null : { tile: id, rot: 0 }))
                     }
                   >
@@ -382,14 +414,14 @@ export default function ColorScreen(props: {
                       style={{ ["--ch" as any]: DEF[t.a].hex }}
                     >
                       {DEF[t.a].glyph}
-                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
+                      {!!t.bonus?.[0] && <span className="bchip">★+{t.bonus[0]}</span>}
                     </div>
                     <div
                       className="cthalf"
                       style={{ ["--ch" as any]: DEF[t.b].hex }}
                     >
                       {DEF[t.b].glyph}
-                      {t.bonus && <span className="bchip">★+{t.bonus}</span>}
+                      {!!t.bonus?.[1] && <span className="bchip">★+{t.bonus[1]}</span>}
                     </div>
                   </div>
                 );
@@ -470,13 +502,13 @@ export default function ColorScreen(props: {
 function powerText(key: ColorKey): string {
   switch (key) {
     case "red":
-      return "Muscle: your match removes 1 influence from the group's leading opponent (adds if none)";
+      return "Muscle: your match adds +1 as usual AND lets you remove 1 influence (your choice) from a group adjacent to the matched red group";
     case "green":
-      return "Favor: your match adds 2 influence";
+      return "Favor: your match adds 1 extra influence to the green group (net +2)";
     case "gold":
       return "Credit: the group scores +2 bonus points";
     case "violet":
-      return "Whisper: your match adds 1 influence to each group ADJACENT to the violet group (none to the violet group itself)";
+      return "Whisper: your match adds the normal +1 to the violet group AND +1 to each group adjacent to it";
     case "cyan":
       return "Intel: when the group scores, the runner-up also scores half";
   }

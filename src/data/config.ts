@@ -103,27 +103,34 @@ export const COLOR_CFG = {
   GROUP_SCORE_FIXED: 4, // "FIXED": every group is worth this, regardless of size
   GROUP_SCORE_PER_TILE: 1, // "SIZE": group is worth (number of halves) × this
 
-  // ---- bonus tiles variant: for EVERY color pair the deck gains one tile
-  // per value below (so [1,2] → 10 one-point + 10 two-point tiles). Bonus
-  // tiles are COLORED: their halves extend/merge groups exactly like normal
-  // halves — but matching with them adds NO influence; instead each bonus
-  // half adds its points to the value of the group it is part of when that
-  // group scores.
-  BONUS_TILE_VALUES: [1, 2],
+  // ---- bonus tiles variant: colored tiles that carry bonus points on ONE
+  // half. They match/extend/merge groups exactly like normal tiles AND add
+  // the normal +1 influence when they match; the bonus half additionally
+  // adds its points to the value of the group that half belongs to when the
+  // group scores. Deck (kept color-balanced — see newColorGame):
+  //   • +1 tiles: for every color pair, two tiles, one with the +1 bonus on
+  //     each color (the other half is the OTHER color) → 20 tiles
+  //   • +2 tiles: for every color, one tile whose two halves are the SAME
+  //     color, +2 on one of them → 5 tiles
+  BONUS_PLUS1: 1, // points on the one-different-color bonus tiles
+  BONUS_PLUS2: 2, // points on the same-color bonus tiles
 
-  // ---- color powers variant: one qualitative rule per color (promptless).
-  // Implemented in src/color/engine.ts; listed here for the tuner:
-  //   red    Muscle  — your match REMOVES 1 influence from the group's
-  //                    leading opponent instead of adding (adds if none)
-  //   green  Favor   — your match adds 2 influence instead of 1
+  // ---- color powers variant: one qualitative rule per color. A matching
+  // placement ALWAYS gives the normal +1 influence to the matched group
+  // first; the power then applies ON TOP. Implemented in
+  // src/color/engine.ts; listed here for the tuner:
+  //   red    Muscle  — also remove 1 influence (your choice) from a color
+  //                    group ADJACENT to the matched red group
+  //   green  Favor   — also add 1 more influence to the green group (net +2)
   //   gold   Credit  — the group scores +2 bonus points
-  //   violet Whisper — your match spreads: instead of the violet group,
-  //                    you add 1 influence to EACH group adjacent to it
+  //   violet Whisper — also add 1 influence to EACH group adjacent to the
+  //                    matched violet group (the violet group still got +1)
   //   cyan   Intel   — when the group scores, the runner-up also scores
   //                    half value (rounded down)
-  POWER_GREEN_ADD: 2,
+  POWER_GREEN_EXTRA: 1, // extra influence on top of the base +1 (→ net 2)
   POWER_GOLD_BONUS: 2,
   POWER_VIOLET_SPREAD: 1, // influence added per adjacent group
+  POWER_RED_REMOVE: 1, // influence removed from a chosen adjacent group
 
   // ---- game end ----
   // Groups still open (not fully sealed) when the tiles run out score:

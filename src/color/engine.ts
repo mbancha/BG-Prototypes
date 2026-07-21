@@ -6,11 +6,11 @@
 // is no frame machine here — an action fully resolves synchronously.
 //
 // Rules implemented (variants in ColorVariant, numbers in config COLOR_CFG):
-//   • Tiles are dominoes with a COLOR on each half (always two different
-//     colors). ★ BONUS tiles (variant) are colored like any other tile but
-//     carry a point value: their halves extend/merge groups normally, add
-//     NO influence when they match, and add their points to the value of
-//     whichever group each half ends up part of.
+//   • Tiles are dominoes with a COLOR on each half. ★ BONUS tiles (variant)
+//     are ordinary colored tiles that also carry bonus points on ONE half:
+//     they match/extend/merge and add the normal +1 influence like any tile,
+//     and the bonus half additionally adds its points to the value of the
+//     group it belongs to when that group scores.
 //   • Same-colored halves that touch orthogonally form contiguous GROUPS
 //     (groups freely span tiles and merge when a placement connects them).
 //   • MATCH: when a placed half joins an existing group, the placer adds
@@ -22,9 +22,12 @@
 //     zero influence scores no one. Influence returns to supplies.
 //   • Value = FIXED or SIZE×per-tile (variant), + member ★ bonuses
 //     (variant), + gold's bonus (powers variant).
-//   • Color powers (variant, all promptless): red steals instead of adds,
-//     green adds double, gold scores bonus, violet spreads the influence
-//     into every ADJACENT group instead of its own, cyan pays the runner-up.
+//   • Color powers (variant): the +1 match ALWAYS happens; the power layers
+//     on top. green +1 more · gold +2 value · violet also +1 to each
+//     adjacent group · cyan pays the runner-up · red removes 1 (placer's
+//     choice) from an adjacent group. Only red needs a choice, so it is the
+//     one thing in this mode that parks an s.pending decision (answered by
+//     the UI, or by colorBotDecide for a bot).
 //
 // Shape mirrors the classic engine: newColorGame() → ColorState,
 // applyColor(s, action) mutates in place and returns null | rejection
@@ -45,14 +48,14 @@ export interface ColorVariant {
   powers: boolean; // variation 5: per-color qualitative rules
 }
 
-/** One physical tile. `bonus` marks a ★ bonus tile: same two colors as any
- *  tile, but its halves add `bonus` points to their group's score value and
- *  never add influence when they match. */
+/** One physical tile. `bonus` (when present) gives each half's point bonus,
+ *  e.g. [1,0] or [2,0] — only one half of a bonus tile carries points; the
+ *  tile otherwise behaves like any colored tile (matches, adds influence). */
 export interface ColorTile {
   id: number;
   a: ColorKey;
   b: ColorKey;
-  bonus?: number;
+  bonus?: [number, number];
 }
 
 export interface ColorPlaced {
@@ -95,6 +98,17 @@ export interface ColorLogEntry {
   msg: string;
 }
 
+/** The only interactive decision in color mode: red's power asks the placer
+ *  which influence to remove from a group adjacent to the matched red group.
+ *  `who` (the deciding player) mirrors classic mode so the App bot driver and
+ *  the pass logic can treat both modes the same way. */
+export interface ColorPending {
+  t: "redRemove";
+  who: number;
+  redGroup: number; // the matched red group, for the UI to explain/highlight
+  options: { group: number; owner: number }[];
+}
+
 export interface ColorState {
   mode: "colors"; // discriminant vs the classic GameState
   variant: ColorVariant;
@@ -103,22 +117,25 @@ export interface ColorState {
   deck: number[];
   board: Record<number, ColorPlaced>;
   cellOwner: Record<string, number>; // cell → tile id
-  cellColor: Record<string, ColorKey | null>; // cell → color (null = ★)
-  cellBonus: Record<string, number>; // cell → ★ bonus points
+  cellColor: Record<string, ColorKey>; // cell → color
+  cellBonus: Record<string, number>; // cell → bonus points on that half
   groups: Record<number, ColorGroup>;
-  cellGroup: Record<string, number>; // cell → group id (color cells only)
+  cellGroup: Record<string, number>; // cell → group id
   nextGroup: number;
   turn: { n: number; p: number; setup: boolean };
   over: boolean;
   ranking?: number[];
   passPending: boolean;
+  pending: ColorPending | null; // a red-removal choice is waiting
+  redQueue: number[]; // red group ids whose removal is still to resolve
   log: ColorLogEntry[];
   telem: ColorTelem;
 }
 
 export type ColorAction =
   | { a: "beginTurn" }
-  | { a: "place"; tile: number; at: Cell; rot: number };
+  | { a: "place"; tile: number; at: Cell; rot: number }
+  | { a: "answer"; group: number; owner: number }; // resolves a redRemove
 
 const log = (s: ColorState, p: number | null, msg: string) =>
   s.log.push({ turn: s.turn.n, p, msg });
@@ -144,23 +161,32 @@ export function newColorGame(
       `Player count must be ${CONFIG.MIN_PLAYERS}–${CONFIG.MAX_PLAYERS}`,
     );
 
-  // deck: every unordered pair of two DIFFERENT colors × copies, plus (when
-  // the variant is on) one ★ bonus tile per pair per BONUS_TILE_VALUES entry
+  // deck: every unordered pair of two DIFFERENT colors × copies. The bonus
+  // variant then adds, per pair, BOTH +1 orientations (bonus on each color,
+  // other half the other color) and, per color, one same-color +2 tile.
+  // This keeps every color's total half-count equal (base 12 + bonus 10 = 22
+  // each) and every color carrying the same number of +1 and +2 bonuses.
   const tiles: Record<number, ColorTile> = {};
   let id = 0;
+  const add = (t: Omit<ColorTile, "id">) => {
+    id++;
+    tiles[id] = { id, ...t };
+  };
   for (let i = 0; i < COLOR_DEFS.length; i++)
     for (let j = i + 1; j < COLOR_DEFS.length; j++)
-      for (let c = 0; c < COLOR_CFG.COPIES_PER_PAIR; c++) {
-        id++;
-        tiles[id] = { id, a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key };
-      }
-  if (variant.specials)
+      for (let c = 0; c < COLOR_CFG.COPIES_PER_PAIR; c++)
+        add({ a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key });
+  if (variant.specials) {
     for (let i = 0; i < COLOR_DEFS.length; i++)
-      for (let j = i + 1; j < COLOR_DEFS.length; j++)
-        for (const bonus of COLOR_CFG.BONUS_TILE_VALUES) {
-          id++;
-          tiles[id] = { id, a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key, bonus };
-        }
+      for (let j = i + 1; j < COLOR_DEFS.length; j++) {
+        // +1 bonus on i's color, then +1 bonus on j's color
+        add({ a: COLOR_DEFS[i].key, b: COLOR_DEFS[j].key, bonus: [COLOR_CFG.BONUS_PLUS1, 0] });
+        add({ a: COLOR_DEFS[j].key, b: COLOR_DEFS[i].key, bonus: [COLOR_CFG.BONUS_PLUS1, 0] });
+      }
+    for (let i = 0; i < COLOR_DEFS.length; i++)
+      // same-color tile, +2 on one half
+      add({ a: COLOR_DEFS[i].key, b: COLOR_DEFS[i].key, bonus: [COLOR_CFG.BONUS_PLUS2, 0] });
+  }
 
   const deck = Object.keys(tiles).map(Number);
   for (let i = deck.length - 1; i > 0; i--) {
@@ -191,6 +217,8 @@ export function newColorGame(
     turn: { n: 0, p: 0, setup: true },
     over: false,
     passPending: true,
+    pending: null,
+    redQueue: [],
     log: [],
     telem: {
       matchesByColor: { red: 0, cyan: 0, green: 0, gold: 0, violet: 0 },
@@ -300,8 +328,8 @@ export function previewMatches(
   const tile = s.tiles[tileId];
   const [ca, cb] = cellsFor(at, rot);
   return {
-    a: !!tile.a && adjacentGroups(s, ca, tile.a, cb).length > 0,
-    b: !!tile.b && adjacentGroups(s, cb, tile.b, ca).length > 0,
+    a: adjacentGroups(s, ca, tile.a, cb).length > 0,
+    b: adjacentGroups(s, cb, tile.b, ca).length > 0,
   };
 }
 
@@ -336,44 +364,58 @@ function neighborGroups(s: ColorState, g: ColorGroup): ColorGroup[] {
   return [...ids].map((gid) => s.groups[gid]);
 }
 
-/** The one influence event of the game: a placed half joined group g. */
+/**
+ * A placed half joined group g. The base +1 influence ALWAYS happens; when
+ * powers are on the color's rule layers on top. Red is special: it can't be
+ * resolved here because it needs the placer to pick a target, so its group
+ * id is added to s.redQueue and processed by continuePlacement (which may
+ * park an s.pending decision). Returns nothing; red side effects are queued.
+ */
 function resolveMatch(s: ColorState, g: ColorGroup, p: number) {
   s.telem.matchesByColor[g.color]++;
-  if (s.variant.powers && g.color === "red") {
-    // Muscle: steal — remove 1 from the leading opponent (add if none)
-    let target = -1;
+  // BASE: every match (bonus tiles included) adds 1 influence to the group.
+  addInf(s, g, p, COLOR_CFG.MATCH_INFLUENCE);
+  if (!s.variant.powers) return;
+  switch (g.color) {
+    case "green": {
+      // Favor: one extra influence on top of the base (→ net +2)
+      addInf(s, g, p, COLOR_CFG.POWER_GREEN_EXTRA);
+      break;
+    }
+    case "violet": {
+      // Whisper: also seed every group adjacent to the violet group
+      const around = neighborGroups(s, g);
+      if (around.length === 0) {
+        log(s, p, `WHISPER match: no adjacent groups to spread to`);
+        break;
+      }
+      log(s, p, `WHISPER match: influence spreads to ${around.length} adjacent group(s)`);
+      for (const ng of around) addInf(s, ng, p, COLOR_CFG.POWER_VIOLET_SPREAD);
+      break;
+    }
+    case "red": {
+      // Muscle: queue a "remove 1 from an adjacent group" choice (deduped
+      // per group so a same-color red tile can't double-remove)
+      if (!s.redQueue.includes(g.id)) s.redQueue.push(g.id);
+      break;
+    }
+    // gold (value bonus) and cyan (runner-up payout) resolve at scoring time
+  }
+}
+
+/** The (group, owner) pairs red may remove from: any influence held in a
+ *  group adjacent to the matched red group. */
+function redRemoveOptions(
+  s: ColorState,
+  redGroupId: number,
+): { group: number; owner: number }[] {
+  const red = s.groups[redGroupId];
+  if (!red || red.scored) return [];
+  const out: { group: number; owner: number }[] = [];
+  for (const ng of neighborGroups(s, red))
     for (let q = 0; q < s.players.length; q++)
-      if (q !== p && g.inf[q] > 0 && (target === -1 || g.inf[q] > g.inf[target]))
-        target = q;
-    if (target !== -1) {
-      g.inf[target]--;
-      s.players[target].supply++;
-      s.telem.infRemoved++;
-      log(
-        s,
-        p,
-        `MUSCLE match: removes 1 of ${pname(s, target)}'s influence from the red group`,
-      );
-      return;
-    }
-  }
-  if (s.variant.powers && g.color === "violet") {
-    // Whisper: the influence spreads — none to the violet group itself,
-    // POWER_VIOLET_SPREAD into every group adjacent to it
-    const around = neighborGroups(s, g);
-    if (around.length === 0) {
-      log(s, p, `WHISPER match: no adjacent groups — the whisper fades`);
-      return;
-    }
-    log(s, p, `WHISPER match: influence spreads to ${around.length} adjacent group(s)`);
-    for (const ng of around) addInf(s, ng, p, COLOR_CFG.POWER_VIOLET_SPREAD);
-    return;
-  }
-  const n =
-    s.variant.powers && g.color === "green"
-      ? COLOR_CFG.POWER_GREEN_ADD
-      : COLOR_CFG.MATCH_INFLUENCE;
-  addInf(s, g, p, n);
+      if (ng.inf[q] > 0) out.push({ group: ng.id, owner: q });
+  return out;
 }
 
 function scoreGroup(s: ColorState, g: ColorGroup, why: string) {
@@ -438,6 +480,8 @@ export function applyColor(s: ColorState, action: ColorAction): string | null {
       return null;
     case "place":
       return actPlaceC(s, action.tile, action.at, action.rot);
+    case "answer":
+      return actAnswerC(s, action.group, action.owner);
   }
 }
 
@@ -449,6 +493,7 @@ function actPlaceC(
 ): string | null {
   const p = s.turn.p;
   if (s.passPending) return "Pass the device first";
+  if (s.pending) return "Resolve the red removal first";
   const hand = s.players[p].hand;
   const idx = hand.indexOf(tileId);
   if (idx === -1) return "Tile not in hand";
@@ -464,27 +509,30 @@ function actPlaceC(
   s.cellColor[cellKey(ca)] = tile.a;
   s.cellColor[cellKey(cb)] = tile.b;
   if (tile.bonus) {
-    s.cellBonus[cellKey(ca)] = tile.bonus;
-    s.cellBonus[cellKey(cb)] = tile.bonus;
+    if (tile.bonus[0]) s.cellBonus[cellKey(ca)] = tile.bonus[0];
+    if (tile.bonus[1]) s.cellBonus[cellKey(cb)] = tile.bonus[1];
   }
   s.telem.placements++;
+  const bonusTag = tile.bonus ? ` ★+${tile.bonus[0] || tile.bonus[1]}` : "";
   log(
     s,
     p,
-    `places ${colorName(tile.a)}/${colorName(tile.b)}${tile.bonus ? ` ★+${tile.bonus}` : ""} at (${ca.x},${ca.y})`,
+    `places ${colorName(tile.a)}/${colorName(tile.b)}${bonusTag} at (${ca.x},${ca.y})`,
   );
 
-  // group each half in: join/merge same-color neighbors, then the MATCH
-  // rule — joining an existing group adds influence (a fresh singleton
-  // group does not, and ★ bonus halves never do — they only add value)
+  // Group each half in (join/merge same-color neighbors), recording which
+  // halves MATCHED (joined a pre-existing external group). Effects are
+  // resolved AFTER the loop so group ids are final (a second half can merge
+  // the first half's group into another and change its id mid-loop).
   const halves: { cell: Cell; color: ColorKey; partner: Cell }[] = [
     { cell: ca, color: tile.a, partner: cb },
     { cell: cb, color: tile.b, partner: ca },
   ];
+  const matchedCells: string[] = [];
   for (const h of halves) {
     const joined = adjacentGroups(s, h.cell, h.color, h.partner);
-    // the internal edge can also connect (future same-color pairs): include
-    // the partner's group for MERGING but never for the match reward
+    const matched = joined.length > 0;
+    // the internal edge also connects same-color partners (for MERGING only)
     const pk = cellKey(h.partner);
     if (s.cellColor[pk] === h.color && s.cellGroup[pk] !== undefined)
       joined.push(s.cellGroup[pk]);
@@ -499,54 +547,85 @@ function actPlaceC(
       };
       s.groups[g.id] = g;
       s.cellGroup[cellKey(h.cell)] = g.id;
+    } else {
+      const main = s.groups[uniq[0]];
+      for (const gid of uniq.slice(1)) {
+        const other = s.groups[gid];
+        for (const ck of other.cells) s.cellGroup[ck] = main.id;
+        main.cells.push(...other.cells);
+        for (let q = 0; q < s.players.length; q++) main.inf[q] += other.inf[q];
+        delete s.groups[gid];
+      }
+      main.cells.push(cellKey(h.cell));
+      s.cellGroup[cellKey(h.cell)] = main.id;
+    }
+    if (matched) matchedCells.push(cellKey(h.cell));
+  }
+  // resolve matches now that every group id is final
+  for (const ck of matchedCells) resolveMatch(s, s.groups[s.cellGroup[ck]], p);
+
+  return continuePlacement(s);
+}
+
+/** After matches: drain the red-removal queue (parking an s.pending decision
+ *  whenever one has legal targets); once empty, finish the placement. */
+function continuePlacement(s: ColorState): string | null {
+  while (s.redQueue.length > 0) {
+    const gid = s.redQueue[0];
+    const options = redRemoveOptions(s, gid);
+    if (options.length === 0) {
+      s.redQueue.shift(); // nothing adjacent to remove — power fizzles
       continue;
     }
-    // merge everything into the first group
-    const main = s.groups[uniq[0]];
-    for (const gid of uniq.slice(1)) {
-      const other = s.groups[gid];
-      for (const ck of other.cells) s.cellGroup[ck] = main.id;
-      main.cells.push(...other.cells);
-      for (let q = 0; q < s.players.length; q++) main.inf[q] += other.inf[q];
-      delete s.groups[gid];
-    }
-    main.cells.push(cellKey(h.cell));
-    s.cellGroup[cellKey(h.cell)] = main.id;
-    const matched = adjacentGroups(s, h.cell, h.color, h.partner).length > 0;
-    if (matched) {
-      if (tile.bonus)
-        log(
-          s,
-          p,
-          `★ extends the ${colorName(h.color)} group (+${tile.bonus} value, no influence)`,
-        );
-      else resolveMatch(s, main, p);
-    }
+    s.pending = { t: "redRemove", who: s.turn.p, redGroup: gid, options };
+    return null; // wait for an answer (UI or bot)
   }
+  s.pending = null;
+  finishPlacement(s);
+  return null;
+}
 
+/** Resolve one red-removal choice, then continue draining the queue. */
+function actAnswerC(s: ColorState, group: number, owner: number): string | null {
+  if (!s.pending) return "Nothing to answer";
+  const ok = s.pending.options.some(
+    (o) => o.group === group && o.owner === owner,
+  );
+  if (!ok) return "Not a legal removal target";
+  const g = s.groups[group];
+  g.inf[owner]--;
+  s.players[owner].supply++;
+  s.telem.infRemoved++;
+  log(
+    s,
+    s.pending.who,
+    `MUSCLE power: removes 1 of ${pname(s, owner)}'s influence from the ${colorName(g.color)} group`,
+  );
+  s.redQueue.shift();
+  s.pending = null;
+  return continuePlacement(s);
+}
+
+/** Seal-score, draw back up, and advance the turn (or end the game). */
+function finishPlacement(s: ColorState) {
+  const p = s.turn.p;
   // seal check: any unscored group with no open perimeter scores now
   for (const g of Object.values(s.groups))
     if (!g.scored && openPerimeter(s, g.cells).length === 0)
       scoreGroup(s, g, "sealed");
 
-  // draw up + advance (turns auto-end after the mandatory placement)
-  while (
-    s.players[p].hand.length < CONFIG.HAND_REFILL &&
-    s.deck.length > 0
-  )
+  while (s.players[p].hand.length < CONFIG.HAND_REFILL && s.deck.length > 0)
     s.players[p].hand.push(s.deck.shift()!);
 
-  const everyoneDry = s.players.every((q) => q.hand.length === 0);
-  if (everyoneDry) {
+  if (s.players.every((q) => q.hand.length === 0)) {
     endColorGame(s);
-    return null;
+    return;
   }
   // next player who still has tiles (deck may be empty late game)
   let np = (p + 1) % s.players.length;
   while (s.players[np].hand.length === 0) np = (np + 1) % s.players.length;
   s.turn = { n: s.turn.n + 1, p: np, setup: false };
   s.passPending = true;
-  return null;
 }
 
 function endColorGame(s: ColorState) {
@@ -603,17 +682,35 @@ function endColorGame(s: ColorState) {
 
 // ---------------------------------------------------------------------------
 // Bot (same philosophy as the classic bot: legal-by-construction, greedy,
-// jittered). No prompts exist in this mode, so it only picks placements.
+// jittered). It picks placements and answers red-removal prompts.
 // ---------------------------------------------------------------------------
 
+/** Who the game is waiting on: the red-removal decider if one is pending,
+ *  otherwise the active player. Mirrors classic mode's decisionOwner. */
 export function isColorBotTurn(s: ColorState): boolean {
-  return !s.over && !!s.players[s.turn.p].isBot;
+  if (s.over) return false;
+  const who = s.pending ? s.pending.who : s.turn.p;
+  return !!s.players[who].isBot;
 }
 
 export function colorBotDecide(
   s: ColorState,
   rnd: () => number = Math.random,
 ): ColorAction {
+  if (s.pending) {
+    // red removal: hurt the strongest OPPONENT token; fall back to any
+    let best = s.pending.options[0];
+    let bestScore = -Infinity;
+    for (const o of s.pending.options) {
+      const inf = s.groups[o.group].inf[o.owner];
+      const score = (o.owner !== s.pending.who ? 100 : 0) + inf;
+      if (score > bestScore) {
+        bestScore = score;
+        best = o;
+      }
+    }
+    return { a: "answer", group: best.group, owner: best.owner };
+  }
   if (s.passPending) return { a: "beginTurn" };
   const p = s.turn.p;
   const hand = s.players[p].hand;
@@ -665,14 +762,27 @@ function scoreColorPlacement(
   const tile = s.tiles[tileId];
   const [ca, cb] = cellsFor(at, rot);
   let v = 0;
-  const infMatch = !tile.bonus; // ★ halves extend groups but add no influence
   const joins: Record<number, boolean> = {}; // group id → my half joins it
   for (const h of [
     { cell: ca, color: tile.a, partner: cb },
     { cell: cb, color: tile.b, partner: ca },
   ]) {
     const gs = adjacentGroups(s, h.cell, h.color, h.partner);
-    if (gs.length > 0) v += infMatch ? 1 : 0.5; // influence vs value-only
+    if (gs.length > 0) {
+      v += 1; // a match = +1 influence to the group
+      if (s.cellBonus[cellKey(h.cell)]) v += 0.3; // bonus points on a live group
+      // red power (if on): a red match lets me zap an opponent-held neighbor
+      if (
+        s.variant.powers &&
+        h.color === "red" &&
+        gs.some((gid) =>
+          neighborGroups(s, s.groups[gid]).some((ng) =>
+            ng.inf.some((nn, q) => q !== p && nn > 0),
+          ),
+        )
+      )
+        v += 0.7;
+    }
     for (const gid of gs) joins[gid] = true;
   }
   // sealing evaluation: which groups end with zero open perimeter once the
@@ -683,13 +793,13 @@ function scoreColorPlacement(
     if (g.scored) continue;
     const cells = [...g.cells];
     if (joins[g.id]) {
-      if (s.tiles[tileId].a === g.color) cells.push(kA);
-      if (s.tiles[tileId].b === g.color) cells.push(kB);
+      if (tile.a === g.color) cells.push(kA);
+      if (tile.b === g.color) cells.push(kB);
     }
     const open = openPerimeter(s, cells).filter((k) => k !== kA && k !== kB);
     if (open.length > 0) continue; // stays open
     const value = groupValue(s, g);
-    const myInf = g.inf[p] + (joins[g.id] && infMatch ? 1 : 0);
+    const myInf = g.inf[p] + (joins[g.id] ? 1 : 0);
     const top = Math.max(...g.inf.map((n, q) => (q === p ? myInf : n)));
     const leaders = g.inf
       .map((n, q) => (q === p ? myInf : n))

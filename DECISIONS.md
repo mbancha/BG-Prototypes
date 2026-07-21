@@ -206,19 +206,25 @@ in ARCHITECTURE.md §2.
     skipped; the game ends when every hand is empty.
 61. **Open groups at game end score nothing** by default (pressure to
     seal); `COLOR_CFG.ENDGAME_OPEN_GROUPS` offers "half" and "full".
-62. **★ bonus tiles (amended):** one ★+1 and one ★+2 per color pair (20
-    when the variant is on). They are COLORED and extend/merge groups like
-    any tile — but a ★ half matching a group adds NO influence and does not
-    count as a match; instead each ★ half adds its value to whichever group
-    it ends up a member of, evaluated at scoring. A ★ tile spanning two
-    groups pays each of them its value.
-63. **Color powers are promptless by design** — red's steal auto-targets
-    the leading opponent; violet's spread (amended: the match influence
-    goes to every unscored group orthogonally adjacent to the violet
-    group, and none to the violet group itself — it fizzles with a log
-    when the violet group has no neighbors) auto-targets everything at
-    once; cyan's runner-up payout reuses the tie divisor. Powers live in
-    resolveMatch/groupValue/scoreGroup in src/color/engine.ts.
+62. **★ bonus tiles (re-amended):** colored tiles with bonus points on ONE
+    half. +1 tiles carry two different colors (both bonus orientations per
+    pair); +2 tiles are the SAME color on both halves. They behave like any
+    colored tile — they match, merge and add the normal +1 influence — and
+    the bonus half additionally adds its points to that half's group value
+    at scoring. Deck kept color-balanced (each color: base 12 + bonus 10
+    halves; each color carries four +1 and one +2 bonus).
+63. **Color powers layer on the base match.** A match always adds +1 to the
+    matched group first, then the power applies: green +1 more (net 2);
+    gold +2 to value at scoring; violet also seeds every unscored group
+    orthogonally adjacent to the violet group; cyan pays the runner-up half
+    (tie divisor). RED is the exception that needs a choice: it also removes
+    1 influence from a group adjacent to the matched red group, chosen by
+    the placer. That is the ONLY interactive decision in color mode — it
+    parks s.pending (queued per red group in redQueue, so a same-color red
+    tile removes once), the UI/bot answers it, then the placement finishes
+    (seal-scoring runs AFTER removals). Fizzles silently when no adjacent
+    group holds influence. Powers live in resolveMatch / groupValue /
+    scoreGroup / actAnswerC in src/color/engine.ts.
 
 ## Not built (out of scope for a playtest loop)
 
