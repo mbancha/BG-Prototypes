@@ -20,6 +20,7 @@ import type {
 } from "../color/engine";
 import {
   cellsFor,
+  freeCells,
   groupValue,
   isColorBotTurn,
   openPerimeter,
@@ -136,7 +137,9 @@ export default function ColorScreen(props: {
             {me.name}
           </span>
           <span style={{ color: "var(--dim)" }}>
-            deck {s.deck.length} · {s.variant.scoring === "fixed" ? `groups =${COLOR_CFG.GROUP_SCORE_FIXED}` : "groups = size"}
+            deck {s.deck.length} · board {s.variant.width}×{s.variant.height} (
+            {freeCells(s)} free) ·{" "}
+            {s.variant.scoring === "fixed" ? `groups =${COLOR_CFG.GROUP_SCORE_FIXED}` : "groups = size"}
             {s.variant.specials ? " · ★" : ""}
             {s.variant.powers ? " · powers" : ""}
           </span>
@@ -213,6 +216,17 @@ export default function ColorScreen(props: {
               className="world"
               style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.z})` }}
             >
+              {/* board walls: nothing can be placed outside this rectangle,
+                  and groups treat its edges as already sealed */}
+              <div
+                className="boardwall"
+                style={{
+                  left: s.bounds.xMin * CS,
+                  top: s.bounds.yMin * CS,
+                  width: (s.bounds.xMax - s.bounds.xMin + 1) * CS - 2,
+                  height: (s.bounds.yMax - s.bounds.yMin + 1) * CS - 2,
+                }}
+              />
               <div className="origin" style={{ left: 0, top: 0, width: CS - 1, height: CS - 1 }}>
                 ⌖
               </div>

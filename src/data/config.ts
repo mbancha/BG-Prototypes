@@ -99,6 +99,21 @@ export const COLOR_CFG = {
 
   MATCH_INFLUENCE: 1, // influence added per half that joins an existing group
 
+  // ---- board size (settable per game on the setup screen) ----
+  // The board is a fixed rectangle centered on the origin cell. Default edge
+  // length = BOARD_BASE + BOARD_PER_PLAYER × players (2p → 6×6, 4p → 8×8).
+  // Cells outside it can never be filled, so THE WALLS SEAL GROUPS: a group
+  // pressed against an edge needs fewer tiles to close. The game ends as
+  // soon as no legal placement is left.
+  BOARD_BASE: 4,
+  BOARD_PER_PLAYER: 1,
+  BOARD_MIN: 3,
+  BOARD_MAX: 16,
+
+  // ---- simulation mode ----
+  SIM_GAMES: 10000, // default number of headless games per run
+  SIM_SEED: 12345, // base seed (run N uses SIM_SEED + N) — runs are repeatable
+
   // ---- scoring variants (setup-screen toggle picks one) ----
   GROUP_SCORE_FIXED: 4, // "FIXED": every group is worth this, regardless of size
   GROUP_SCORE_PER_TILE: 1, // "SIZE": group is worth (number of halves) × this
@@ -133,7 +148,12 @@ export const COLOR_CFG = {
   POWER_RED_REMOVE: 1, // influence removed from a chosen adjacent group
 
   // ---- game end ----
-  // Groups still open (not fully sealed) when the tiles run out score:
-  // "none" (they die unscored — pressure to seal), "half" value, or "full".
+  // Groups still open (not fully sealed) when the game ends (board full, no
+  // legal placement, or tiles exhausted) score: "none" (they die unscored —
+  // pressure to seal), "half" value, or "full".
   ENDGAME_OPEN_GROUPS: "none" as "none" | "half" | "full",
 } as const;
+
+/** Default board edge length for a given player count (2p → 6, 4p → 8). */
+export const defaultBoardSize = (players: number) =>
+  COLOR_CFG.BOARD_BASE + COLOR_CFG.BOARD_PER_PLAYER * players;

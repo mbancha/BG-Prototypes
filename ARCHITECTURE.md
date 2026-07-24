@@ -87,8 +87,17 @@ placed half joins an existing group, the placer adds influence to that
 GROUP (`MATCH_INFLUENCE`); fresh singleton halves add nothing. A group
 scores the moment **every cell around it is occupied** — most influence
 takes the value, ties split, influence returns to supply. Turns are just
-"place one tile" (auto-advance); groups left open when tiles run out score
-per `ENDGAME_OPEN_GROUPS` (default: nothing).
+"place one tile" (auto-advance); groups left open at the end score per
+`ENDGAME_OPEN_GROUPS` (default: nothing).
+
+The board is a **fixed W×H rectangle centered on the origin** (`boundsFor`,
+stored as `state.bounds`), sized on the setup screen and defaulting to
+`BOARD_BASE + BOARD_PER_PLAYER × players` (2p → 6×6, 4p → 8×8). Two
+consequences: nothing can be placed outside it, and **its walls count as
+sealed** — `openPerimeter` skips off-board cells, so a group pressed into a
+corner closes with far fewer tiles. The game ends as soon as
+`hasLegalPlacement` is false (checked after the turn advances, so the
+opening "cover the origin" rule isn't still in force).
 
 Variant toggles (chosen per game on the setup screen, numbers in
 `COLOR_CFG`):
@@ -114,6 +123,31 @@ once every removal is answered). Everything else resolves synchronously.
 Bots answer red prompts and place greedily (match + seal-what-you'd-win,
 avoid gifting, sometimes deny neutral groups) in `colorBotDecide`.
 
+### Simulation mode
+
+`src/color/sim.ts` exports `runSimulation({games, players, variant, seed})`,
+a pure, seeded, DOM-free function that plays whole bot-vs-bot games and
+aggregates telemetry — above all **win rate by colour played**: for each
+colour it reports the win rate of whichever player placed the most of it
+(`leaderWinRate`, compare to `baselineWinRate` = 1/players), the winners'
+vs losers' average counts, and the points each colour's groups paid out.
+Ties split win credit. Three front ends, all calling the same function:
+
+- **UI** — the ⚗ SIMULATE button on the setup screen opens `SimPanel`,
+  which runs it in a Web Worker (`sim.worker.ts`) with progress + cancel,
+  so 10,000 games never freeze the page (~1.5 min at 2p/6×6).
+- **CLI** — `npm run sim -- --games 10000 --players 2 --powers --specials`
+  (`scripts/sim.mjs` loads the TS through Vite's SSR loader; `--json out`
+  to save the raw numbers).
+- **tests** — `tests/colors.test.ts` runs short simulations and asserts
+  determinism and that seat win rates sum to 1.
+
+Bot search is kept cheap enough for this: `legalPlacements` enumerates
+candidates from the frontier (both orientations, so nothing is missed
+despite tiles being two-colored) instead of scanning the board, seal
+evaluation only visits groups adjacent to the two new cells, and cell-key
+parsing is memoized.
+
 ## 3. Module map
 
 ```
@@ -136,6 +170,8 @@ src/game/turn.ts       newGame + applyAction (beginTurn/deploy/place/endTurn/
                        answer), double-match bonus, enclosure frame, game end
 src/game/bot.ts        botDecide(state) → next Action; decisionOwner helper
 src/color/engine.ts    ENTIRE color-groups mode: rules + bot (see §2b)
+src/color/sim.ts       headless simulation + colour win-rate telemetry
+src/color/sim.worker.ts  Web Worker wrapper so the UI stays responsive
 src/App.tsx            session = mode + snapshot array (undo), dispatch,
                        mode-agnostic bot driver
 src/ui/*.tsx           SetupScreen (mode/variants/players) / GameScreen /
@@ -144,10 +180,12 @@ src/ui/*.tsx           SetupScreen (mode/variants/players) / GameScreen /
 tests/engine.test.ts   targeted classic rules tests (forcePlace helpers)
 tests/simulation.test.ts  24 seeded random full games, invariants each step
 tests/bots.test.ts     all-bot seeded classic games + enclosure behavior
-tests/colors.test.ts   color mode: grouping/merges/sealing/variants/powers
-                       + all-bot games with token conservation
+tests/colors.test.ts   color mode: grouping/merges/sealing/variants/powers,
+                       bounded board, simulation + all-bot games
 scripts/smoke.mjs      headless-Chromium boot-and-click check (needs build)
 scripts/colorsmoke.mjs same for color mode: all-bot game, board fills up
+scripts/simsmoke.mjs   board defaults + in-browser simulation run
+scripts/sim.mjs        CLI simulation (npm run sim)
 ```
 
 ## 4. How state flows

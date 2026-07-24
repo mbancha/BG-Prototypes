@@ -10,20 +10,30 @@
 // violet/violet 55.
 
 import { describe, expect, it } from "vitest";
-import { COLOR_CFG, CONFIG } from "../src/data/config";
+import { COLOR_CFG, CONFIG, defaultBoardSize } from "../src/data/config";
 import {
   applyColor,
+  boundsFor,
   colorBotDecide,
+  freeCells,
   groupValue,
+  hasLegalPlacement,
   newColorGame,
+  openPerimeter,
+  placementCheckC,
   type ColorState,
   type ColorVariant,
 } from "../src/color/engine";
+import { runSimulation } from "../src/color/sim";
 
+// Tests use a roomy board by default so fixed scenarios aren't cramped by
+// the walls; bounded-board behaviour gets its own describe block below.
 const V = (over: Partial<ColorVariant> = {}): ColorVariant => ({
   scoring: "size",
   specials: false,
   powers: false,
+  width: 14,
+  height: 14,
   ...over,
 });
 
@@ -225,6 +235,98 @@ describe("color powers", () => {
     expect(groupOf(s, "0,-1").scored).toBe(true);
     expect(s.players[0].pts).toBe(4); // winner: size 4
     expect(s.players[1].pts).toBe(Math.floor(4 / 2)); // intel runner-up
+  });
+});
+
+describe("bounded board", () => {
+  it("defaults to 4 + 1 per player and centers on the origin", () => {
+    expect(defaultBoardSize(2)).toBe(6);
+    expect(defaultBoardSize(3)).toBe(7);
+    expect(defaultBoardSize(4)).toBe(8);
+    // 6 wide → x from -2..3 (origin inside, near the middle)
+    expect(boundsFor(6, 6)).toEqual({ xMin: -2, xMax: 3, yMin: -2, yMax: 3 });
+    const s = freshC(V({ width: 6, height: 6 }));
+    expect(freeCells(s)).toBe(36);
+  });
+
+  it("rejects placements that leave the board", () => {
+    const s = freshC(V({ width: 6, height: 6 })); // x,y ∈ [-2,3]
+    forcePlaceC(s, 0, 1, 0, 0, 0);
+    // a tile whose second half would sit at x=4 is out of bounds
+    expect(placementCheckC(s, { x: 3, y: 0 }, 3).ok).toBe(false);
+    expect(placementCheckC(s, { x: 3, y: 0 }, 3).reason).toBe(
+      "Outside the board",
+    );
+    s.passPending = false;
+    s.players[s.turn.p].hand.push(2);
+    expect(applyColor(s, { a: "place", tile: 2, at: { x: 3, y: 0 }, rot: 3 })).toBe(
+      "Outside the board",
+    );
+  });
+
+  it("treats walls as sealed: a corner group needs fewer tiles to close", () => {
+    // 3x3 board → x,y ∈ [-1,1]. Put a red half in the corner (-1,-1).
+    const s = freshC(V({ width: 3, height: 3 }));
+    forcePlaceC(s, 0, 1, 0, 0, 2); // red@(0,0), cyan@(0,-1) covers origin
+    // the cyan half at (0,-1) sits on the top wall: (0,-2) is off-board and
+    // (0,0) is its own tile, so only two cells are actually still open
+    expect(openPerimeter(s, ["0,-1"]).sort()).toEqual(["-1,-1", "1,-1"]);
+    // fill both remaining neighbours of the cyan half → it seals
+    forcePlaceC(s, 1, 4, -1, -1, 0); // red@(-1,-1), green@(-1,0)
+    expect(groupOf(s, "0,-1").scored).toBe(false);
+    forcePlaceC(s, 0, 22, 1, -1, 0); // green@(1,-1), gold@(1,0)
+    expect(groupOf(s, "0,-1").scored).toBe(true); // sealed by 2 tiles + walls
+  });
+
+  it("ends the game when no legal placement is left", () => {
+    const s = freshC(V({ width: 3, height: 3 }));
+    forcePlaceC(s, 0, 1, 0, 0, 2); // (0,0) + (0,-1)
+    forcePlaceC(s, 1, 4, -1, -1, 0); // (-1,-1) + (-1,0)
+    forcePlaceC(s, 0, 22, 1, -1, 0); // (1,-1) + (1,0)
+    expect(s.over).toBe(false);
+    forcePlaceC(s, 1, 28, 0, 1, 3); // (0,1) + (1,1)
+    // only (-1,1) is left — a domino can never fit in a single cell
+    expect(hasLegalPlacement(s)).toBe(false);
+    expect(s.over).toBe(true);
+    expect(s.ranking).toBeDefined();
+  });
+});
+
+describe("simulation", () => {
+  it("runs headless games and reports per-colour telemetry", () => {
+    const res = runSimulation({
+      games: 40,
+      players: 2,
+      variant: V({ width: 6, height: 6, powers: true, specials: true }),
+      seed: 99,
+    });
+    expect(res.games).toBe(40);
+    expect(res.baselineWinRate).toBe(0.5);
+    // win credit is split on ties, so seat win rates always total 1
+    expect(res.winRateBySeat.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 6);
+    expect(res.avgPlacements).toBeGreaterThan(5);
+    expect(res.avgScore).toBeGreaterThan(0);
+    expect(res.byColor).toHaveLength(5);
+    for (const c of res.byColor) {
+      expect(c.avgPlacedPerPlayer).toBeGreaterThan(0);
+      if (c.leaderWinRate !== null) {
+        expect(c.leaderWinRate).toBeGreaterThanOrEqual(0);
+        expect(c.leaderWinRate).toBeLessThanOrEqual(1);
+      }
+    }
+    expect(
+      res.byColor.reduce((a, c) => a + c.ptsShare, 0),
+    ).toBeCloseTo(1, 6);
+  });
+
+  it("is deterministic for a given seed", () => {
+    const opts = {
+      games: 15,
+      players: 3,
+      variant: V({ width: 7, height: 7, powers: true }),
+      seed: 7,
+    };
+    expect(runSimulation(opts).avgScore).toBe(runSimulation(opts).avgScore);
   });
 });
 

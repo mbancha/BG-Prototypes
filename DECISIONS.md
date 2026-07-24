@@ -226,6 +226,32 @@ in ARCHITECTURE.md §2.
     group holds influence. Powers live in resolveMatch / groupValue /
     scoreGroup / actAnswerC in src/color/engine.ts.
 
+## Bounded board & simulation (color mode)
+
+64. **The board is a fixed rectangle centered on the origin**, not a
+    growing bounding box: with a floating box "is this cell still
+    fillable?" has no stable answer, and the sealing rule needs one.
+    Default edge = 4 + 1 per player (2p → 6×6). Applies to COLOR GROUPS
+    only — classic's 60-tile deck needs 120 cells, so bounding it would
+    break its deck-exhaustion endgame.
+65. **Walls seal groups.** Off-board cells can never be filled, so
+    openPerimeter ignores them: a group in a corner closes with two
+    fewer tiles. This is the main strategic consequence of bounding the
+    board and is deliberate.
+66. **The game ends when no legal placement remains** (checked after the
+    turn advances). Since legality is pure geometry, if one player is
+    stuck everyone is. Leftover open groups then score per
+    ENDGAME_OPEN_GROUPS (default: nothing).
+67. **Simulation win-credit:** tied games split credit (two winners →
+    0.5 each) so seat win rates always total 1.
+68. **"Win rate by colour played" = leader win rate:** the win rate of
+    whoever placed the most halves of that colour, skipping games with no
+    unique leader. Compared against 1/players. The winners-vs-losers
+    average counts are reported alongside as a continuous cross-check.
+    Bots play both seats, so the numbers describe the *rules*, not human
+    strategy — read them as "does this colour reward the bot's greedy
+    play", not as a final balance verdict.
+
 ## Not built (out of scope for a playtest loop)
 
 - No networking, no save/load (a full game fits one sitting; the JSON

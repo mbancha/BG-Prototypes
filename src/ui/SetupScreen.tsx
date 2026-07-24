@@ -5,9 +5,10 @@
 // newGame. Purely presentational — no game rules here.
 // =============================================================================
 
-import { useState } from "react";
-import { CONFIG } from "../data/config";
+import { useEffect, useState } from "react";
+import { COLOR_CFG, CONFIG, defaultBoardSize } from "../data/config";
 import type { ColorVariant } from "../color/engine";
+import SimPanel from "./SimPanel";
 
 export const NEON_COLORS = [
   "#00e5ff",
@@ -30,12 +31,32 @@ export default function SetupScreen(props: {
   onStart: (r: SetupResult) => void;
 }) {
   const [mode, setMode] = useState<"classic" | "colors">("classic");
+  const [count, setCount] = useState(2);
   const [variant, setVariant] = useState<ColorVariant>({
     scoring: "size",
     specials: false,
     powers: false,
+    width: defaultBoardSize(2),
+    height: defaultBoardSize(2),
   });
-  const [count, setCount] = useState(2);
+  const [sizeTouched, setSizeTouched] = useState(false);
+  const [showSim, setShowSim] = useState(false);
+
+  // board size follows the player count until the user sets it by hand
+  useEffect(() => {
+    if (sizeTouched) return;
+    const n = defaultBoardSize(count);
+    setVariant((v) => ({ ...v, width: n, height: n }));
+  }, [count, sizeTouched]);
+
+  const setSize = (key: "width" | "height", raw: number) => {
+    setSizeTouched(true);
+    const n = Math.max(
+      COLOR_CFG.BOARD_MIN,
+      Math.min(COLOR_CFG.BOARD_MAX, Math.round(raw) || COLOR_CFG.BOARD_MIN),
+    );
+    setVariant((v) => ({ ...v, [key]: n }));
+  };
   const [names, setNames] = useState<string[]>([...DEFAULT_NAMES]);
   const [bots, setBots] = useState<boolean[]>([false, false, false, false]);
   const [colors, setColors] = useState<string[]>([
@@ -86,6 +107,40 @@ export default function SetupScreen(props: {
 
         {mode === "colors" && (
           <div className="variantbox">
+            <div className="vrow">
+              <span className="vlabel">board size</span>
+              <input
+                type="number"
+                className="sizein"
+                min={COLOR_CFG.BOARD_MIN}
+                max={COLOR_CFG.BOARD_MAX}
+                value={variant.width}
+                onChange={(e) => setSize("width", +e.target.value)}
+                title="Board width in cells. Tiles can never be placed outside the board, and its walls count as sealed edges for groups."
+              />
+              <span style={{ color: "var(--dim)" }}>×</span>
+              <input
+                type="number"
+                className="sizein"
+                min={COLOR_CFG.BOARD_MIN}
+                max={COLOR_CFG.BOARD_MAX}
+                value={variant.height}
+                onChange={(e) => setSize("height", +e.target.value)}
+                title="Board height in cells."
+              />
+              <span style={{ color: "var(--dim)", fontSize: 10 }}>
+                = {variant.width * variant.height} cells
+                {sizeTouched && (
+                  <button
+                    style={{ marginLeft: 6, padding: "1px 5px", fontSize: 10 }}
+                    onClick={() => setSizeTouched(false)}
+                    title={`Back to the default for ${count} players (${defaultBoardSize(count)}×${defaultBoardSize(count)})`}
+                  >
+                    auto
+                  </button>
+                )}
+              </span>
+            </div>
             <div className="vrow">
               <span className="vlabel">group value</span>
               <button
@@ -181,29 +236,47 @@ export default function SetupScreen(props: {
             </div>
           </div>
         ))}
-        <button
-          className="primary"
-          onClick={() =>
-            props.onStart({
-              mode,
-              variant: mode === "colors" ? variant : undefined,
-              players: Array.from({ length: count }, (_, i) => ({
-                name: names[i].trim() || `Player ${i + 1}`,
-                color: colors[i],
-                isBot: bots[i],
-              })),
-            })
-          }
-        >
-          ▶ START GAME
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            className="primary"
+            style={{ flex: 1 }}
+            onClick={() =>
+              props.onStart({
+                mode,
+                variant: mode === "colors" ? variant : undefined,
+                players: Array.from({ length: count }, (_, i) => ({
+                  name: names[i].trim() || `Player ${i + 1}`,
+                  color: colors[i],
+                  isBot: bots[i],
+                })),
+              })
+            }
+          >
+            ▶ START GAME
+          </button>
+          {mode === "colors" && (
+            <button
+              onClick={() => setShowSim(true)}
+              title={`Play ${COLOR_CFG.SIM_GAMES.toLocaleString()} bot-vs-bot games headlessly on these exact settings and report win rates by color played, average scores and points per color`}
+            >
+              ⚗ SIMULATE
+            </button>
+          )}
+        </div>
         <div style={{ color: "var(--dim)", fontSize: 11 }}>
           Hotseat: pass the device between turns. Player 1 opens on the origin.
           Seats marked 🤖 play themselves — their hands stay hidden.
           {mode === "colors" &&
-            " COLOR GROUPS: match a side to add influence to that group; a group only scores once every side of it is sealed."}
+            ` COLOR GROUPS: match a side to add influence to that group; a group only scores once every side of it is sealed — the ${variant.width}×${variant.height} board's walls count as sealed.`}
         </div>
       </div>
+      {showSim && (
+        <SimPanel
+          players={count}
+          variant={variant}
+          onClose={() => setShowSim(false)}
+        />
+      )}
     </div>
   );
 }

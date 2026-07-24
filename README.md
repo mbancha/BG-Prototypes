@@ -9,8 +9,12 @@ Two game modes on the setup screen:
 - **♠ CLASSIC** — the full 60-card ability game.
 - **◼ COLOR GROUPS** — stripped-down core experiment: color dominoes form
   contiguous groups; matching a side adds influence to the group; a group
-  scores only when every cell around it is sealed. Variant toggles at
-  setup: group value BY SIZE vs FIXED, ★ bonus tiles, per-color powers.
+  scores only when every cell around it is sealed. Played on a bounded
+  board (default 4 + 1 per player, so 6×6 at 2p) whose **walls count as
+  sealed edges**. Variant toggles at setup: group value BY SIZE vs FIXED,
+  ★ bonus tiles, per-color powers — plus **⚗ SIMULATE**, which plays
+  10,000 headless bot games on the current settings and reports win rate
+  by colour played, average scores and points per colour.
 
 **New here (or an AI picking this up cold)? Read `ARCHITECTURE.md` first** —
 it summarizes the game rules as built, every module, and the recipes for
@@ -24,7 +28,15 @@ npm run dev        # → http://localhost:5173
 npm test           # engine tests + random full-game sims + bot games
 npm run build      # typecheck + production build (static files in dist/)
 npm run smoke      # headless-browser boot check (run after a build)
+npm run sim        # 10,000 headless color games, colour win-rate report
 ```
+
+Simulation flags: `npm run sim -- --games 50000 --players 3 --powers
+--specials --scoring fixed --size 8 --seed 42 --json out.json`. The same
+report is available in-app via ⚗ SIMULATE on the setup screen (runs in a
+Web Worker with progress + cancel). Read `lead win%` against the baseline
+(1 / players): above it means playing that colour more went with winning
+more.
 
 Windows note: run these in **cmd.exe** (PowerShell blocks npm scripts by
 default unless you loosen its execution policy).

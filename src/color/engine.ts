@@ -16,10 +16,15 @@
 //   • MATCH: when a placed half joins an existing group, the placer adds
 //     MATCH_INFLUENCE to that group's pool (not to a card — the GROUP holds
 //     influence). A half that starts a fresh 1-cell group adds nothing.
+//   • The board is a FIXED W×H rectangle centered on the origin (size set
+//     per game; default 4 + 1 per player). Cells outside it can never be
+//     filled, so the walls count as sealed: a group against an edge closes
+//     with fewer tiles. The game ends when no legal placement remains.
 //   • A group scores the moment its ENTIRE perimeter (every empty-able cell
-//     orthogonally adjacent to any of its cells) is occupied — by anything,
-//     any color. Most influence takes the value; ties split (TIE_DIVISOR);
-//     zero influence scores no one. Influence returns to supplies.
+//     orthogonally adjacent to any of its cells — board walls excluded) is
+//     occupied — by anything, any color. Most influence takes the value;
+//     ties split (TIE_DIVISOR); zero influence scores no one. Influence
+//     returns to supplies.
 //   • Value = FIXED or SIZE×per-tile (variant), + member ★ bonuses
 //     (variant), + gold's bonus (powers variant).
 //   • Color powers (variant): the +1 match ALWAYS happens; the power layers
@@ -46,7 +51,31 @@ export interface ColorVariant {
   scoring: "fixed" | "size"; // variation 2 vs 3
   specials: boolean; // variation 4: ★ bonus tiles in the deck
   powers: boolean; // variation 5: per-color qualitative rules
+  width: number; // board size in cells (see COLOR_CFG.BOARD_*)
+  height: number;
 }
+
+/** Inclusive cell bounds of the board rectangle, centered on the origin. */
+export interface ColorBounds {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+}
+
+export function boundsFor(width: number, height: number): ColorBounds {
+  const w = Math.max(COLOR_CFG.BOARD_MIN, Math.min(COLOR_CFG.BOARD_MAX, width));
+  const h = Math.max(COLOR_CFG.BOARD_MIN, Math.min(COLOR_CFG.BOARD_MAX, height));
+  const xMin = -Math.floor((w - 1) / 2);
+  const yMin = -Math.floor((h - 1) / 2);
+  return { xMin, xMax: xMin + w - 1, yMin, yMax: yMin + h - 1 };
+}
+
+export const inBounds = (s: ColorState, c: Cell) =>
+  c.x >= s.bounds.xMin &&
+  c.x <= s.bounds.xMax &&
+  c.y >= s.bounds.yMin &&
+  c.y <= s.bounds.yMax;
 
 /** One physical tile. `bonus` (when present) gives each half's point bonus,
  *  e.g. [1,0] or [2,0] — only one half of a bonus tile carries points; the
@@ -81,7 +110,18 @@ export interface ColorPlayerState {
   pts: number;
   supply: number;
   hand: number[]; // tile ids
+  // per-color telemetry (drives the simulation's win-rate-by-color report)
+  placedByColor: Record<ColorKey, number>; // halves of each color placed
+  ptsByColor: Record<ColorKey, number>; // points won from each color's groups
 }
+
+const zeroByColor = (): Record<ColorKey, number> => ({
+  red: 0,
+  cyan: 0,
+  green: 0,
+  gold: 0,
+  violet: 0,
+});
 
 export interface ColorTelem {
   matchesByColor: Record<ColorKey, number>;
@@ -112,6 +152,7 @@ export interface ColorPending {
 export interface ColorState {
   mode: "colors"; // discriminant vs the classic GameState
   variant: ColorVariant;
+  bounds: ColorBounds; // the fixed board rectangle (walls seal groups)
   players: ColorPlayerState[];
   tiles: Record<number, ColorTile>;
   deck: number[];
@@ -147,6 +188,23 @@ export function cellsFor(a: Cell, rot: number): [Cell, Cell] {
   return [a, { x: a.x + o.x, y: a.y + o.y }];
 }
 
+/**
+ * "x,y" → {x,y}, memoized. Group cells are stored as keys, and the perimeter
+ * scans re-read the same handful of keys thousands of times per simulated
+ * game, so parsing them once is a large win. Pure derivation of the key —
+ * safe to share across games (the cache is bounded by board size).
+ */
+const KEY_CACHE = new Map<string, Cell>();
+function parseKey(k: string): Cell {
+  let c = KEY_CACHE.get(k);
+  if (!c) {
+    const i = k.indexOf(",");
+    c = { x: +k.slice(0, i), y: +k.slice(i + 1) };
+    KEY_CACHE.set(k, c);
+  }
+  return c;
+}
+
 // ---------------------------------------------------------------------------
 // Setup
 // ---------------------------------------------------------------------------
@@ -154,6 +212,7 @@ export function cellsFor(a: Cell, rot: number): [Cell, Cell] {
 export function newColorGame(
   playersIn: { name: string; color: string; isBot?: boolean }[],
   variant: ColorVariant,
+  rnd: () => number = Math.random, // injectable so simulations are repeatable
 ): ColorState {
   const n = playersIn.length;
   if (n < CONFIG.MIN_PLAYERS || n > CONFIG.MAX_PLAYERS)
@@ -190,13 +249,14 @@ export function newColorGame(
 
   const deck = Object.keys(tiles).map(Number);
   for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rnd() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
 
   const s: ColorState = {
     mode: "colors",
     variant,
+    bounds: boundsFor(variant.width, variant.height),
     players: playersIn.map((p) => ({
       name: p.name,
       color: p.color,
@@ -204,6 +264,8 @@ export function newColorGame(
       pts: 0,
       supply: CONFIG.INFLUENCE_SUPPLY,
       hand: [],
+      placedByColor: zeroByColor(),
+      ptsByColor: zeroByColor(),
     })),
     tiles,
     deck,
@@ -253,9 +315,11 @@ export function placementCheckC(
   rot: number,
 ): { ok: boolean; reason?: string } {
   const [ca, cb] = cellsFor(at, rot);
-  for (const c of [ca, cb])
+  for (const c of [ca, cb]) {
+    if (!inBounds(s, c)) return { ok: false, reason: "Outside the board" };
     if (s.cellOwner[cellKey(c)] !== undefined)
       return { ok: false, reason: "Cell occupied" };
+  }
   if (s.turn.setup) {
     const covers =
       (ca.x === 0 && ca.y === 0) || (cb.x === 0 && cb.y === 0);
@@ -292,18 +356,46 @@ function adjacentGroups(
   return [...found];
 }
 
-/** Every empty cell orthogonally adjacent to any of the given cells. */
+/**
+ * Every still-fillable empty cell orthogonally adjacent to the given cells.
+ * Cells outside the board are skipped — they can never be filled, so the
+ * walls count as sealed and a group against an edge closes early.
+ */
 export function openPerimeter(s: ColorState, cells: string[]): string[] {
   const own = new Set(cells);
   const open = new Set<string>();
+  const { xMin, xMax, yMin, yMax } = s.bounds;
   for (const ck of cells) {
-    const [x, y] = ck.split(",").map(Number);
+    const { x, y } = parseKey(ck);
     for (const o of ORTHO) {
-      const k = cellKey({ x: x + o.x, y: y + o.y });
-      if (!own.has(k) && s.cellOwner[k] === undefined) open.add(k);
+      const nx = x + o.x;
+      const ny = y + o.y;
+      if (nx < xMin || nx > xMax || ny < yMin || ny > yMax) continue; // wall
+      const k = `${nx},${ny}`;
+      if (own.has(k) || s.cellOwner[k] !== undefined) continue;
+      open.add(k);
     }
   }
   return [...open];
+}
+
+/** Is any legal placement left on the board? (Geometry only — every tile
+ *  fits anywhere, so this is the same answer for every player.) */
+export function hasLegalPlacement(s: ColorState): boolean {
+  for (let x = s.bounds.xMin; x <= s.bounds.xMax; x++)
+    for (let y = s.bounds.yMin; y <= s.bounds.yMax; y++)
+      for (let rot = 0; rot < 4; rot++)
+        if (placementCheckC(s, { x, y }, rot).ok) return true;
+  return false;
+}
+
+/** Free (in-bounds, unoccupied) cell count — shown in the HUD. */
+export function freeCells(s: ColorState): number {
+  let n = 0;
+  for (let x = s.bounds.xMin; x <= s.bounds.xMax; x++)
+    for (let y = s.bounds.yMin; y <= s.bounds.yMax; y++)
+      if (s.cellOwner[cellKey({ x, y })] === undefined) n++;
+  return n;
 }
 
 /** The value a group would score for right now (variant-aware). */
@@ -354,9 +446,9 @@ function addInf(s: ColorState, g: ColorGroup, p: number, n: number) {
 function neighborGroups(s: ColorState, g: ColorGroup): ColorGroup[] {
   const ids = new Set<number>();
   for (const ck of g.cells) {
-    const [x, y] = ck.split(",").map(Number);
+    const { x, y } = parseKey(ck);
     for (const o of ORTHO) {
-      const gid = s.cellGroup[cellKey({ x: x + o.x, y: y + o.y })];
+      const gid = s.cellGroup[`${x + o.x},${y + o.y}`];
       if (gid !== undefined && gid !== g.id && !s.groups[gid].scored)
         ids.add(gid);
     }
@@ -435,10 +527,14 @@ function scoreGroup(s: ColorState, g: ColorGroup, why: string) {
       .map((e) => e.q);
     if (winners.length === 1) {
       s.players[winners[0]].pts += value;
+      s.players[winners[0]].ptsByColor[g.color] += value;
       label = `${pname(s, winners[0])} +${value}`;
     } else {
       const each = Math.floor(value / CONFIG.TIE_DIVISOR);
-      for (const q of winners) s.players[q].pts += each;
+      for (const q of winners) {
+        s.players[q].pts += each;
+        s.players[q].ptsByColor[g.color] += each;
+      }
       label = winners.map((q) => `${pname(s, q)} +${each}`).join(", ");
     }
     // Intel power: the runner-up count also scores half (rounded down)
@@ -451,6 +547,7 @@ function scoreGroup(s: ColorState, g: ColorGroup, why: string) {
           for (let q = 0; q < s.players.length; q++)
             if (g.inf[q] === second) {
               s.players[q].pts += half;
+              s.players[q].ptsByColor[g.color] += half;
               label += `, ${pname(s, q)} +${half} (intel)`;
             }
       }
@@ -513,6 +610,8 @@ function actPlaceC(
     if (tile.bonus[1]) s.cellBonus[cellKey(cb)] = tile.bonus[1];
   }
   s.telem.placements++;
+  s.players[p].placedByColor[tile.a]++;
+  s.players[p].placedByColor[tile.b]++;
   const bonusTag = tile.bonus ? ` ★+${tile.bonus[0] || tile.bonus[1]}` : "";
   log(
     s,
@@ -626,6 +725,17 @@ function finishPlacement(s: ColorState) {
   while (s.players[np].hand.length === 0) np = (np + 1) % s.players.length;
   s.turn = { n: s.turn.n + 1, p: np, setup: false };
   s.passPending = true;
+  // Bounded board: play stops as soon as nothing fits anywhere. Checked
+  // AFTER the turn advances, so the opening placement's "must cover the
+  // origin" rule is no longer in force when we ask.
+  if (!hasLegalPlacement(s)) {
+    log(
+      s,
+      null,
+      `no room left on the ${s.variant.width}×${s.variant.height} board`,
+    );
+    endColorGame(s);
+  }
 }
 
 function endColorGame(s: ColorState) {
@@ -655,7 +765,10 @@ function endColorGame(s: ColorState) {
             winners.length === 1
               ? value
               : Math.floor(value / CONFIG.TIE_DIVISOR);
-          for (const w of winners) s.players[w.q].pts += each;
+          for (const w of winners) {
+            s.players[w.q].pts += each;
+            s.players[w.q].ptsByColor[g.color] += each;
+          }
           g.scoredLabel = winners
             .map((w) => `${pname(s, w.q)} +${each} (open)`)
             .join(", ");
@@ -715,41 +828,62 @@ export function colorBotDecide(
   const p = s.turn.p;
   const hand = s.players[p].hand;
 
-  // candidate anchors: free cells adjacent to the board + one ring out
-  const anchors: Cell[] = [];
-  const seen = new Set<string>();
-  const add = (c: Cell) => {
-    const k = cellKey(c);
-    if (!seen.has(k) && s.cellOwner[k] === undefined) {
-      seen.add(k);
-      anchors.push(c);
-    }
-  };
-  if (s.turn.setup) {
-    add({ x: 0, y: 0 });
-    add({ x: 1, y: 0 });
-    add({ x: 0, y: 1 });
-    add({ x: -1, y: 0 });
-    add({ x: 0, y: -1 });
-  } else {
-    for (const pl of Object.values(s.board))
-      for (const c of [pl.cellA, pl.cellB])
-        for (const o of ORTHO) add({ x: c.x + o.x, y: c.y + o.y });
-    for (const c of [...anchors])
-      for (const o of ORTHO) add({ x: c.x + o.x, y: c.y + o.y });
-  }
-
   let best: { tile: number; at: Cell; rot: number; score: number } | null =
     null;
-  for (const tile of hand)
-    for (const at of anchors)
-      for (const rot of [0, 1, 2, 3]) {
-        if (!placementCheckC(s, at, rot).ok) continue;
-        const score = scoreColorPlacement(s, p, tile, at, rot) + rnd() * 0.5;
-        if (!best || score > best.score) best = { tile, at, rot, score };
-      }
-  // a legal spot always exists on an unbounded grid
+  for (const c of legalPlacements(s))
+    for (const tile of hand) {
+      const score = scoreColorPlacement(s, p, tile, c.at, c.rot) + rnd() * 0.5;
+      if (!best || score > best.score) best = { tile, ...c, score };
+    }
+  // finishPlacement ends the game when nothing fits, so best is never null
   return { a: "place", tile: best!.tile, at: best!.at, rot: best!.rot };
+}
+
+/**
+ * Every legal (anchor, rotation) pair, without scanning the whole board.
+ * A legal domino always has at least one cell orthogonally touching an
+ * existing tile, so it is enough to walk the free cells around the board
+ * and, for each direction, try that cell as BOTH halves of the domino
+ * (anchoring at the neighbor with the opposite rotation covers the
+ * color-swapped orientation).
+ */
+function legalPlacements(s: ColorState): { at: Cell; rot: number }[] {
+  const out: { at: Cell; rot: number }[] = [];
+  const seen = new Set<string>();
+  const push = (at: Cell, rot: number) => {
+    const k = `${at.x},${at.y}:${rot}`;
+    if (seen.has(k)) return;
+    seen.add(k);
+    if (placementCheckC(s, at, rot).ok) out.push({ at, rot });
+  };
+  if (s.turn.setup) {
+    for (const at of [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: 1 },
+      { x: -1, y: 0 },
+      { x: 0, y: -1 },
+    ])
+      for (let rot = 0; rot < 4; rot++) push(at, rot);
+    return out;
+  }
+  const frontier = new Set<string>();
+  for (const pl of Object.values(s.board))
+    for (const c of [pl.cellA, pl.cellB])
+      for (const o of ORTHO) {
+        const n = { x: c.x + o.x, y: c.y + o.y };
+        if (inBounds(s, n) && s.cellOwner[cellKey(n)] === undefined)
+          frontier.add(cellKey(n));
+      }
+  for (const fk of frontier) {
+    const [x, y] = fk.split(",").map(Number);
+    for (let rot = 0; rot < 4; rot++) {
+      push({ x, y }, rot); // this cell is half A
+      const o = B_OFFSET[rot];
+      push({ x: x + o.x, y: y + o.y }, (rot + 2) % 4); // …or half B
+    }
+  }
+  return out;
 }
 
 function scoreColorPlacement(
@@ -785,12 +919,20 @@ function scoreColorPlacement(
     }
     for (const gid of gs) joins[gid] = true;
   }
-  // sealing evaluation: which groups end with zero open perimeter once the
-  // two new cells fill in (a joined group also grows by my matching cell)
+  // Sealing evaluation. Only groups orthogonally adjacent to one of the two
+  // new cells can change seal status, so gather those instead of scanning
+  // every group on the board (exact, and much cheaper in simulations).
   const kA = cellKey(ca);
   const kB = cellKey(cb);
-  for (const g of Object.values(s.groups)) {
-    if (g.scored) continue;
+  const nearby = new Set<number>();
+  for (const c of [ca, cb])
+    for (const o of ORTHO) {
+      const gid = s.cellGroup[cellKey({ x: c.x + o.x, y: c.y + o.y })];
+      if (gid !== undefined) nearby.add(gid);
+    }
+  for (const gid of nearby) {
+    const g = s.groups[gid];
+    if (!g || g.scored) continue;
     const cells = [...g.cells];
     if (joins[g.id]) {
       if (tile.a === g.color) cells.push(kA);

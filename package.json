@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "smoke": "node scripts/smoke.mjs",
-    "smoke:colors": "node scripts/colorsmoke.mjs"
+    "smoke:colors": "node scripts/colorsmoke.mjs",
+    "smoke:sim": "node scripts/simsmoke.mjs",
+    "sim": "node scripts/sim.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
