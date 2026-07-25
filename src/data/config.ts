@@ -47,6 +47,16 @@ export const CONFIG = {
   // ---- game end ----
   FINAL_TURNS_PER_PLAYER: 2, // turns each player gets once the deck is empty
 
+  // ---- board limit (classic mode) ----
+  // Same floating rule as color mode: cards may be placed until the layout
+  // spans this many columns/rows. Classic's 60-card deck needs up to ~120
+  // cells, so the default is generous enough that it rarely binds — shrink
+  // it on the setup screen to make space itself a constraint.
+  BOARD_BASE: 8,
+  BOARD_PER_PLAYER: 2, // 2p → 12×12, 3p → 14×14, 4p → 16×16
+  BOARD_MIN: 2, // a domino is 2 cells long, so 2 is the smallest sane span
+  BOARD_MAX: 30,
+
   // ---- undo ----
   MAX_UNDO_STEPS: 600, // history snapshots kept (each dispatch = 1 step)
 
@@ -99,15 +109,18 @@ export const COLOR_CFG = {
 
   MATCH_INFLUENCE: 1, // influence added per half that joins an existing group
 
-  // ---- board size (settable per game on the setup screen) ----
-  // The board is a fixed rectangle centered on the origin cell. Default edge
-  // length = BOARD_BASE + BOARD_PER_PLAYER × players (2p → 6×6, 4p → 8×8).
-  // Cells outside it can never be filled, so THE WALLS SEAL GROUPS: a group
-  // pressed against an edge needs fewer tiles to close. The game ends as
-  // soon as no legal placement is left.
+  // ---- board limit (settable per game on the setup screen) ----
+  // There is no drawn board: tiles may be played anywhere until the layout
+  // SPANS this many columns / rows, after which nothing may extend it
+  // further. The limit floats — it is measured from the tiles actually on
+  // the table, so the first tile pins nothing. Default edge length =
+  // BOARD_BASE + BOARD_PER_PLAYER × players (2p → 6×6, 4p → 8×8).
+  // Cells that could never be played (they would push the layout past the
+  // limit) count as sealed, so a group at the edge of the span closes with
+  // fewer tiles. The game ends as soon as no legal placement is left.
   BOARD_BASE: 4,
   BOARD_PER_PLAYER: 1,
-  BOARD_MIN: 3,
+  BOARD_MIN: 2, // a domino is 2 cells long, so 2 is the smallest sane span
   BOARD_MAX: 16,
 
   // ---- simulation mode ----
@@ -154,6 +167,69 @@ export const COLOR_CFG = {
   ENDGAME_OPEN_GROUPS: "none" as "none" | "half" | "full",
 } as const;
 
-/** Default board edge length for a given player count (2p → 6, 4p → 8). */
+/** Default column/row limit for color mode (2p → 6, 4p → 8). */
 export const defaultBoardSize = (players: number) =>
   COLOR_CFG.BOARD_BASE + COLOR_CFG.BOARD_PER_PLAYER * players;
+
+/** Default column/row limit for classic mode (2p → 12, 4p → 16). */
+export const defaultClassicBoardSize = (players: number) =>
+  CONFIG.BOARD_BASE + CONFIG.BOARD_PER_PLAYER * players;
+
+// -----------------------------------------------------------------------------
+// Shared "floating extent" geometry, used by BOTH engines.
+//
+// There is no fixed board: the limit is measured against the bounding box of
+// whatever is already on the table. A cell may be played only if including it
+// keeps the span within the limit — so the playable region slides around
+// until the layout grows into it, then locks.
+// -----------------------------------------------------------------------------
+
+export interface Extent {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+}
+
+/** Grow an extent to include a cell (or start one). */
+export function growExtent(
+  e: Extent | undefined,
+  c: { x: number; y: number },
+): Extent {
+  if (!e) return { minX: c.x, maxX: c.x, minY: c.y, maxY: c.y };
+  return {
+    minX: Math.min(e.minX, c.x),
+    maxX: Math.max(e.maxX, c.x),
+    minY: Math.min(e.minY, c.y),
+    maxY: Math.max(e.maxY, c.y),
+  };
+}
+
+/** Could this cell ever be played without exceeding the limit? Nothing is
+ *  placed yet ⇒ anywhere. Monotone: the extent only grows, so a cell that
+ *  fails here can never become legal again (which is what lets sealing
+ *  treat it as a wall). */
+export function cellWithinLimit(
+  e: Extent | undefined,
+  limit: { w: number; h: number },
+  c: { x: number; y: number },
+): boolean {
+  if (!e) return true;
+  const g = growExtent(e, c);
+  return g.maxX - g.minX + 1 <= limit.w && g.maxY - g.minY + 1 <= limit.h;
+}
+
+/** The rectangle of cells still playable right now (null before the first
+ *  placement). Drawn in the UI so players can see the remaining room. */
+export function playableEnvelope(
+  e: Extent | undefined,
+  limit: { w: number; h: number },
+): Extent | null {
+  if (!e) return null;
+  return {
+    minX: e.maxX - limit.w + 1,
+    maxX: e.minX + limit.w - 1,
+    minY: e.maxY - limit.h + 1,
+    maxY: e.minY + limit.h - 1,
+  };
+}

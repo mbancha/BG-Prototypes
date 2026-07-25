@@ -16,15 +16,18 @@
 //   • MATCH: when a placed half joins an existing group, the placer adds
 //     MATCH_INFLUENCE to that group's pool (not to a card — the GROUP holds
 //     influence). A half that starts a fresh 1-cell group adds nothing.
-//   • The board is a FIXED W×H rectangle centered on the origin (size set
-//     per game; default 4 + 1 per player). Cells outside it can never be
-//     filled, so the walls count as sealed: a group against an edge closes
-//     with fewer tiles. The game ends when no legal placement remains.
-//   • A group scores the moment its ENTIRE perimeter (every empty-able cell
-//     orthogonally adjacent to any of its cells — board walls excluded) is
-//     occupied — by anything, any color. Most influence takes the value;
-//     ties split (TIE_DIVISOR); zero influence scores no one. Influence
-//     returns to supplies.
+//   • There is no drawn board: tiles may be played anywhere until the
+//     layout SPANS the column/row limit (set per game; default 4 + 1 per
+//     player), after which nothing may extend it further. The limit floats
+//     against the tiles already played (see cellWithinLimit in config).
+//     Cells that could never be played count as sealed, so a group at the
+//     edge of the span closes with fewer tiles. The game ends when no legal
+//     placement remains.
+//   • A group scores the moment its ENTIRE perimeter (every still-playable
+//     cell orthogonally adjacent to any of its cells) is occupied — by
+//     anything, any color. Most influence takes the value; ties split
+//     (TIE_DIVISOR); zero influence scores no one. Influence returns to
+//     supplies.
 //   • Value = FIXED or SIZE×per-tile (variant), + member ★ bonuses
 //     (variant), + gold's bonus (powers variant).
 //   • Color powers (variant): the +1 match ALWAYS happens; the power layers
@@ -40,7 +43,15 @@
 // undo works identically. Turns auto-advance after the mandatory placement.
 // =============================================================================
 
-import { COLOR_CFG, COLOR_DEFS, CONFIG } from "../data/config";
+import {
+  cellWithinLimit,
+  COLOR_CFG,
+  COLOR_DEFS,
+  CONFIG,
+  growExtent,
+  playableEnvelope,
+  type Extent,
+} from "../data/config";
 import { B_OFFSET, ORTHO } from "../game/grid";
 import type { Cell } from "../game/types";
 import { cellKey } from "../game/types";
@@ -51,31 +62,21 @@ export interface ColorVariant {
   scoring: "fixed" | "size"; // variation 2 vs 3
   specials: boolean; // variation 4: ★ bonus tiles in the deck
   powers: boolean; // variation 5: per-color qualitative rules
-  width: number; // board size in cells (see COLOR_CFG.BOARD_*)
-  height: number;
+  width: number; // max columns the layout may span (see COLOR_CFG.BOARD_*)
+  height: number; // max rows
 }
 
-/** Inclusive cell bounds of the board rectangle, centered on the origin. */
-export interface ColorBounds {
-  xMin: number;
-  xMax: number;
-  yMin: number;
-  yMax: number;
-}
+const clampSize = (n: number) =>
+  Math.max(COLOR_CFG.BOARD_MIN, Math.min(COLOR_CFG.BOARD_MAX, Math.round(n)));
 
-export function boundsFor(width: number, height: number): ColorBounds {
-  const w = Math.max(COLOR_CFG.BOARD_MIN, Math.min(COLOR_CFG.BOARD_MAX, width));
-  const h = Math.max(COLOR_CFG.BOARD_MIN, Math.min(COLOR_CFG.BOARD_MAX, height));
-  const xMin = -Math.floor((w - 1) / 2);
-  const yMin = -Math.floor((h - 1) / 2);
-  return { xMin, xMax: xMin + w - 1, yMin, yMax: yMin + h - 1 };
-}
+/** Can this cell still be played without over-spanning the limit? */
+export const withinLimit = (s: ColorState, c: Cell) =>
+  cellWithinLimit(s.extent, s.limit, c);
 
-export const inBounds = (s: ColorState, c: Cell) =>
-  c.x >= s.bounds.xMin &&
-  c.x <= s.bounds.xMax &&
-  c.y >= s.bounds.yMin &&
-  c.y <= s.bounds.yMax;
+/** Rectangle of cells still playable (null before the first tile) — the UI
+ *  draws it so players can see how much room is left. */
+export const colorEnvelope = (s: ColorState) =>
+  playableEnvelope(s.extent, s.limit);
 
 /** One physical tile. `bonus` (when present) gives each half's point bonus,
  *  e.g. [1,0] or [2,0] — only one half of a bonus tile carries points; the
@@ -152,7 +153,8 @@ export interface ColorPending {
 export interface ColorState {
   mode: "colors"; // discriminant vs the classic GameState
   variant: ColorVariant;
-  bounds: ColorBounds; // the fixed board rectangle (walls seal groups)
+  limit: { w: number; h: number }; // max columns / rows the layout may span
+  extent?: Extent; // bounding box of what's on the table (undefined = empty)
   players: ColorPlayerState[];
   tiles: Record<number, ColorTile>;
   deck: number[];
@@ -256,7 +258,7 @@ export function newColorGame(
   const s: ColorState = {
     mode: "colors",
     variant,
-    bounds: boundsFor(variant.width, variant.height),
+    limit: { w: clampSize(variant.width), h: clampSize(variant.height) },
     players: playersIn.map((p) => ({
       name: p.name,
       color: p.color,
@@ -315,11 +317,20 @@ export function placementCheckC(
   rot: number,
 ): { ok: boolean; reason?: string } {
   const [ca, cb] = cellsFor(at, rot);
-  for (const c of [ca, cb]) {
-    if (!inBounds(s, c)) return { ok: false, reason: "Outside the board" };
+  for (const c of [ca, cb])
     if (s.cellOwner[cellKey(c)] !== undefined)
       return { ok: false, reason: "Cell occupied" };
-  }
+  // the tile must not push the layout past the column/row limit (both halves
+  // are tested together — a domino can widen the span by one on its own)
+  const grown = growExtent(growExtent(s.extent, ca), cb);
+  if (
+    grown.maxX - grown.minX + 1 > s.limit.w ||
+    grown.maxY - grown.minY + 1 > s.limit.h
+  )
+    return {
+      ok: false,
+      reason: `Would exceed the ${s.limit.w}×${s.limit.h} limit`,
+    };
   if (s.turn.setup) {
     const covers =
       (ca.x === 0 && ca.y === 0) || (cb.x === 0 && cb.y === 0);
@@ -357,44 +368,50 @@ function adjacentGroups(
 }
 
 /**
- * Every still-fillable empty cell orthogonally adjacent to the given cells.
- * Cells outside the board are skipped — they can never be filled, so the
- * walls count as sealed and a group against an edge closes early.
+ * Every still-playable empty cell orthogonally adjacent to the given cells.
+ * Cells that could never be played (they would over-span the limit) are
+ * skipped — they behave like walls, so a group at the edge of the span
+ * closes early. Safe because the extent only ever grows: an unplayable cell
+ * can never become playable again.
  */
 export function openPerimeter(s: ColorState, cells: string[]): string[] {
   const own = new Set(cells);
   const open = new Set<string>();
-  const { xMin, xMax, yMin, yMax } = s.bounds;
   for (const ck of cells) {
     const { x, y } = parseKey(ck);
     for (const o of ORTHO) {
-      const nx = x + o.x;
-      const ny = y + o.y;
-      if (nx < xMin || nx > xMax || ny < yMin || ny > yMax) continue; // wall
-      const k = `${nx},${ny}`;
+      const c = { x: x + o.x, y: y + o.y };
+      const k = `${c.x},${c.y}`;
       if (own.has(k) || s.cellOwner[k] !== undefined) continue;
+      if (!withinLimit(s, c)) continue; // as good as a wall
       open.add(k);
     }
   }
   return [...open];
 }
 
-/** Is any legal placement left on the board? (Geometry only — every tile
- *  fits anywhere, so this is the same answer for every player.) */
+/** Is any legal placement left? (Geometry only — every tile fits anywhere,
+ *  so the answer is the same for every player.) */
 export function hasLegalPlacement(s: ColorState): boolean {
-  for (let x = s.bounds.xMin; x <= s.bounds.xMax; x++)
-    for (let y = s.bounds.yMin; y <= s.bounds.yMax; y++)
+  const env = colorEnvelope(s);
+  if (!env) return true; // nothing placed yet
+  for (let x = env.minX; x <= env.maxX; x++)
+    for (let y = env.minY; y <= env.maxY; y++)
       for (let rot = 0; rot < 4; rot++)
         if (placementCheckC(s, { x, y }, rot).ok) return true;
   return false;
 }
 
-/** Free (in-bounds, unoccupied) cell count — shown in the HUD. */
+/** Cells still playable and empty — shown in the HUD as room remaining. */
 export function freeCells(s: ColorState): number {
+  const env = colorEnvelope(s);
+  if (!env) return s.limit.w * s.limit.h;
   let n = 0;
-  for (let x = s.bounds.xMin; x <= s.bounds.xMax; x++)
-    for (let y = s.bounds.yMin; y <= s.bounds.yMax; y++)
-      if (s.cellOwner[cellKey({ x, y })] === undefined) n++;
+  for (let x = env.minX; x <= env.maxX; x++)
+    for (let y = env.minY; y <= env.maxY; y++) {
+      const c = { x, y };
+      if (s.cellOwner[cellKey(c)] === undefined && withinLimit(s, c)) n++;
+    }
   return n;
 }
 
@@ -605,6 +622,7 @@ function actPlaceC(
   s.cellOwner[cellKey(cb)] = tileId;
   s.cellColor[cellKey(ca)] = tile.a;
   s.cellColor[cellKey(cb)] = tile.b;
+  s.extent = growExtent(growExtent(s.extent, ca), cb);
   if (tile.bonus) {
     if (tile.bonus[0]) s.cellBonus[cellKey(ca)] = tile.bonus[0];
     if (tile.bonus[1]) s.cellBonus[cellKey(cb)] = tile.bonus[1];
@@ -729,11 +747,7 @@ function finishPlacement(s: ColorState) {
   // AFTER the turn advances, so the opening placement's "must cover the
   // origin" rule is no longer in force when we ask.
   if (!hasLegalPlacement(s)) {
-    log(
-      s,
-      null,
-      `no room left on the ${s.variant.width}×${s.variant.height} board`,
-    );
+    log(s, null, `no room left within the ${s.limit.w}×${s.limit.h} limit`);
     endColorGame(s);
   }
 }
@@ -872,7 +886,7 @@ function legalPlacements(s: ColorState): { at: Cell; rot: number }[] {
     for (const c of [pl.cellA, pl.cellB])
       for (const o of ORTHO) {
         const n = { x: c.x + o.x, y: c.y + o.y };
-        if (inBounds(s, n) && s.cellOwner[cellKey(n)] === undefined)
+        if (withinLimit(s, n) && s.cellOwner[cellKey(n)] === undefined)
           frontier.add(cellKey(n));
       }
   for (const fk of frontier) {

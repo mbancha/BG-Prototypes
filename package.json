@@ -11,6 +11,7 @@
     "smoke": "node scripts/smoke.mjs",
     "smoke:colors": "node scripts/colorsmoke.mjs",
     "smoke:sim": "node scripts/simsmoke.mjs",
+    "smoke:sheet": "node scripts/sheetsmoke.mjs",
     "sim": "node scripts/sim.mjs"
   },
   "dependencies": {

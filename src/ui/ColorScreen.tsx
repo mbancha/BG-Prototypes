@@ -20,6 +20,7 @@ import type {
 } from "../color/engine";
 import {
   cellsFor,
+  colorEnvelope,
   freeCells,
   groupValue,
   isColorBotTurn,
@@ -111,6 +112,7 @@ export default function ColorScreen(props: {
     if (check.ok) pv = previewMatches(s, placing.tile, hover, placing.rot);
   }
   const pt = placing ? s.tiles[placing.tile] : null;
+  const envelope = colorEnvelope(s);
 
   // group render data: anchor cell (top-left-most) per unscored/scored group
   const badges = Object.values(s.groups).map((g) => {
@@ -137,8 +139,10 @@ export default function ColorScreen(props: {
             {me.name}
           </span>
           <span style={{ color: "var(--dim)" }}>
-            deck {s.deck.length} · board {s.variant.width}×{s.variant.height} (
-            {freeCells(s)} free) ·{" "}
+            deck {s.deck.length} · span{" "}
+            {s.extent ? s.extent.maxX - s.extent.minX + 1 : 0}×
+            {s.extent ? s.extent.maxY - s.extent.minY + 1 : 0} / {s.limit.w}×
+            {s.limit.h} ({freeCells(s)} free) ·{" "}
             {s.variant.scoring === "fixed" ? `groups =${COLOR_CFG.GROUP_SCORE_FIXED}` : "groups = size"}
             {s.variant.specials ? " · ★" : ""}
             {s.variant.powers ? " · powers" : ""}
@@ -216,17 +220,20 @@ export default function ColorScreen(props: {
               className="world"
               style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.z})` }}
             >
-              {/* board walls: nothing can be placed outside this rectangle,
-                  and groups treat its edges as already sealed */}
-              <div
-                className="boardwall"
-                style={{
-                  left: s.bounds.xMin * CS,
-                  top: s.bounds.yMin * CS,
-                  width: (s.bounds.xMax - s.bounds.xMin + 1) * CS - 2,
-                  height: (s.bounds.yMax - s.bounds.yMin + 1) * CS - 2,
-                }}
-              />
+              {/* room left: tiles may only be played inside this rectangle,
+                  which shrinks as the layout grows into the column/row
+                  limit. Cells outside it seal groups like walls. */}
+              {envelope && (
+                <div
+                  className="boardwall"
+                  style={{
+                    left: envelope.minX * CS,
+                    top: envelope.minY * CS,
+                    width: (envelope.maxX - envelope.minX + 1) * CS - 2,
+                    height: (envelope.maxY - envelope.minY + 1) * CS - 2,
+                  }}
+                />
+              )}
               <div className="origin" style={{ left: 0, top: 0, width: CS - 1, height: CS - 1 }}>
                 ⌖
               </div>

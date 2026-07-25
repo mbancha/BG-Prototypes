@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { CONFIG } from "../src/data/config";
-import { cellsFor, findEnclosed, matchesFor } from "../src/game/grid";
+import {
+  cellsFor,
+  findEnclosed,
+  matchesFor,
+  placementCheck,
+} from "../src/game/grid";
 import {
   addToken,
   canRemoveToken,
@@ -14,12 +19,12 @@ import type { GameState } from "../src/game/types";
 // helpers
 // ---------------------------------------------------------------------------
 
-function fresh(n = 2): GameState {
+function fresh(n = 2, board?: { width: number; height: number }): GameState {
   const names = ["A", "B", "C", "D"].slice(0, n).map((name, i) => ({
     name,
     color: ["#0ff", "#f0f", "#ff0", "#f00"][i],
   }));
-  const s = newGame(names);
+  const s = newGame(names, board);
   s.passPending = false;
   return s;
 }
@@ -191,6 +196,50 @@ describe("enclosure & scoring", () => {
     expect(s.players[0].pts).toBe(0);
     expect(s.players[1].pts).toBe(0);
     expect(s.telem.scoredZero).toBe(1);
+  });
+});
+
+describe("board limit", () => {
+  it("rejects cards that would over-span the column/row limit", () => {
+    const s = fresh(2, { width: 3, height: 2 });
+    forceSetup(s, 1); // (0,0)+(0,1): 1 column, 2 rows — rows are now maxed
+    // a vertical card below would make 3 rows
+    expect(placementCheck(s, { x: 1, y: 1 }, 0).ok).toBe(false);
+    expect(placementCheck(s, { x: 1, y: 1 }, 0).reason).toBe(
+      "Would exceed the 3×2 limit",
+    );
+    expect(placementCheck(s, { x: 1, y: 0 }, 0).ok).toBe(true); // sideways ok
+  });
+
+  it("counts unplayable cells as sealed, so the limit encloses cards early", () => {
+    const s = fresh(2, { width: 3, height: 2 });
+    forceSetup(s, 1); // Silent Needle (muscle/whisper) at (0,0)+(0,1)
+    // rows are capped at 2, so (0,-1) and (0,2) can never be played: each
+    // card only needs its side neighbours to be enclosed
+    forcePlace(s, 1, 28, -1, 0, 0); // credit/credit — no match
+    expect(s.board[1].scored).toBe(false);
+    forcePlace(s, 0, 22, 1, 0, 0); // favor/favor — no match
+    // the 3×2 span is now full, which walls in all three cards at once
+    while (s.pending?.t === "card")
+      applyAction(s, { a: "answer", ans: { card: s.pending.ids[0] } });
+    expect(s.board[1].scored).toBe(true);
+    expect(s.board[22].scored).toBe(true);
+    expect(s.board[28].scored).toBe(true);
+    expect(s.players[0].pts).toBe(5 + 2); // Silent Needle 5 + Earmark 2
+    expect(s.players[1].pts).toBe(2); // Incumbent (credit+credit)
+  });
+
+  it("ends the game once nothing can be placed", () => {
+    const s = fresh(2, { width: 3, height: 2 });
+    forceSetup(s, 1);
+    forcePlace(s, 1, 28, -1, 0, 0);
+    forcePlace(s, 0, 22, 1, 0, 0); // span is now the full 3×2
+    while (s.pending?.t === "card")
+      applyAction(s, { a: "answer", ans: { card: s.pending.ids[0] } });
+    s.passPending = false;
+    s.turn.placed = true;
+    applyAction(s, { a: "endTurn" });
+    expect(s.over).toBe(true);
   });
 });
 

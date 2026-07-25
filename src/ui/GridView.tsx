@@ -19,7 +19,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { def, SYM_GLYPH, SYM_NAME, TYPE_ICON } from "../game/cards";
-import { cellsFor, matchesFor, placementCheck } from "../game/grid";
+import {
+  boardEnvelope,
+  cellsFor,
+  matchesFor,
+  placementCheck,
+} from "../game/grid";
 import { creditValue, muscleCount, whisperMax } from "../game/ongoing";
 import type { Cell, GameState, Placed, Sym } from "../game/types";
 import { cellKey } from "../game/types";
@@ -254,6 +259,22 @@ export default function GridView(props: {
         className="world"
         style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.z})` }}
       >
+        {/* room left within the column/row limit — cards can only go inside
+            this rectangle, and cells outside it seal enclosures */}
+        {(() => {
+          const env = boardEnvelope(s);
+          return env ? (
+            <div
+              className="boardwall"
+              style={{
+                left: env.minX * CS,
+                top: env.minY * CS,
+                width: (env.maxX - env.minX + 1) * CS - 2,
+                height: (env.maxY - env.minY + 1) * CS - 2,
+              }}
+            />
+          ) : null;
+        })()}
         <div className="origin" style={{ left: 0, top: 0, width: CS - 1, height: CS - 1 }}>
           ⌖
         </div>

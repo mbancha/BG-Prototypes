@@ -226,31 +226,46 @@ in ARCHITECTURE.md §2.
     group holds influence. Powers live in resolveMatch / groupValue /
     scoreGroup / actAnswerC in src/color/engine.ts.
 
-## Bounded board & simulation (color mode)
+## Board limit & simulation
 
-64. **The board is a fixed rectangle centered on the origin**, not a
-    growing bounding box: with a floating box "is this cell still
-    fillable?" has no stable answer, and the sealing rule needs one.
-    Default edge = 4 + 1 per player (2p → 6×6). Applies to COLOR GROUPS
-    only — classic's 60-tile deck needs 120 cells, so bounding it would
-    break its deck-exhaustion endgame.
-65. **Walls seal groups.** Off-board cells can never be filled, so
-    openPerimeter ignores them: a group in a corner closes with two
-    fewer tiles. This is the main strategic consequence of bounding the
-    board and is deliberate.
-66. **The game ends when no legal placement remains** (checked after the
-    turn advances). Since legality is pure geometry, if one player is
-    stuck everyone is. Leftover open groups then score per
+64. **The limit is relative, not a drawn board** (amended): play continues
+    until the layout *spans* W columns / H rows, measured against the
+    cards already on the table (`state.extent`), so the first card pins
+    nothing. Applies to BOTH modes. Defaults: color 4 + 1 per player
+    (2p → 6×6), classic 8 + 2 per player (2p → 12×12 — deliberately
+    generous, since classic's 60-card deck wants ~120 cells; shrink it to
+    make space a constraint).
+65. **Cells that could never be played seal.** A cell that would
+    over-span the limit can never hold a card, so openPerimeter (color)
+    and isEnclosed (classic) treat it exactly like an occupied neighbour.
+    Sound because the extent only grows — an unplayable cell never
+    becomes playable again. Consequence: cards/groups at the edge of the
+    span enclose early, which is the point.
+66. **Sealing uses a single-cell test.** A perimeter cell counts as open
+    if *that cell* is within the limit, without checking that a whole
+    domino could still fit there. Simpler, matches what a player eyeballs,
+    and only differs in rare one-cell-gap cases (which end the game
+    anyway).
+67. **Running out of room ends the game** (checked after the turn
+    advances, so the opening "cover the origin" rule isn't still in
+    force). Legality is pure geometry, so if one player is stuck everyone
+    is. Classic also drops its mandatory-placement requirement when
+    nothing fits. Leftover open color groups score per
     ENDGAME_OPEN_GROUPS (default: nothing).
-67. **Simulation win-credit:** tied games split credit (two winners →
+68. **Simulation win-credit:** tied games split credit (two winners →
     0.5 each) so seat win rates always total 1.
-68. **"Win rate by colour played" = leader win rate:** the win rate of
+69. **"Win rate by colour played" = leader win rate:** the win rate of
     whoever placed the most halves of that colour, skipping games with no
     unique leader. Compared against 1/players. The winners-vs-losers
     average counts are reported alongside as a continuous cross-check.
     Bots play both seats, so the numbers describe the *rules*, not human
     strategy — read them as "does this colour reward the bot's greedy
     play", not as a final balance verdict.
+70. **The classic cheat sheet is generated, not written.** Symbol effects,
+    card values, type counts and the turn structure all read from CONFIG /
+    SYMBOL_VP / the card database, so retuning can't leave stale rules on
+    screen. Only the one-line description of each card *type* is prose,
+    since a type is flavour plus a grab-bag of effects rather than a rule.
 
 ## Not built (out of scope for a playtest loop)
 

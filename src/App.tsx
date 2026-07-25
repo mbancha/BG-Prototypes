@@ -111,7 +111,10 @@ export default function App() {
 
   const start = (r: SetupResult) => {
     if (r.mode === "classic")
-      setSession({ mode: "classic", hist: [newGame(r.players)] });
+      setSession({
+        mode: "classic",
+        hist: [newGame(r.players, r.classicBoard)],
+      });
     else
       setSession({
         mode: "colors",

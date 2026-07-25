@@ -17,11 +17,16 @@
 // s.pending and applyAction({a:"answer"}) feeds the reply back in.
 // =============================================================================
 
-import { CONFIG } from "../data/config";
+import {
+  CONFIG,
+  defaultClassicBoardSize,
+  growExtent,
+} from "../data/config";
 import { CARDS, def, isDisabled } from "./cards";
 import { EFFECTS_LOADED } from "./effects";
 import {
   adjacentCards,
+  boardEnvelope,
   cellsFor,
   findEnclosed,
   matchesFor,
@@ -84,8 +89,15 @@ function freshTelemetry(): Telemetry {
 
 export function newGame(
   playersIn: { name: string; color: string; isBot?: boolean }[],
+  opts?: { width?: number; height?: number },
 ): GameState {
   const n = playersIn.length;
+  const clamp = (v: number) =>
+    Math.max(CONFIG.BOARD_MIN, Math.min(CONFIG.BOARD_MAX, Math.round(v)));
+  const limit = {
+    w: clamp(opts?.width ?? defaultClassicBoardSize(n)),
+    h: clamp(opts?.height ?? defaultClassicBoardSize(n)),
+  };
   if (n < CONFIG.MIN_PLAYERS || n > CONFIG.MAX_PLAYERS)
     throw new Error(`Player count must be ${CONFIG.MIN_PLAYERS}–${CONFIG.MAX_PLAYERS}`);
   const deck = CARDS.map((c) => c.id);
@@ -108,6 +120,7 @@ export function newGame(
     discard: [],
     board: {},
     cellOwner: {},
+    limit,
     turn: { n: 0, p: 0, deployed: false, placed: false, setup: true },
     over: false,
     exec: [],
@@ -275,6 +288,7 @@ function actPlace(
   };
   s.cellOwner[cellKey(ca)] = cardId;
   s.cellOwner[cellKey(cb)] = cardId;
+  s.extent = growExtent(growExtent(s.extent, ca), cb);
   s.players[p].lastPlaced = cardId;
   s.turn.placed = true;
   s.telem.placements++;
@@ -339,7 +353,12 @@ function actEndTurn(s: GameState): string | null {
   if (s.passPending) return "Pass the device first";
   if (s.turn.setup) return "Place your opening card first";
   if (busy(s)) return "Resolve pending effects first";
-  if (!s.turn.placed && s.players[p].hand.length > 0)
+  // Placement is mandatory — unless the board limit leaves nowhere to play.
+  if (
+    !s.turn.placed &&
+    s.players[p].hand.length > 0 &&
+    hasLegalPlacement(s)
+  )
     return "You must place a card (placement is mandatory)";
 
   // Rule: you ALWAYS draw back up to your hand size at the end of your turn.
@@ -358,7 +377,24 @@ function actEndTurn(s: GameState): string | null {
   s.turn.deployed = false;
   s.turn.placed = false;
   s.passPending = true;
+  // board limit reached: with nowhere left to play, the game is over
+  if (!hasLegalPlacement(s)) {
+    log(s, null, `no room left within the ${s.limit.w}×${s.limit.h} limit`);
+    endGame(s);
+  }
   return null;
+}
+
+/** Is any legal placement left? Geometry only, so the answer is the same
+ *  for every player (hand contents never restrict where a card may go). */
+export function hasLegalPlacement(s: GameState): boolean {
+  const env = boardEnvelope(s);
+  if (!env) return true; // nothing placed yet
+  for (let x = env.minX; x <= env.maxX; x++)
+    for (let y = env.minY; y <= env.maxY; y++)
+      for (let rot = 0; rot < 4; rot++)
+        if (placementCheck(s, { x, y }, rot).ok) return true;
+  return false;
 }
 
 function infOnGrid(s: GameState, q: number): number {

@@ -90,14 +90,7 @@ takes the value, ties split, influence returns to supply. Turns are just
 "place one tile" (auto-advance); groups left open at the end score per
 `ENDGAME_OPEN_GROUPS` (default: nothing).
 
-The board is a **fixed W×H rectangle centered on the origin** (`boundsFor`,
-stored as `state.bounds`), sized on the setup screen and defaulting to
-`BOARD_BASE + BOARD_PER_PLAYER × players` (2p → 6×6, 4p → 8×8). Two
-consequences: nothing can be placed outside it, and **its walls count as
-sealed** — `openPerimeter` skips off-board cells, so a group pressed into a
-corner closes with far fewer tiles. The game ends as soon as
-`hasLegalPlacement` is false (checked after the turn advances, so the
-opening "cover the origin" rule isn't still in force).
+Board limit: see §2c — the same floating column/row cap both modes use.
 
 Variant toggles (chosen per game on the setup screen, numbers in
 `COLOR_CFG`):
@@ -148,6 +141,35 @@ despite tiles being two-colored) instead of scanning the board, seal
 evaluation only visits groups adjacent to the two new cells, and cell-key
 parsing is memoized.
 
+## 2c. The board limit (both modes)
+
+There is **no drawn board**. Cards/tiles may be played anywhere until the
+layout *spans* the configured number of columns and rows, after which
+nothing may extend it further. The cap is **relative**: it is measured
+against the bounding box of what is already on the table (`state.extent`,
+grown on every placement), so the first card pins nothing and the playable
+region slides until the layout grows into it.
+
+Shared helpers live in `src/data/config.ts` and are used by both engines:
+`growExtent`, `cellWithinLimit` (could this cell ever be played?) and
+`playableEnvelope` (the rectangle still in reach — what the UI draws as a
+dashed box). Defaults come from `defaultBoardSize` (color: 4 + 1/player →
+2p 6×6) and `defaultClassicBoardSize` (classic: 8 + 2/player → 2p 12×12,
+generous because classic's 60-card deck wants ~120 cells; shrink it on the
+setup screen to make space a real constraint).
+
+Two consequences, identical in both modes:
+
+- **Unplayable cells seal.** A cell that would over-span the limit can
+  never be filled, so `openPerimeter` (color) and `isEnclosed` (classic)
+  treat it exactly like an occupied neighbour — cards and groups at the
+  edge of the span close with fewer tiles. This is sound because the
+  extent only grows: an unplayable cell can never become playable again.
+- **Running out of room ends the game.** `hasLegalPlacement` is checked
+  after the turn advances (so the opening "cover the origin" rule isn't
+  still in force); classic also stops requiring the mandatory placement
+  when nothing fits.
+
 ## 3. Module map
 
 ```
@@ -174,9 +196,11 @@ src/color/sim.ts       headless simulation + colour win-rate telemetry
 src/color/sim.worker.ts  Web Worker wrapper so the UI stays responsive
 src/App.tsx            session = mode + snapshot array (undo), dispatch,
                        mode-agnostic bot driver
-src/ui/*.tsx           SetupScreen (mode/variants/players) / GameScreen /
-                       GridView / PendingPanel / SidePanel — classic UI —
+src/ui/*.tsx           SetupScreen (mode/variants/board limit/players) /
+                       GameScreen / GridView / PendingPanel / SidePanel /
+                       CheatSheet (classic rules reference, 📖 or "?") —
                        plus ColorScreen (whole color-mode UI in one file)
+                       and SimPanel (simulation modal)
 tests/engine.test.ts   targeted classic rules tests (forcePlace helpers)
 tests/simulation.test.ts  24 seeded random full games, invariants each step
 tests/bots.test.ts     all-bot seeded classic games + enclosure behavior
@@ -185,6 +209,7 @@ tests/colors.test.ts   color mode: grouping/merges/sealing/variants/powers,
 scripts/smoke.mjs      headless-Chromium boot-and-click check (needs build)
 scripts/colorsmoke.mjs same for color mode: all-bot game, board fills up
 scripts/simsmoke.mjs   board defaults + in-browser simulation run
+scripts/sheetsmoke.mjs classic cheat sheet + classic limit control
 scripts/sim.mjs        CLI simulation (npm run sim)
 ```
 

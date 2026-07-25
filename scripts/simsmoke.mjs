@@ -49,10 +49,16 @@ try {
   const rows = await page.locator(".simres tbody tr").count();
   if (rows < 5) throw new Error(`expected per-colour rows, saw ${rows}`);
 
-  // and the bounded board renders its walls in an actual game
+  // …and in a real game the playable envelope appears once the first tile
+  // is down (it is relative, so there is nothing to draw before that)
   await page.getByRole("button", { name: /close/ }).click();
   await page.getByRole("button", { name: /START GAME/ }).click();
   await page.locator(".passover button.primary").click();
+  if ((await page.locator(".boardwall").count()) !== 0)
+    throw new Error("envelope should not exist before the first tile");
+  await page.locator(".ctile").first().click();
+  const grid = await page.locator(".gridvp").boundingBox();
+  await page.mouse.click(grid.x + grid.width / 2, grid.y + grid.height / 2 - 42);
   await page.waitForSelector(".boardwall", { timeout: 5000 });
   await page.screenshot({ path: `${OUT}-board.png` });
 

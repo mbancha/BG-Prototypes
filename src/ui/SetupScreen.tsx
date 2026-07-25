@@ -6,7 +6,12 @@
 // =============================================================================
 
 import { useEffect, useState } from "react";
-import { COLOR_CFG, CONFIG, defaultBoardSize } from "../data/config";
+import {
+  COLOR_CFG,
+  CONFIG,
+  defaultBoardSize,
+  defaultClassicBoardSize,
+} from "../data/config";
 import type { ColorVariant } from "../color/engine";
 import SimPanel from "./SimPanel";
 
@@ -24,7 +29,8 @@ const DEFAULT_NAMES = ["Cipher", "Vesper", "Halcyon", "Marrow"];
 export interface SetupResult {
   mode: "classic" | "colors";
   players: { name: string; color: string; isBot: boolean }[];
-  variant?: ColorVariant;
+  variant?: ColorVariant; // color mode settings (incl. its board limit)
+  classicBoard?: { width: number; height: number };
 }
 
 export default function SetupScreen(props: {
@@ -41,13 +47,23 @@ export default function SetupScreen(props: {
   });
   const [sizeTouched, setSizeTouched] = useState(false);
   const [showSim, setShowSim] = useState(false);
+  const [classicBoard, setClassicBoard] = useState({
+    width: defaultClassicBoardSize(2),
+    height: defaultClassicBoardSize(2),
+  });
+  const [classicTouched, setClassicTouched] = useState(false);
 
-  // board size follows the player count until the user sets it by hand
+  // both modes' limits follow the player count until set by hand
   useEffect(() => {
-    if (sizeTouched) return;
-    const n = defaultBoardSize(count);
-    setVariant((v) => ({ ...v, width: n, height: n }));
-  }, [count, sizeTouched]);
+    if (!sizeTouched) {
+      const n = defaultBoardSize(count);
+      setVariant((v) => ({ ...v, width: n, height: n }));
+    }
+    if (!classicTouched) {
+      const n = defaultClassicBoardSize(count);
+      setClassicBoard({ width: n, height: n });
+    }
+  }, [count, sizeTouched, classicTouched]);
 
   const setSize = (key: "width" | "height", raw: number) => {
     setSizeTouched(true);
@@ -56,6 +72,15 @@ export default function SetupScreen(props: {
       Math.min(COLOR_CFG.BOARD_MAX, Math.round(raw) || COLOR_CFG.BOARD_MIN),
     );
     setVariant((v) => ({ ...v, [key]: n }));
+  };
+
+  const setClassicSize = (key: "width" | "height", raw: number) => {
+    setClassicTouched(true);
+    const n = Math.max(
+      CONFIG.BOARD_MIN,
+      Math.min(CONFIG.BOARD_MAX, Math.round(raw) || CONFIG.BOARD_MIN),
+    );
+    setClassicBoard((b) => ({ ...b, [key]: n }));
   };
   const [names, setNames] = useState<string[]>([...DEFAULT_NAMES]);
   const [bots, setBots] = useState<boolean[]>([false, false, false, false]);
@@ -105,10 +130,51 @@ export default function SetupScreen(props: {
           </button>
         </div>
 
+        {mode === "classic" && (
+          <div className="variantbox">
+            <div className="vrow">
+              <span className="vlabel">max cols × rows</span>
+              <input
+                type="number"
+                className="sizein"
+                min={CONFIG.BOARD_MIN}
+                max={CONFIG.BOARD_MAX}
+                value={classicBoard.width}
+                onChange={(e) => setClassicSize("width", +e.target.value)}
+                title="Cards may be played until the layout spans this many columns. The limit floats with the cards already down — it isn't a fixed board."
+              />
+              <span style={{ color: "var(--dim)" }}>×</span>
+              <input
+                type="number"
+                className="sizein"
+                min={CONFIG.BOARD_MIN}
+                max={CONFIG.BOARD_MAX}
+                value={classicBoard.height}
+                onChange={(e) => setClassicSize("height", +e.target.value)}
+                title="…and this many rows."
+              />
+              <span style={{ color: "var(--dim)", fontSize: 10 }}>
+                {classicBoard.width * classicBoard.height} cells ·{" "}
+                {classicTouched ? (
+                  <button
+                    style={{ padding: "1px 5px", fontSize: 10 }}
+                    onClick={() => setClassicTouched(false)}
+                    title={`Back to the default for ${count} players`}
+                  >
+                    auto
+                  </button>
+                ) : (
+                  "default"
+                )}
+              </span>
+            </div>
+          </div>
+        )}
+
         {mode === "colors" && (
           <div className="variantbox">
             <div className="vrow">
-              <span className="vlabel">board size</span>
+              <span className="vlabel">max cols × rows</span>
               <input
                 type="number"
                 className="sizein"
@@ -116,7 +182,7 @@ export default function SetupScreen(props: {
                 max={COLOR_CFG.BOARD_MAX}
                 value={variant.width}
                 onChange={(e) => setSize("width", +e.target.value)}
-                title="Board width in cells. Tiles can never be placed outside the board, and its walls count as sealed edges for groups."
+                title="Tiles may be played until the layout spans this many columns. The limit floats with the tiles already down; cells that could never be played count as sealed edges for groups."
               />
               <span style={{ color: "var(--dim)" }}>×</span>
               <input
@@ -126,7 +192,7 @@ export default function SetupScreen(props: {
                 max={COLOR_CFG.BOARD_MAX}
                 value={variant.height}
                 onChange={(e) => setSize("height", +e.target.value)}
-                title="Board height in cells."
+                title="…and this many rows."
               />
               <span style={{ color: "var(--dim)", fontSize: 10 }}>
                 = {variant.width * variant.height} cells
@@ -244,6 +310,7 @@ export default function SetupScreen(props: {
               props.onStart({
                 mode,
                 variant: mode === "colors" ? variant : undefined,
+                classicBoard: mode === "classic" ? classicBoard : undefined,
                 players: Array.from({ length: count }, (_, i) => ({
                   name: names[i].trim() || `Player ${i + 1}`,
                   color: colors[i],
@@ -265,9 +332,14 @@ export default function SetupScreen(props: {
         </div>
         <div style={{ color: "var(--dim)", fontSize: 11 }}>
           Hotseat: pass the device between turns. Player 1 opens on the origin.
-          Seats marked 🤖 play themselves — their hands stay hidden.
+          Seats marked 🤖 play themselves — their hands stay hidden. There is
+          no drawn board: cards may be played until the layout spans{" "}
+          {mode === "colors"
+            ? `${variant.width}×${variant.height}`
+            : `${classicBoard.width}×${classicBoard.height}`}
+          , then nothing may extend it further.
           {mode === "colors" &&
-            ` COLOR GROUPS: match a side to add influence to that group; a group only scores once every side of it is sealed — the ${variant.width}×${variant.height} board's walls count as sealed.`}
+            " COLOR GROUPS: match a side to add influence to that group; a group only scores once every side of it is sealed."}
         </div>
       </div>
       {showSim && (

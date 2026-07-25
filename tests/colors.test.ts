@@ -13,9 +13,8 @@ import { describe, expect, it } from "vitest";
 import { COLOR_CFG, CONFIG, defaultBoardSize } from "../src/data/config";
 import {
   applyColor,
-  boundsFor,
   colorBotDecide,
-  freeCells,
+  colorEnvelope,
   groupValue,
   hasLegalPlacement,
   newColorGame,
@@ -238,54 +237,54 @@ describe("color powers", () => {
   });
 });
 
-describe("bounded board", () => {
-  it("defaults to 4 + 1 per player and centers on the origin", () => {
+describe("board limit (floating span)", () => {
+  it("defaults to 4 + 1 per player", () => {
     expect(defaultBoardSize(2)).toBe(6);
     expect(defaultBoardSize(3)).toBe(7);
     expect(defaultBoardSize(4)).toBe(8);
-    // 6 wide → x from -2..3 (origin inside, near the middle)
-    expect(boundsFor(6, 6)).toEqual({ xMin: -2, xMax: 3, yMin: -2, yMax: 3 });
-    const s = freshC(V({ width: 6, height: 6 }));
-    expect(freeCells(s)).toBe(36);
   });
 
-  it("rejects placements that leave the board", () => {
-    const s = freshC(V({ width: 6, height: 6 })); // x,y ∈ [-2,3]
+  it("is relative: the limit measures the span of what's played, not a fixed box", () => {
+    const s = freshC(V({ width: 3, height: 3 }));
+    // opening tile spans one column, two rows: (0,0) + (0,1)
     forcePlaceC(s, 0, 1, 0, 0, 0);
-    // a tile whose second half would sit at x=4 is out of bounds
-    expect(placementCheckC(s, { x: 3, y: 0 }, 3).ok).toBe(false);
-    expect(placementCheckC(s, { x: 3, y: 0 }, 3).reason).toBe(
-      "Outside the board",
-    );
-    s.passPending = false;
-    s.players[s.turn.p].hand.push(2);
-    expect(applyColor(s, { a: "place", tile: 2, at: { x: 3, y: 0 }, rot: 3 })).toBe(
-      "Outside the board",
+    expect(s.extent).toEqual({ minX: 0, maxX: 0, minY: 0, maxY: 1 });
+    // 3 columns are still available in EITHER direction from that column…
+    expect(placementCheckC(s, { x: -1, y: 0 }, 0).ok).toBe(true);
+    expect(placementCheckC(s, { x: 1, y: 0 }, 0).ok).toBe(true);
+    // …and the playable envelope reflects that (x from -2 to 2)
+    expect(colorEnvelope(s)).toEqual({
+      minX: -2,
+      maxX: 2,
+      minY: -1,
+      maxY: 2,
+    });
+    // grow left, which pins the right edge: x=1 is now out of reach
+    forcePlaceC(s, 1, 4, -2, 0, 3); // red@(-2,0), green@(-1,0)
+    expect(placementCheckC(s, { x: 1, y: 0 }, 0).ok).toBe(false);
+    expect(placementCheckC(s, { x: 1, y: 0 }, 0).reason).toBe(
+      "Would exceed the 3×3 limit",
     );
   });
 
-  it("treats walls as sealed: a corner group needs fewer tiles to close", () => {
-    // 3x3 board → x,y ∈ [-1,1]. Put a red half in the corner (-1,-1).
+  it("cells that can never be played seal groups like walls", () => {
     const s = freshC(V({ width: 3, height: 3 }));
-    forcePlaceC(s, 0, 1, 0, 0, 2); // red@(0,0), cyan@(0,-1) covers origin
-    // the cyan half at (0,-1) sits on the top wall: (0,-2) is off-board and
-    // (0,0) is its own tile, so only two cells are actually still open
-    expect(openPerimeter(s, ["0,-1"]).sort()).toEqual(["-1,-1", "1,-1"]);
-    // fill both remaining neighbours of the cyan half → it seals
-    forcePlaceC(s, 1, 4, -1, -1, 0); // red@(-1,-1), green@(-1,0)
-    expect(groupOf(s, "0,-1").scored).toBe(false);
-    forcePlaceC(s, 0, 22, 1, -1, 0); // green@(1,-1), gold@(1,0)
-    expect(groupOf(s, "0,-1").scored).toBe(true); // sealed by 2 tiles + walls
+    forcePlaceC(s, 0, 1, 0, 0, 0); // red@(0,0), cyan@(0,1)
+    forcePlaceC(s, 1, 4, -1, 0, 0); // red@(-1,0), green@(-1,1)
+    forcePlaceC(s, 0, 22, 1, 0, 0); // green@(1,0), gold@(1,1)
+    // all 3 columns are now spanned, so nothing can ever sit left or right
+    // of the cyan half at (0,1) — only (0,2) is still playable
+    expect(openPerimeter(s, ["0,1"])).toEqual(["0,2"]);
   });
 
-  it("ends the game when no legal placement is left", () => {
+  it("ends the game when nothing can legally be played", () => {
     const s = freshC(V({ width: 3, height: 3 }));
-    forcePlaceC(s, 0, 1, 0, 0, 2); // (0,0) + (0,-1)
-    forcePlaceC(s, 1, 4, -1, -1, 0); // (-1,-1) + (-1,0)
-    forcePlaceC(s, 0, 22, 1, -1, 0); // (1,-1) + (1,0)
+    forcePlaceC(s, 0, 1, 0, 0, 0); // (0,0)+(0,1)
+    forcePlaceC(s, 1, 4, -1, 0, 0); // (-1,0)+(-1,1)  → columns locked to -1..1
+    forcePlaceC(s, 0, 22, 1, 0, 0); // (1,0)+(1,1)
     expect(s.over).toBe(false);
-    forcePlaceC(s, 1, 28, 0, 1, 3); // (0,1) + (1,1)
-    // only (-1,1) is left — a domino can never fit in a single cell
+    forcePlaceC(s, 1, 28, -1, 2, 3); // (-1,2)+(0,2)  → rows locked to 0..2
+    // only the single cell (1,2) is left anywhere inside the span
     expect(hasLegalPlacement(s)).toBe(false);
     expect(s.over).toBe(true);
     expect(s.ranking).toBeDefined();

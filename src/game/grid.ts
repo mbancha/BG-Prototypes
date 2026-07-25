@@ -5,9 +5,24 @@
 // Everything match- and enclosure-related starts from these functions.
 // =============================================================================
 
+import {
+  cellWithinLimit,
+  growExtent,
+  playableEnvelope,
+} from "../data/config";
 import type { Cell, GameState, Placed, Sym } from "./types";
 import { cellKey } from "./types";
 import { def } from "./cards";
+
+/** Could this cell ever hold a card without over-spanning the board limit?
+ *  Cells that can't behave like walls: they seal enclosures (see
+ *  isEnclosed) exactly as an occupied neighbor would. */
+export const cellPlayable = (s: GameState, c: Cell) =>
+  cellWithinLimit(s.extent, s.limit, c);
+
+/** Rectangle of cells still playable (null before the first card). */
+export const boardEnvelope = (s: GameState) =>
+  playableEnvelope(s.extent, s.limit);
 
 /**
  * Rotation: `rot` clockwise quarter-turns from the base vertical orientation
@@ -112,8 +127,12 @@ export function surroundingCells(p: Placed): Cell[] {
   return out;
 }
 
+/** A card is enclosed when every surrounding cell is occupied — or could
+ *  never be played at all (the board limit walls it in). */
 export function isEnclosed(s: GameState, p: Placed): boolean {
-  return surroundingCells(p).every((c) => s.cellOwner[cellKey(c)] !== undefined);
+  return surroundingCells(p).every(
+    (c) => s.cellOwner[cellKey(c)] !== undefined || !cellPlayable(s, c),
+  );
 }
 
 /** Unscored cards currently fully surrounded. */
@@ -153,6 +172,16 @@ export function placementCheck(
     if (s.cellOwner[cellKey(c)] !== undefined)
       return { ok: false, reason: "Cell occupied" };
   }
+  // the card must not push the layout past the column/row limit
+  const grown = growExtent(growExtent(s.extent, ca), cb);
+  if (
+    grown.maxX - grown.minX + 1 > s.limit.w ||
+    grown.maxY - grown.minY + 1 > s.limit.h
+  )
+    return {
+      ok: false,
+      reason: `Would exceed the ${s.limit.w}×${s.limit.h} limit`,
+    };
   if (s.turn.setup) {
     const coversOrigin =
       (ca.x === 0 && ca.y === 0) || (cb.x === 0 && cb.y === 0);

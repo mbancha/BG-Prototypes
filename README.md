@@ -9,12 +9,25 @@ Two game modes on the setup screen:
 - **♠ CLASSIC** — the full 60-card ability game.
 - **◼ COLOR GROUPS** — stripped-down core experiment: color dominoes form
   contiguous groups; matching a side adds influence to the group; a group
-  scores only when every cell around it is sealed. Played on a bounded
-  board (default 4 + 1 per player, so 6×6 at 2p) whose **walls count as
-  sealed edges**. Variant toggles at setup: group value BY SIZE vs FIXED,
-  ★ bonus tiles, per-color powers — plus **⚗ SIMULATE**, which plays
-  10,000 headless bot games on the current settings and reports win rate
-  by colour played, average scores and points per colour.
+  scores only when every cell around it is sealed. Variant toggles at
+  setup: group value BY SIZE vs FIXED, ★ bonus tiles, per-color powers —
+  plus **⚗ SIMULATE**, which plays 10,000 headless bot games on the
+  current settings and reports win rate by colour played, average scores
+  and points per colour.
+
+**Board limit (both modes).** There is no drawn board: cards may be played
+until the layout *spans* the chosen number of columns and rows, then
+nothing may extend it further. The limit is relative — measured against
+the cards already down — and cells that could never be played count as
+sealed, so cards and groups at the edge of the span enclose early.
+Defaults scale with the player count (color 4 + 1 per player → 6×6 at 2p;
+classic 8 + 2 per player → 12×12 at 2p) and are editable at setup. Running
+out of room ends the game.
+
+**Cheat sheet (classic).** 📖 button or `?` / `h` in-game: turn structure,
+what each symbol match does, card values, the six card types, and how
+scoring and game end work — all generated from the live config and card
+data, so it can't drift from the rules in force.
 
 **New here (or an AI picking this up cold)? Read `ARCHITECTURE.md` first** —
 it summarizes the game rules as built, every module, and the recipes for

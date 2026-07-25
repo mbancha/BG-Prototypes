@@ -58,6 +58,13 @@ export interface Placed {
   turnPlaced: number;
 }
 
+/** Board limit + current span. Cards may be placed until the layout spans
+ *  `limit` columns/rows; see cellWithinLimit in src/data/config.ts. */
+export interface BoardLimit {
+  w: number;
+  h: number;
+}
+
 export interface PlayerState {
   name: string;
   color: string;
@@ -157,6 +164,8 @@ export interface GameState {
   discard: number[];
   board: Record<number, Placed>; // by card id
   cellOwner: Record<string, number>; // "x,y" -> card id
+  limit: BoardLimit; // max columns/rows the layout may span
+  extent?: { minX: number; maxX: number; minY: number; maxY: number };
   turn: TurnState;
   finalPhase?: { remaining: number; setOnTurn: number };
   over: boolean;

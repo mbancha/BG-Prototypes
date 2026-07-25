@@ -24,6 +24,7 @@ import { placementCheck } from "../game/grid";
 import { deployDiscount, seesHands } from "../game/ongoing";
 import type { Action } from "../game/turn";
 import type { Cell, GameState } from "../game/types";
+import CheatSheet from "./CheatSheet";
 import GridView from "./GridView";
 import PendingPanel from "./PendingPanel";
 import SidePanel from "./SidePanel";
@@ -40,6 +41,7 @@ export default function GameScreen(props: {
   const [placing, setPlacing] = useState<{ card: number; rot: number } | null>(
     null,
   );
+  const [sheet, setSheet] = useState(false);
 
   const busy = s.exec.length > 0 || s.pending !== null;
   const me = s.players[s.turn.p];
@@ -61,7 +63,12 @@ export default function GameScreen(props: {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "r" || e.key === "R") rotate();
-      if (e.key === "Escape") setPlacing(null);
+      if (e.key === "?" || e.key === "h" || e.key === "H")
+        setSheet((v) => !v);
+      if (e.key === "Escape") {
+        setPlacing(null);
+        setSheet(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -108,7 +115,10 @@ export default function GameScreen(props: {
             {me.name}
           </span>
           <span style={{ color: "var(--dim)" }}>
-            deck {s.deck.length} · discard {s.discard.length}
+            deck {s.deck.length} · discard {s.discard.length} · span{" "}
+            {s.extent ? s.extent.maxX - s.extent.minX + 1 : 0}×
+            {s.extent ? s.extent.maxY - s.extent.minY + 1 : 0} / {s.limit.w}×
+            {s.limit.h}
           </span>
           {s.finalPhase && !s.over && (
             <span className="finalbanner">
@@ -290,6 +300,9 @@ export default function GameScreen(props: {
           >
             ▶ END TURN
           </button>
+          <button onClick={() => setSheet(true)} title="Rules reference (?)">
+            📖 CHEAT SHEET
+          </button>
           <button disabled={!props.canUndo} onClick={props.undo}>
             ⎌ UNDO
           </button>
@@ -306,6 +319,7 @@ export default function GameScreen(props: {
       </div>
 
       {/* ------------- OVERLAYS ------------- */}
+      {sheet && <CheatSheet s={s} onClose={() => setSheet(false)} />}
       {/* pass screen for humans only — bot handoffs keep the board visible
           (the driver begins the bot's turn by itself) */}
       {s.passPending && !s.over && !me.isBot && (
