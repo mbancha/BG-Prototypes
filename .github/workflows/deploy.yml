@@ -93,5 +93,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # v4, not v5: the Jekyll workflow GitHub's settings page generates
+      # references @v5, but that tag doesn't resolve and the job dies at
+      # setup with no log. v4 logs a Node 20 deprecation warning on every
+      # run — noise, not a failure.
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
