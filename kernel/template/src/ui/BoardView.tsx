@@ -6,7 +6,7 @@
 // the part you replace.
 
 import { useEffect, useRef, useState } from "react";
-import { cellKey, type Cell } from "../data/config";
+import { cellKey, type Cell } from "../kernel/board";
 import { envelope, placementCheck, type GameState } from "../game/engine";
 
 export const CS = 76; // cell size in px (world units; zoom scales it)

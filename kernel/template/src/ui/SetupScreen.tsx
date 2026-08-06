@@ -18,6 +18,9 @@ const DEFAULT_NAMES = ["Ada", "Bo", "Cy", "Dex"];
 export interface SetupResult {
   players: { name: string; color: string; isBot: boolean }[];
   board: { width: number; height: number };
+  /** Blank ⇒ random. Type a seed to replay the exact same deal — the fastest
+   *  way to re-examine a position a playtester complained about. */
+  seed?: number;
 }
 
 export default function SetupScreen(props: {
@@ -32,6 +35,7 @@ export default function SetupScreen(props: {
     height: defaultBoardSize(2),
   });
   const [touched, setTouched] = useState(false);
+  const [seed, setSeed] = useState("");
 
   useEffect(() => {
     if (touched) return;
@@ -83,6 +87,20 @@ export default function SetupScreen(props: {
             onChange={(e) => setSize("height", +e.target.value)}
           />
         </div>
+        <div className="vrow">
+          <span className="vlabel">seed</span>
+          <input
+            type="text"
+            className="sizein"
+            style={{ width: 96 }}
+            placeholder="random"
+            value={seed}
+            onChange={(e) => setSeed(e.target.value.replace(/\D/g, ""))}
+          />
+          <span style={{ color: "var(--dim)", fontSize: 11 }}>
+            same seed → same deal
+          </span>
+        </div>
         {Array.from({ length: count }, (_, i) => (
           <div className="prow" key={i}>
             <span style={{ color: colors[i], width: 20 }}>P{i + 1}</span>
@@ -121,6 +139,7 @@ export default function SetupScreen(props: {
           onClick={() =>
             props.onStart({
               board,
+              seed: seed === "" ? undefined : Number(seed),
               players: Array.from({ length: count }, (_, i) => ({
                 name: names[i].trim() || `Player ${i + 1}`,
                 color: colors[i],

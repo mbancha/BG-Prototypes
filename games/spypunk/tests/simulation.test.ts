@@ -116,19 +116,14 @@ function answerRandomly(s: GameState, rnd: () => number) {
 
 function playFullGame(seed: number, nPlayers: number) {
   const rnd = mulberry32(seed);
-  const origRandom = Math.random;
-  Math.random = rnd; // seeded shuffle in newGame
-  let s: GameState;
-  try {
-    s = newGame(
-      Array.from({ length: nPlayers }, (_, i) => ({
-        name: `P${i + 1}`,
-        color: "#0ff",
-      })),
-    );
-  } finally {
-    Math.random = origRandom;
-  }
+  const s: GameState = newGame(
+    Array.from({ length: nPlayers }, (_, i) => ({
+      name: `P${i + 1}`,
+      color: "#0ff",
+    })),
+    undefined,
+    rnd,
+  );
 
   let steps = 0;
   while (!s.over) {
@@ -190,5 +185,14 @@ describe("randomized full games", () => {
     }
     // across 24 random games symbol matches must actually be happening
     expect(totalMatches).toBeGreaterThan(100);
+  });
+
+  it("is reproducible from a seed — same seed, byte-identical game", () => {
+    // newGame takes rnd, and nothing inside the state may come from
+    // Math.random (hub keys used to), so a seed replays a game exactly.
+    const a = playFullGame(31337, 3);
+    const b = playFullGame(31337, 3);
+    expect(JSON.stringify(b)).toBe(JSON.stringify(a));
+    expect(JSON.stringify(playFullGame(31338, 3))).not.toBe(JSON.stringify(a));
   });
 });

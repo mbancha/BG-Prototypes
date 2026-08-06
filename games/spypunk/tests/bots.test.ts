@@ -82,20 +82,15 @@ describe("bot opponents", () => {
       [303, 4],
     ] as const) {
       const rnd = mulberry32(seed);
-      const orig = Math.random;
-      Math.random = rnd; // seeded shuffle inside newGame
-      let s: GameState;
-      try {
-        s = newGame(
-          Array.from({ length: nPlayers }, (_, i) => ({
-            name: `Bot${i + 1}`,
-            color: "#0ff",
-            isBot: true,
-          })),
-        );
-      } finally {
-        Math.random = orig;
-      }
+      const s: GameState = newGame(
+        Array.from({ length: nPlayers }, (_, i) => ({
+          name: `Bot${i + 1}`,
+          color: "#0ff",
+          isBot: true,
+        })),
+        undefined,
+        rnd,
+      );
 
       let steps = 0;
       while (!s.over) {

@@ -1,29 +1,45 @@
-// In-game layout: HUD, board, hand, log, and the hotseat / game-over
-// overlays. All interaction funnels into props.dispatch(Action); this
-// component holds only view state (which piece is selected).
+// In-game layout: HUD, board, hand, log, prompts, and the hotseat /
+// game-over overlays. All interaction funnels into props.dispatch(Action);
+// this component holds only view state (which piece is selected).
 
 import { useEffect, useState } from "react";
 import BoardView from "./BoardView";
+import PendingPrompt from "./PendingPrompt";
 import { buildDump, downloadJson } from "./dump";
-import type { Cell } from "../data/config";
+import type { Cell } from "../kernel/board";
+import { count } from "../kernel/zones";
 import { isBotTurn } from "../game/bot";
-import type { Action, GameState } from "../game/engine";
+import {
+  activeSeat,
+  currentSpan,
+  handOf,
+  pts,
+  seatOnClock,
+  type Action,
+  type GameState,
+} from "../game/engine";
 
 export default function GameScreen(props: {
   s: GameState;
+  actions: Action[];
   dispatch: (a: Action) => void;
   undo: () => void;
   canUndo: boolean;
   onNewGame: () => void;
 }) {
   const { s, dispatch } = props;
-  const me = s.players[s.turn.p];
+  const seat = activeSeat(s);
+  const me = s.players[seat];
   const botActing = isBotTurn(s);
   const [selected, setSelected] = useState<number | null>(null);
+  const names = s.players.map((p) => p.name);
+  const colors = s.players.map((p) => p.color);
+  const hand = handOf(s, seat);
+  const span = currentSpan(s);
 
   useEffect(() => {
-    if (s.passPending || s.over || botActing) setSelected(null);
-  }, [s.passPending, s.over, botActing, s.turn.p]);
+    if (s.passPending || s.over || botActing || s.pending) setSelected(null);
+  }, [s.passPending, s.over, botActing, s.pending, seat]);
 
   const onPlace = (cell: Cell) => {
     if (selected === null) return;
@@ -31,26 +47,27 @@ export default function GameScreen(props: {
     setSelected(null);
   };
 
+  const dump = () =>
+    downloadJson(buildDump(s, props.actions), "playtest.json");
+
   return (
     <div className="game">
       <div className="hud">
         <div className="turninfo">
-          <span className="big">TURN {s.turn.n}</span>
+          <span className="big">TURN {s.flow.turn}</span>
           <span style={{ color: me.color }}>
             {me.isBot ? "🤖 " : ""}
             {me.name}
           </span>
           <span style={{ color: "var(--dim)" }}>
-            deck {s.deck.length} · span{" "}
-            {s.extent ? s.extent.maxX - s.extent.minX + 1 : 0}×
-            {s.extent ? s.extent.maxY - s.extent.minY + 1 : 0} / {s.limit.w}×
+            deck {count(s.zones, "deck")} · span {span.w}×{span.h} / {s.limit.w}×
             {s.limit.h}
           </span>
         </div>
         {s.players.map((p, i) => (
           <div
             key={i}
-            className={"pcard" + (i === s.turn.p ? " active" : "")}
+            className={"pcard" + (i === seat ? " active" : "")}
             style={{ ["--pc" as any]: p.color }}
           >
             <div className="pname">
@@ -58,8 +75,8 @@ export default function GameScreen(props: {
               {p.name}
             </div>
             <div className="pstats">
-              <span>{p.pts} pts</span>
-              <span>🁢 {p.hand.length}</span>
+              <span>{pts(p)} pts</span>
+              <span>🁢 {handOf(s, i).length}</span>
             </div>
           </div>
         ))}
@@ -69,7 +86,17 @@ export default function GameScreen(props: {
         <div className="gridwrap">
           <BoardView s={s} selected={selected} onPlace={onPlace} />
           {botActing && !s.passPending && !s.over && (
-            <div className="botbanner">🤖 {me.name} is playing…</div>
+            <div className="botbanner">
+              🤖 {s.players[seatOnClock(s)].name} is playing…
+            </div>
+          )}
+          {s.pending && !botActing && (
+            <PendingPrompt
+              pending={s.pending}
+              names={names}
+              colors={colors}
+              onAnswer={(ans) => dispatch({ a: "answer", ans })}
+            />
           )}
         </div>
         <div className="side">
@@ -90,11 +117,7 @@ export default function GameScreen(props: {
             ))}
           </div>
           <div style={{ padding: 8, borderTop: "1px solid var(--line)" }}>
-            <button
-              className="primary"
-              style={{ width: "100%" }}
-              onClick={() => downloadJson(buildDump(s), "playtest.json")}
-            >
+            <button className="primary" style={{ width: "100%" }} onClick={dump}>
               ⬇ DUMP JSON
             </button>
           </div>
@@ -108,12 +131,14 @@ export default function GameScreen(props: {
             <div className="botthinking">🤖 {me.name}'s hand is hidden.</div>
           ) : (
             <div className="hand">
-              {me.hand.map((id) => (
+              {hand.map((id) => (
                 <div
                   key={id}
                   className={"ctile" + (selected === id ? " selected" : "")}
                   onClick={() =>
-                    !s.passPending && setSelected(selected === id ? null : id)
+                    !s.passPending &&
+                    !s.pending &&
+                    setSelected(selected === id ? null : id)
                   }
                 >
                   {s.tiles[id].value}
@@ -135,7 +160,7 @@ export default function GameScreen(props: {
       {s.passPending && !s.over && !me.isBot && (
         <div className="passover" style={{ ["--pc" as any]: me.color }}>
           <div style={{ color: "var(--dim)", letterSpacing: 6 }}>
-            TURN {s.turn.n}
+            TURN {s.flow.turn}
           </div>
           <div className="whom">→ {me.name}</div>
           <button
@@ -151,28 +176,36 @@ export default function GameScreen(props: {
         </div>
       )}
 
-      {s.over && (
+      {s.over && s.result && (
         <div className="gameover">
           <div className="goc">
             <h2>GAME OVER</h2>
-            {(s.ranking ?? s.players.map((_, i) => i)).map((pi, rank) => (
+            <div style={{ color: "var(--dim)", marginBottom: 10 }}>
+              {s.result.reason}
+            </div>
+            {s.result.ranking.map((pi, rank) => (
               <div
                 className="gorow"
                 key={pi}
                 style={{ ["--pc" as any]: s.players[pi].color }}
               >
-                <span className="rk">#{rank + 1}</span>
+                <span className="rk">
+                  {s.result!.winners.includes(pi) ? "★" : `#${rank + 1}`}
+                </span>
                 <span className="gpname">{s.players[pi].name}</span>
                 <span>
-                  <b>{s.players[pi].pts} pts</b>
+                  <b>{pts(s.players[pi])} pts</b>
+                  <span style={{ color: "var(--dim)", fontSize: 11 }}>
+                    {" "}
+                    {Object.entries(s.players[pi].score)
+                      .map(([k, v]) => `${k} ${v}`)
+                      .join(" · ")}
+                  </span>
                 </span>
               </div>
             ))}
             <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-              <button
-                className="primary"
-                onClick={() => downloadJson(buildDump(s), "playtest.json")}
-              >
+              <button className="primary" onClick={dump}>
                 ⬇ DUMP STATS
               </button>
               <button onClick={props.undo}>⎌ back (undo)</button>

@@ -12,6 +12,15 @@ kernel/template/   starting point for a new prototype — copy it to games/<name
 .claude/skills/    the prototyping playbook Claude follows in this repo
 ```
 
+The template carries a **kernel** of board-game primitives — turn flow
+(phases, action points, passing, simultaneous play), zones (decks, hands,
+markets, supplies, reshuffles), board topologies (fixed grid, open grid, hex,
+point-to-point map, track), player decisions, resources, scoring, and a
+random-play fuzzer. It is copied into each game, not shared, so a prototype
+can diverge as hard as it likes. `kernel/template/tests/mechanisms.test.ts`
+has a runnable micro-game for each mechanism family, from tic-tac-toe to a
+Through-the-Ages-shaped civ engine.
+
 ## Running a game
 
 Everything runs **inside a game folder**, not the repo root. On Windows use
@@ -23,8 +32,9 @@ npm install        # once per clone
 npm run dev        # → http://localhost:5173
 ```
 
-Other scripts (same folder): `npm test`, `npm run build`, `npm run sim`
-(headless bot games + telemetry), `npm run smoke` (browser check).
+Other scripts (same folder): `npm test` (unit + fuzz + replay), `npm run
+build`, `npm run sim` (headless bot games + telemetry), `npm run smoke`
+(browser check).
 
 To get the latest changes: `git pull` from the repo root. If the dev server
 is running, Vite hot-reloads the moment the files land — no restart.
@@ -34,8 +44,9 @@ is running, Vite hot-reloads the moment the files land — no restart.
 Copy `kernel/template/` to `games/<your-game>/`, rename it in
 `package.json` and `index.html`, then `npm install && npm run dev`. It boots
 as a working (if pointless) tile-laying game with undo, hotseat pass
-screens, bot seats, a seeded simulator and a telemetry dump already wired
-up — replace the placeholder rules in `src/game/engine.ts`.
+screens, bot seats, player prompts, a seeded simulator, replay-from-seed and
+a telemetry dump already wired up — replace the placeholder rules in
+`src/game/engine.ts` and delete the kernel modules you don't need.
 
 Fastest path in practice: write the spec (see
 `.claude/skills/board-game-prototype/references/spec-template.md`), hand it

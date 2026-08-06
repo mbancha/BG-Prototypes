@@ -2,7 +2,8 @@
 // Turn flow and the PUBLIC ACTION API — the only entry points the UI (and the
 // bot driver) ever call:
 //
-//   newGame(players)        → fresh GameState
+//   newGame(players, opts?, rnd?) → fresh GameState (rnd seeds the shuffle, so
+//                             the same seed reproduces the same game)
 //   applyAction(s, action)  → mutates s in place; returns null on success or a
 //                             human-readable rejection string (s must then be
 //                             discarded — the UI applies actions to a fresh
@@ -90,6 +91,7 @@ function freshTelemetry(): Telemetry {
 export function newGame(
   playersIn: { name: string; color: string; isBot?: boolean }[],
   opts?: { width?: number; height?: number },
+  rnd: () => number = Math.random,
 ): GameState {
   const n = playersIn.length;
   const clamp = (v: number) =>
@@ -102,7 +104,7 @@ export function newGame(
     throw new Error(`Player count must be ${CONFIG.MIN_PLAYERS}–${CONFIG.MAX_PLAYERS}`);
   const deck = CARDS.map((c) => c.id);
   for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rnd() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
   const s: GameState = {
@@ -333,8 +335,8 @@ function actPlace(
 
   // resolution: enclosure check runs after the match/trigger hub drains
   pushFrame(s, "encl", {});
-  const items: HubItem[] = ms.map((m) =>
-    matchItem(m.sym as Sym, cardId, m.other),
+  const items: HubItem[] = ms.map((m, i) =>
+    matchItem(m.sym as Sym, cardId, m.other, i),
   );
   for (const { id } of onPlaceTriggers(s, p, d.type))
     items.push(trigItem(id, p));
