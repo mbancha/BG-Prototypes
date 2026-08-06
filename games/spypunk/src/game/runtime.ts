@@ -92,9 +92,17 @@ export function provideAnswer(s: GameState, ans: any) {
 // d = { title, items: HubItem[], ctx?: { placedId } }
 // ---------------------------------------------------------------------------
 
-export function matchItem(sym: Sym, placed: number, other: number): HubItem {
+/** `n` disambiguates otherwise-identical items in the same hub list (a card
+ *  whose two halves show the same symbol makes two). It must NOT be random:
+ *  hub items live inside GameState, and state has to stay reproducible. */
+export function matchItem(
+  sym: Sym,
+  placed: number,
+  other: number,
+  n = 0,
+): HubItem {
   return {
-    key: `m:${sym}:${placed}:${other}:${Math.random().toString(36).slice(2, 7)}`,
+    key: `m:${sym}:${placed}:${other}:${n}`,
     label: `${SYM_GLYPH[sym]} ${SYM_NAME[sym]} match`,
     sub:
       placed === other

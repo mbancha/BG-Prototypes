@@ -40,6 +40,13 @@ The interactions that make the game. Placement/adjacency rules, matching,
 combat, auctions — whatever applies. Include the edge cases you already
 know are edge cases.
 
+Naming the familiar families is genuinely useful here ("worker placement
+with blocking", "trick-taking, must follow suit", "deck-building with a
+market row", "area majority", "action points, four per turn", "simultaneous
+draft"). Each one maps to a primitive the kernel already has, so saying it
+plainly is faster than describing it from scratch — see the mechanism
+cookbook in SKILL.md.
+
 ## 6. Scoring and game end
 
 How points are earned, when the game ends, tiebreakers.

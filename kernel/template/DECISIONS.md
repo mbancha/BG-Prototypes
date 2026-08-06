@@ -15,6 +15,12 @@ of a rule is often the most useful part.
    the alternative (passing freely) removes all board pressure. Relaxed only
    when the board limit leaves nowhere legal. See `applyAction`.
 
+2. **Example — the bonus choice is offered, not automatic.** Touching two or
+   more pieces asks the player rather than taking the better option for
+   them. Rulings like this are why `state.pending` exists; the alternative
+   (silently applying a default) hides a decision the designer wanted to
+   watch people make. See the `bonus` frame in `engine.ts`.
+
 ## Not built (out of scope)
 
 <!-- Say what you deliberately skipped, so nobody "fixes" it later:

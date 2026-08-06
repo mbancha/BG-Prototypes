@@ -876,7 +876,7 @@ register("e_zeroDay", (s, f) => {
   popFrame(s);
   pushFrame(s, "hub", {
     title: `Zero Day — ${cname(id)}`,
-    items: [matchItem(cd.top, id, id), matchItem(cd.bottom, id, id)],
+    items: [matchItem(cd.top, id, id, 0), matchItem(cd.bottom, id, id, 1)],
     ctx: { why: "Zero Day" },
   });
 });

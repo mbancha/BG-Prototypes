@@ -23,8 +23,14 @@ architecture rules, required artifacts and verification steps live there.
 
 `kernel/template/` is the starting point for a **new** prototype: copy it to
 `games/<name>/`, rename it, build on top. It is a runnable hotseat game with
-undo, bots, seeded simulation and telemetry already wired up. Copy and
-diverge — never import across games.
+undo, bots, player prompts, seeded simulation, replay and telemetry already
+wired up, on top of a **kernel** of board-game primitives (`src/kernel/`:
+turn flow, zones, board topologies, decisions, resources, scoring, fuzzing).
+The kernel is copied per game and is yours to edit or delete — copy and
+diverge, never import across games.
+
+Which primitive fits which mechanism is tabulated in the skill, and every
+row has a runnable micro-game in `kernel/template/tests/mechanisms.test.ts`.
 
 ## House rules
 
@@ -35,6 +41,9 @@ diverge — never import across games.
   a numbered entry to that game's `DECISIONS.md` in the same change.
 - **Variants are runtime toggles**, chosen on the setup screen — not forks
   or branches, so two rules can be compared in one sitting.
+- **Randomness lives in the state** (`state.rng`), never `Math.random` and
+  never an injected `rnd` function — otherwise undo doesn't rewind luck and
+  a seed stops reproducing a game.
 - **Verify before pushing**: `npm test` and `npm run build` inside the game
   folder; drive the browser (`scripts/*smoke.mjs`) for UI-visible changes
   and actually look at the screenshot.

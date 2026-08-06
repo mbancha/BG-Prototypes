@@ -42,7 +42,7 @@ try {
 
   const pct = (v) => (v * 100).toFixed(1) + "%";
   console.log(
-    `${res.games} games in ${(res.elapsedMs / 1000).toFixed(1)}s · avg score ${res.avgScore.toFixed(2)} · ties ${pct(res.tieRate)} · avg placements ${res.avgPlacements.toFixed(1)}`,
+    `${res.games} games in ${(res.elapsedMs / 1000).toFixed(1)}s · avg score ${res.avgScore.toFixed(2)} · ties ${pct(res.tieRate)} · avg turns ${res.avgTurns.toFixed(1)}`,
   );
   console.log(`\nBY SEAT (baseline ${pct(res.baselineWinRate)})`);
   res.winRateBySeat.forEach((w, i) =>
@@ -50,6 +50,16 @@ try {
       `  P${i + 1}  win ${pct(w)} · avg score ${res.avgScoreBySeat[i].toFixed(2)}`,
     ),
   );
+
+  const totalPts = Object.values(res.pointsBySource).reduce((a, b) => a + b, 0);
+  console.log("\nPOINTS BY SOURCE");
+  for (const [src, v] of Object.entries(res.pointsBySource))
+    console.log(
+      `  ${src.padEnd(12)} ${(v / res.games).toFixed(2)} per game · ${pct(v / totalPts)} of all points`,
+    );
+  console.log("\nHOW GAMES ENDED");
+  for (const [why, v] of Object.entries(res.endReasons))
+    console.log(`  ${why.padEnd(12)} ${pct(v / res.games)}`);
 
   const json = opt("json", null);
   if (json) {

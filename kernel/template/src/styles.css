@@ -304,6 +304,45 @@ input[type="number"] {
   text-align: center;
 }
 
+/* ---------- pending decision (PendingPrompt.tsx) ----------
+   Floats over the board so a prompt can highlight cells behind it. */
+.prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 120;
+  min-width: 340px;
+  max-width: min(680px, 92%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(5, 8, 14, 0.97);
+  border: 1px solid var(--pc, var(--hot));
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+.promptwho {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.prompttext {
+  font-size: 15px;
+  color: var(--txt);
+}
+.promptopts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.optsub {
+  color: var(--dim);
+  font-size: 11px;
+}
+
 /* ---------- side panel ---------- */
 .side {
   width: 320px;
