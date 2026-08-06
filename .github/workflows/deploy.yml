@@ -1,11 +1,18 @@
 # Builds every prototype under games/ and publishes them to GitHub Pages, so
 # playtesters get a link instead of a toolchain.
 #
-# ONE-TIME SETUP: repo Settings → Pages → Source: "GitHub Actions".
-# Games then live at https://<user>.github.io/<repo>/<game>/
+# ONLY `main` PUBLISHES. Every other branch builds as a check and stops
+# there, so a work-in-progress branch can never overwrite the playtest link.
+#
+# Games live at https://<user>.github.io/<repo>/<game>/
 #
 # Each game sets base: "./" in its vite.config.ts, which is what lets the
 # same build work from a subpath.
+#
+# Do not add a second Pages workflow (the "Configure" buttons on the repo's
+# Pages settings offer to write one). Two workflows publishing to Pages fight
+# over the same site, and the Jekyll one would publish the repo root instead
+# of the games.
 
 name: Deploy playtest builds
 
@@ -19,8 +26,11 @@ permissions:
   pages: write
   id-token: write
 
+# One run per branch. A new push supersedes an older run on the SAME branch,
+# but a feature-branch build can no longer cancel a deploy of main — which is
+# what used to happen when every branch shared a single "pages" group.
 concurrency:
-  group: pages
+  group: playtest-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -69,11 +79,19 @@ jobs:
           path: site
 
   deploy:
+    # Publishing is main-only; other branches stop after the build above.
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    # Pages allows one deployment at a time. For a playtest site the newest
+    # build is always the one we want, so a superseded deploy is cancelled
+    # rather than left to finish and overwrite it.
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

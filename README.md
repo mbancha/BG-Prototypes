@@ -54,10 +54,19 @@ to Claude, and let it do the copy-and-build.
 
 ## Playtest links
 
-Pushing to `main` builds every game and publishes it to GitHub Pages, so
-playtesters get a URL instead of a toolchain. **One-time setup:** repo
-Settings → Pages → Source: **GitHub Actions**. After that the games live at
-`https://<user>.github.io/<repo>/<game>/`.
+Pushing to **`main`** builds every game and publishes it to GitHub Pages, so
+playtesters get a URL instead of a toolchain:
+
+<https://mbancha.github.io/BG-Prototypes/>
+
+Every other branch **builds but does not publish** — a work-in-progress
+branch can't overwrite the link you gave a playtester. Merge to `main` when
+you want the site updated.
+
+Pages is already configured (Settings → Pages → Source: **GitHub Actions**).
+Don't add a second Pages workflow: the "Configure" buttons on that settings
+page offer to write a Jekyll one, and two workflows publishing to Pages fight
+over the same site.
 
 ## Per-game docs
 
