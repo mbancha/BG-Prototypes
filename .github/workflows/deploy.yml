@@ -1,0 +1,79 @@
+# Builds every prototype under games/ and publishes them to GitHub Pages, so
+# playtesters get a link instead of a toolchain.
+#
+# ONE-TIME SETUP: repo Settings → Pages → Source: "GitHub Actions".
+# Games then live at https://<user>.github.io/<repo>/<game>/
+#
+# Each game sets base: "./" in its vite.config.ts, which is what lets the
+# same build work from a subpath.
+
+name: Deploy playtest builds
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build every game
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1" # smoke-test dep, not needed here
+        run: |
+          set -e
+          mkdir -p site
+          for dir in games/*/; do
+            name=$(basename "$dir")
+            echo "::group::$name"
+            (
+              cd "$dir"
+              npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+              npm run build
+            )
+            cp -r "$dir/dist" "site/$name"
+            echo "::endgroup::"
+          done
+
+      - name: Write index page
+        run: |
+          {
+            echo '<!doctype html><meta charset="utf-8"><title>Playtest builds</title>'
+            echo '<style>body{background:#07090f;color:#c6d3e6;font-family:ui-monospace,monospace;padding:48px;line-height:1.8}'
+            echo 'h1{letter-spacing:6px;color:#eaf6ff}a{color:#00e5ff}small{color:#6b7b95}</style>'
+            echo '<h1>PLAYTEST BUILDS</h1><small>built from '"$GITHUB_SHA"'</small><ul>'
+            for dir in games/*/; do
+              n=$(basename "$dir")
+              echo "<li><a href=\"./$n/\">$n</a></li>"
+            done
+            echo '</ul>'
+          } > site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
