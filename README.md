@@ -63,10 +63,16 @@ Every other branch **builds but does not publish** — a work-in-progress
 branch can't overwrite the link you gave a playtester. Merge to `main` when
 you want the site updated.
 
-Pages is already configured (Settings → Pages → Source: **GitHub Actions**).
-Don't add a second Pages workflow: the "Configure" buttons on that settings
-page offer to write a Jekyll one, and two workflows publishing to Pages fight
-over the same site.
+Pages is already configured (Settings → Pages → Source: **GitHub Actions**),
+and the `github-pages` environment is set to **No restriction** under
+Settings → Environments → Deployment branches. That second setting matters:
+enabling Pages pins whatever branch was default at the time, and it does not
+follow a later default-branch change — a deploy from a branch it doesn't
+allow fails in about a second with no runner and no log.
+
+Don't add a second Pages workflow: the "Configure" buttons on the Pages
+settings page offer to write a Jekyll one, and two workflows publishing to
+Pages fight over the same site.
 
 ## Per-game docs
 

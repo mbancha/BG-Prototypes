@@ -13,6 +13,12 @@
 # Pages settings offer to write one). Two workflows publishing to Pages fight
 # over the same site, and the Jekyll one would publish the repo root instead
 # of the games.
+#
+# IF THE DEPLOY JOB FAILS IN ABOUT A SECOND with no runner, no steps and no
+# log, it is not this file: it is the github-pages ENVIRONMENT refusing the
+# branch. Settings -> Environments -> github-pages -> "Deployment branches
+# and tags". Enabling Pages captures whatever branch was default at the time,
+# and later renaming or changing the default branch does not update it.
 
 name: Deploy playtest builds
 
