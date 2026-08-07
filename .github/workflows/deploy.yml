@@ -83,12 +83,11 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
-    # Pages allows one deployment at a time. For a playtest site the newest
-    # build is always the one we want, so a superseded deploy is cancelled
-    # rather than left to finish and overwrite it.
-    concurrency:
-      group: pages
-      cancel-in-progress: true
+    # No job-level concurrency here. The workflow-level group above already
+    # serialises runs per branch, and only main reaches this job, so deploys
+    # are serialised anyway — while a second group on a job that also has an
+    # `environment` stopped the job being scheduled at all (failed in one
+    # second, no runner, no log).
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
