@@ -83,11 +83,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
-    # No job-level concurrency here. The workflow-level group above already
-    # serialises runs per branch, and only main reaches this job, so deploys
-    # are serialised anyway — while a second group on a job that also has an
-    # `environment` stopped the job being scheduled at all (failed in one
-    # second, no runner, no log).
+    # No job-level concurrency group: the workflow-level group above already
+    # serialises runs per branch, and only main reaches this job.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
