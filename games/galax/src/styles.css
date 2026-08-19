@@ -1,0 +1,482 @@
+/* Neon-noir playtest shell. Deliberately plain: prototypes are for reading
+   state fast, not for looking finished. Swap --hot / the radial gradients to
+   re-theme a new game in about a minute. */
+
+:root {
+  --bg: #07090f;
+  --panel: #0e1420;
+  --panel2: #121a29;
+  --line: #1e2a3d;
+  --txt: #c6d3e6;
+  --dim: #6b7b95;
+  --hot: #00e5ff;
+  --bad: #ff4d5e;
+  --ok: #b4ff39;
+  --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--mono);
+  font-size: 13px;
+  overflow: hidden;
+}
+button {
+  font-family: var(--mono);
+  background: var(--panel2);
+  color: var(--txt);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+button:hover:not(:disabled) {
+  border-color: var(--hot);
+  color: var(--hot);
+}
+button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+button.primary {
+  border-color: var(--hot);
+  color: var(--hot);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+}
+button.danger {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+input[type="text"],
+input[type="number"] {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--txt);
+  font-family: var(--mono);
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+.sizein {
+  width: 58px;
+}
+.toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2a1218;
+  border: 1px solid var(--bad);
+  color: #ffb3ba;
+  padding: 8px 16px;
+  border-radius: 6px;
+  z-index: 300;
+}
+
+/* ---------- setup ---------- */
+.setup {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, rgba(0, 229, 255, 0.08), transparent),
+    var(--bg);
+}
+.setup h1 {
+  font-size: 40px;
+  letter-spacing: 12px;
+  margin: 0;
+  color: #eaf6ff;
+  text-shadow: 0 0 18px rgba(0, 229, 255, 0.8);
+}
+.setup .sub {
+  color: var(--dim);
+  letter-spacing: 4px;
+}
+.setup-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 22px;
+  min-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.prow,
+.vrow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.prow input[type="text"] {
+  flex: 1;
+}
+.vlabel {
+  color: var(--dim);
+  font-size: 11px;
+  width: 120px;
+  letter-spacing: 1px;
+}
+.countbtns {
+  display: flex;
+  gap: 8px;
+}
+.swatches {
+  display: flex;
+  gap: 6px;
+}
+.swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.swatch.sel {
+  border-color: #fff;
+}
+.bottoggle {
+  min-width: 92px;
+}
+.bottoggle.on {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+/* ---------- layout ---------- */
+.game {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.hud {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.turninfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 12px;
+  border-right: 1px solid var(--line);
+  min-width: 150px;
+}
+.turninfo .big {
+  font-size: 15px;
+  color: #fff;
+}
+.pcard {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  min-width: 150px;
+  background: var(--panel2);
+}
+.pcard.active {
+  border-color: var(--pc);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--pc) 45%, transparent);
+}
+.pcard .pname {
+  color: var(--pc);
+  font-weight: bold;
+}
+.pcard .pstats {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+}
+.mid {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.gridwrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- board ---------- */
+.gridvp {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+}
+.world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+.origin {
+  position: absolute;
+  border: 1px dashed #2c3c55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c3c55;
+  font-size: 20px;
+}
+.boardwall {
+  position: absolute;
+  border: 2px dashed #3a4c6b;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.gcard {
+  position: absolute;
+  border: 1px solid #33445f;
+  border-radius: 6px;
+  background: linear-gradient(160deg, #16202f, #0d1420);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #dfe9f5;
+}
+.ghostcell {
+  position: absolute;
+  border: 2px dashed var(--ok);
+  background: rgba(180, 255, 57, 0.12);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--ok);
+  pointer-events: none;
+  z-index: 5;
+}
+.ghostcell.invalid {
+  border-color: var(--bad);
+  background: rgba(255, 77, 94, 0.12);
+  color: var(--bad);
+}
+.placebox {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 40;
+  background: rgba(5, 8, 14, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  max-width: 340px;
+  color: var(--dim);
+}
+.botbanner {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: rgba(5, 8, 14, 0.95);
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+.botthinking {
+  color: var(--dim);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ---------- pending decision (PendingPrompt.tsx) ----------
+   Floats over the board so a prompt can highlight cells behind it. */
+.prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 120;
+  min-width: 340px;
+  max-width: min(680px, 92%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(5, 8, 14, 0.97);
+  border: 1px solid var(--pc, var(--hot));
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+.promptwho {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.prompttext {
+  font-size: 15px;
+  color: var(--txt);
+}
+.promptopts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.optsub {
+  color: var(--dim);
+  font-size: 11px;
+}
+
+/* ---------- side panel ---------- */
+.side {
+  width: 320px;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.side .tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+}
+.side .tabs button {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  padding: 8px;
+  background: transparent;
+  color: var(--hot);
+  border-bottom: 2px solid var(--hot);
+}
+.logbody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.logrow .lt {
+  color: #45536b;
+}
+
+/* ---------- hand ---------- */
+.bottombar {
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.handwrap {
+  flex: 1;
+  min-width: 0;
+}
+.handlabel {
+  color: var(--dim);
+  font-size: 11px;
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+}
+.hand {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+.ctile {
+  min-width: 60px;
+  height: 76px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+}
+.ctile.selected {
+  border-color: var(--ok);
+  box-shadow: 0 0 12px rgba(180, 255, 57, 0.4);
+}
+.actionstack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+.actionstack button {
+  width: 100%;
+}
+
+/* ---------- overlays ---------- */
+.passover {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.passover .whom {
+  font-size: 30px;
+  color: var(--pc);
+  text-shadow: 0 0 20px var(--pc);
+  letter-spacing: 4px;
+}
+.gameover {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 9, 0.94);
+  z-index: 160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gameover .goc {
+  background: var(--panel);
+  border: 1px solid var(--hot);
+  border-radius: 12px;
+  padding: 26px 32px;
+}
+.gameover h2 {
+  margin: 0 0 14px;
+  letter-spacing: 6px;
+  color: #fff;
+}
+.gorow {
+  display: flex;
+  gap: 18px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.gorow .rk {
+  color: var(--dim);
+  width: 26px;
+}
+.gorow .gpname {
+  color: var(--pc);
+  font-weight: bold;
+  width: 140px;
+}

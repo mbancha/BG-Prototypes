@@ -6,6 +6,7 @@ built to answer rules questions fast: change a number, reload, play, export
 the numbers, repeat.
 
 ```
+games/galax/       GALAX — 2–4p space-civilization Science prototype
 games/spypunk/     SPYPUNK — domino placement, influence, enclosure scoring
                    (+ a stripped-down color-groups mode and a 10k-game simulator)
 kernel/template/   starting point for a new prototype — copy it to games/<name>/
@@ -82,3 +83,7 @@ Each game folder carries its own:
   this first when picking a game back up.
 - `DECISIONS.md` — numbered rulings for everything the design spec left open.
 - `README.md` — how to run and tune that specific game.
+
+## Automation
+
+See [`AUTOMATION.md`](AUTOMATION.md) for the one-time GitHub setup and the plain-language workflow for requesting, testing, reviewing, and publishing prototypes.

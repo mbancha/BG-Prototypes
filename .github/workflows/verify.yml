@@ -1,0 +1,37 @@
+name: Verify prototypes
+
+on:
+  pull_request:
+  push:
+    branches: [main, "claude/**", work]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  galax:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+    defaults:
+      run:
+        working-directory: games/galax
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: games/galax/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - run: npm run smoke
+      - name: Upload browser screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: galax-browser-smoke
+          path: games/galax/artifacts/
+          if-no-files-found: warn

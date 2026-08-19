@@ -19,6 +19,7 @@ architecture rules, required artifacts and verification steps live there.
 
 | Path | What it is |
 |---|---|
+| `games/galax/` | GALAX — 2–4p space civilization prototype with bots, Science capacity and global Blue defense. |
 | `games/spypunk/` | SPYPUNK — 2–4p domino-placement influence game. 60 unique ability cards, symbol matching, enclosure scoring. Also contains a stripped-down **color-groups** mode for testing the core loop without abilities, with variant toggles and a 10k-game simulator. |
 
 `kernel/template/` is the starting point for a **new** prototype: copy it to
