@@ -20,7 +20,7 @@ try {
   await page.getByRole("button", { name: "advanceScience" }).click();
   await page.getByRole("button", { name: "endTurn" }).click();
   await page.getByText("Turn 2 · Bo").waitFor();
-  await page.getByRole("button", { name: "Undo" }).click();
+  await page.locator(".passover").getByRole("button", { name: "Undo" }).click();
   await page.getByText("Turn 1 · Ada").waitFor();
   await mkdir(OUT_DIR, { recursive: true });
   const screenshot = `${OUT_DIR}/galax-smoke.png`;
