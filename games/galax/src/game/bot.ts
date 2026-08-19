@@ -1,0 +1,6 @@
+import { SCIENCE_STEP_UTILITY } from "../data/config";
+import { activeSeat, conquerProbability, civResistance, legalActions, type Action, type GameState } from "./engine";
+export const isBotTurn=(s:GameState)=>!s.over&&!!s.players[activeSeat(s)]?.isBot;
+export const seatOnClock=activeSeat;
+export function botDecide(s:GameState):Action{const a=legalActions(s);if(!a.length)throw Error("No legal action");return a.reduce((best,x)=>value(s,x)>value(s,best)?x:best)}
+function value(s:GameState,a:Action){const p=s.players[s.active];if(a.a==="advanceScience")return SCIENCE_STEP_UTILITY[p.scienceLevel]??0;if(a.a==="invent")return s.cards[a.cardId].rank+(s.cards[a.cardId].techType==="Technology"?3:1);if(a.a==="conquer"){const l=s.locations[a.location],owner=l.civs.find(x=>x!==null&&x!==s.active);const r=owner==null?l.planetResistance:civResistance(s,owner);const power=l.fleets.filter(f=>f.owner===s.active).reduce((n,f)=>n+f.level,0)+(p.scienceLevel>=10?1:0);return conquerProbability(s,power,r)*10+(l.color==="Science"?4:0)}if(a.a==="buildCiv")return s.locations[a.location].color==="Science"?8:4;if(a.a==="generate")return a.color==="Science"?5:a.method==="card"?3:1;if(a.a==="endTurn")return-10;return 0}

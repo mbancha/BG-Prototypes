@@ -1,0 +1,8 @@
+[
+ {"id":1,"systemName":"Azure Reach","color":"Science","rank":1,"planetData":{"resource":"science","resistance":1},"techName":"Assimilation Agents","techText":"Advance Science 1.","techType":"Discovery","burstCount":0,"shieldCount":0},
+ {"id":2,"systemName":"Verdant Gate","color":"Exploration","rank":2,"planetData":{"resource":"card","resistance":2},"techName":"Blackhole Extraction","techText":"Advance Science and gain a Trophy per controlled Anomaly.","techType":"Discovery","burstCount":0,"shieldCount":1},
+ {"id":3,"systemName":"Crimson Forge","color":"Military","rank":3,"planetData":{"resource":"fleet","resistance":3},"techName":"Military Technocracy","techText":"Gain Battle Power from Technologies in tableau.","techType":"Technology","burstCount":1,"shieldCount":0},
+ {"id":4,"systemName":"Guildark","color":"Commerce","rank":4,"planetData":{"resource":"trophy","resistance":4},"techName":"Science Guildark","techText":"First opponent Science advance each turn draws a card.","techType":"Technology","burstCount":1,"shieldCount":1},
+ {"id":5,"systemName":"Psion","color":"Science","rank":4,"planetData":{"resource":"science","resistance":2},"techName":"PsyDomination","techText":"Advance Science per opponent Civ at occupied locations.","techType":"Discovery","burstCount":0,"shieldCount":1},
+ {"id":6,"systemName":"Override","color":"Science","rank":2,"planetData":{"resource":"science","resistance":3},"techName":"Tech Override","techText":"Science Capacity +5 this turn; Trophy per later Technology.","techType":"Technology","burstCount":1,"shieldCount":0}
+]
