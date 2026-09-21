@@ -1,0 +1,6 @@
+/sources/dextrous-*.json
+/sources/design.txt
+/sources/rules.txt
+/artifacts/
+/dist/
+/node_modules/

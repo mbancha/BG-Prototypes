@@ -1,159 +1,123 @@
-// Pre-game lobby: player count, names, colors, human/bot per seat, and the
-// board limit. Emits the object App feeds straight into newGame().
-// Presentational only — no rules here, ever.
-
-import { useEffect, useState } from "react";
-import { CONFIG, defaultBoardSize } from "../data/config";
-
-export const NEON_COLORS = [
-  "#00e5ff",
-  "#ff2ec4",
-  "#b4ff39",
-  "#ffb020",
-  "#a78bfa",
-  "#ff4d5e",
-];
-const DEFAULT_NAMES = ["Ada", "Bo", "Cy", "Dex"];
-
+import { useState } from "react";
+import type { Seat } from "../game/model";
 export interface SetupResult {
-  players: { name: string; color: string; isBot: boolean }[];
-  board: { width: number; height: number };
-  /** Blank ⇒ random. Type a seed to replay the exact same deal — the fastest
-   *  way to re-examine a position a playtester complained about. */
-  seed?: number;
+  players: Seat[];
+  seed: number;
 }
-
-export default function SetupScreen(props: {
+export default function SetupScreen({
+  onStart,
+  onSim,
+  onLoad,
+}: {
   onStart: (r: SetupResult) => void;
+  onSim: () => void;
+  onLoad: (file: File) => void;
 }) {
-  const [count, setCount] = useState(2);
-  const [names, setNames] = useState([...DEFAULT_NAMES]);
-  const [bots, setBots] = useState([false, false, false, false]);
-  const [colors, setColors] = useState(NEON_COLORS.slice(0, 4));
-  const [board, setBoard] = useState({
-    width: defaultBoardSize(2),
-    height: defaultBoardSize(2),
-  });
-  const [touched, setTouched] = useState(false);
-  const [seed, setSeed] = useState("");
-
-  useEffect(() => {
-    if (touched) return;
-    const n = defaultBoardSize(count);
-    setBoard({ width: n, height: n });
-  }, [count, touched]);
-
-  const setSize = (k: "width" | "height", raw: number) => {
-    setTouched(true);
-    const n = Math.max(
-      CONFIG.BOARD_MIN,
-      Math.min(CONFIG.BOARD_MAX, Math.round(raw) || CONFIG.BOARD_MIN),
-    );
-    setBoard((b) => ({ ...b, [k]: n }));
-  };
-
-  const counts = [];
-  for (let n = CONFIG.MIN_PLAYERS; n <= CONFIG.MAX_PLAYERS; n++) counts.push(n);
-
+  const [n, setN] = useState(2),
+    [seed, setSeed] = useState("20260920"),
+    [modes, setModes] = useState([false, true, true, true]);
   return (
-    <div className="setup">
-      <h1>PROTOTYPE</h1>
-      <div className="sub">— playtest build —</div>
-      <div className="setup-card">
-        <div className="countbtns">
-          {counts.map((n) => (
-            <button
-              key={n}
-              className={n === count ? "primary" : ""}
-              onClick={() => setCount(n)}
-            >
-              {n} players
-            </button>
-          ))}
+    <main className="setup">
+      <section className="intro">
+        <div className="eyebrow">A GALAXY IN YOUR HAND</div>
+        <h1>GALAX</h1>
+        <p className="lead">
+          Beyond the veil,
+          <br />
+          an empire awaits.
+        </p>
+        <p>
+          Explore hidden systems, establish civilizations, and turn the cards in
+          your hand into the technologies that shape your future.
+        </p>
+        <div className="edition">
+          Dextrous playtest · September 20, 2026
+          <br />
+          2–4 players · Hotseat + basic bots
         </div>
-        <div className="vrow">
-          <span className="vlabel">max cols × rows</span>
-          <input
-            type="number"
-            className="sizein"
-            value={board.width}
-            onChange={(e) => setSize("width", +e.target.value)}
-          />
-          <span style={{ color: "var(--dim)" }}>×</span>
-          <input
-            type="number"
-            className="sizein"
-            value={board.height}
-            onChange={(e) => setSize("height", +e.target.value)}
-          />
-        </div>
-        <div className="vrow">
-          <span className="vlabel">seed</span>
-          <input
-            type="text"
-            className="sizein"
-            style={{ width: 96 }}
-            placeholder="random"
-            value={seed}
-            onChange={(e) => setSeed(e.target.value.replace(/\D/g, ""))}
-          />
-          <span style={{ color: "var(--dim)", fontSize: 11 }}>
-            same seed → same deal
-          </span>
-        </div>
-        {Array.from({ length: count }, (_, i) => (
-          <div className="prow" key={i}>
-            <span style={{ color: colors[i], width: 20 }}>P{i + 1}</span>
-            <input
-              type="text"
-              value={names[i]}
-              maxLength={12}
+      </section>
+      <section className="setup-panel">
+        <h2>Launch an expedition</h2>
+        <label>
+          Players
+          <select
+            aria-label="Players"
+            value={n}
+            onChange={(e) => setN(+e.target.value)}
+          >
+            {[2, 3, 4].map((i) => (
+              <option key={i}>{i}</option>
+            ))}
+          </select>
+        </label>
+        {Array.from({ length: n }, (_, i) => (
+          <label key={i}>
+            Empire {i + 1}
+            <select
+              aria-label={"Empire " + (i + 1) + " controller"}
+              value={modes[i] ? "bot" : "human"}
               onChange={(e) =>
-                setNames((p) => p.map((v, j) => (j === i ? e.target.value : v)))
-              }
-            />
-            <button
-              className={"bottoggle" + (bots[i] ? " on" : "")}
-              onClick={() =>
-                setBots((p) => p.map((v, j) => (j === i ? !v : v)))
+                setModes((v) =>
+                  v.map((b, j) => (i === j ? e.target.value === "bot" : b)),
+                )
               }
             >
-              {bots[i] ? "🤖 BOT" : "👤 HUMAN"}
-            </button>
-            <div className="swatches">
-              {NEON_COLORS.map((c) => (
-                <div
-                  key={c}
-                  className={"swatch" + (colors[i] === c ? " sel" : "")}
-                  style={{ background: c, color: c }}
-                  onClick={() =>
-                    setColors((p) => p.map((v, j) => (j === i ? c : v)))
-                  }
-                />
-              ))}
-            </div>
-          </div>
+              <option value="human">Human · hotseat</option>
+              <option value="bot">Basic bot</option>
+            </select>
+          </label>
         ))}
+        <label>
+          Map seed
+          <input
+            aria-label="Map seed"
+            value={seed}
+            onChange={(e) => setSeed(e.target.value)}
+          />
+        </label>
         <button
           className="primary"
           onClick={() =>
-            props.onStart({
-              board,
-              seed: seed === "" ? undefined : Number(seed),
-              players: Array.from({ length: count }, (_, i) => ({
-                name: names[i].trim() || `Player ${i + 1}`,
-                color: colors[i],
-                isBot: bots[i],
+            onStart({
+              seed: Number(seed) || 1,
+              players: Array.from({ length: n }, (_, i) => ({
+                name: "Empire " + (i + 1),
+                color: ["#f5a276", "#79d7df", "#ba9bff", "#f0d567"][i],
+                isBot: modes[i],
               })),
             })
           }
         >
-          ▶ START GAME
+          Start expedition →
         </button>
-        <div style={{ color: "var(--dim)", fontSize: 11 }}>
-          Hotseat: pass the device between turns. 🤖 seats play themselves.
-        </div>
+        <button onClick={onSim}>Simulation lab</button>
+        <label className="load-replay">
+          Resume a saved replay
+          <input
+            type="file"
+            accept=".json"
+            aria-label="Load replay"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) onLoad(f);
+            }}
+          />
+        </label>
+        <p className="small">
+          Uses the supplied card artwork and September reference rules. Rule
+          interpretations are documented in the in-game reference. This is a
+          development playtest.
+        </p>
+      </section>
+      <div className="setup-cards">
+        {["c34", "c32", "c29"].map((id) => (
+          <img
+            key={id}
+            src={"./cards/" + id + ".webp"}
+            alt="Galax system and technology card"
+          />
+        ))}
       </div>
-    </div>
+    </main>
   );
 }

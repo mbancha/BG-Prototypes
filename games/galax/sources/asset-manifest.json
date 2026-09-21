@@ -1,0 +1,560 @@
+{
+  "c01": {
+    "file": "cards/c01.webp",
+    "sheet": 0,
+    "index": 0,
+    "width": 480,
+    "height": 672,
+    "sha256": "f098d2783c6e7417e2724b8c2c51ed0b782d2dfccbc11cf2d0c2334d910f3d2e",
+    "copies": 1
+  },
+  "c02": {
+    "file": "cards/c02.webp",
+    "sheet": 0,
+    "index": 1,
+    "width": 480,
+    "height": 672,
+    "sha256": "beb42cb97b89ac3af8c82cb7657b226f9636fbdb1c7833b75237571dcf9aca21",
+    "copies": 1
+  },
+  "c03": {
+    "file": "cards/c03.webp",
+    "sheet": 0,
+    "index": 2,
+    "width": 480,
+    "height": 672,
+    "sha256": "b35497c8779f7271f65c5f6d938d2c3b3d57b1b2909dae6fa6d8174e0a2546ed",
+    "copies": 1
+  },
+  "c04": {
+    "file": "cards/c04.webp",
+    "sheet": 0,
+    "index": 3,
+    "width": 480,
+    "height": 672,
+    "sha256": "3d22f9aa9a72b43ef0d37b1d6faa6e4bb95485f1ee21e4b06200a38e4c1e9a15",
+    "copies": 1
+  },
+  "c05": {
+    "file": "cards/c05.webp",
+    "sheet": 0,
+    "index": 4,
+    "width": 480,
+    "height": 672,
+    "sha256": "d68db4185659cc19d2d2e04d9d09a5b91573f5852a83770d8a2779d8b11ce529",
+    "copies": 1
+  },
+  "c06": {
+    "file": "cards/c06.webp",
+    "sheet": 0,
+    "index": 5,
+    "width": 480,
+    "height": 672,
+    "sha256": "f59333791756a9a2f75c57a8670b8721b6c22fe8c8f2eabd8f51806ebcba3580",
+    "copies": 1
+  },
+  "c07": {
+    "file": "cards/c07.webp",
+    "sheet": 0,
+    "index": 6,
+    "width": 480,
+    "height": 672,
+    "sha256": "951ccf3f6f7133ada2798b715bb43fcf6b46c5b6500f7682347c53847dc421f9",
+    "copies": 1
+  },
+  "c08": {
+    "file": "cards/c08.webp",
+    "sheet": 0,
+    "index": 7,
+    "width": 480,
+    "height": 672,
+    "sha256": "a0d2451df128df4fe0914c76d5a081353bfaa3f589acc282030b4920eb5ed22f",
+    "copies": 1
+  },
+  "c09": {
+    "file": "cards/c09.webp",
+    "sheet": 0,
+    "index": 8,
+    "width": 480,
+    "height": 672,
+    "sha256": "a6cfbbdfab5f260bacd3e72ca3cb3fe68d0b54d34226e872c9928d1fafd3733e",
+    "copies": 1
+  },
+  "c10": {
+    "file": "cards/c10.webp",
+    "sheet": 0,
+    "index": 9,
+    "width": 480,
+    "height": 672,
+    "sha256": "2905540d6fe24ebafcbec6f12e03c3a0d36633f5999c9c85904065617f9672f2",
+    "copies": 1
+  },
+  "c11": {
+    "file": "cards/c11.webp",
+    "sheet": 0,
+    "index": 10,
+    "width": 480,
+    "height": 672,
+    "sha256": "581dbe14807b5e4b0ea7ecc1b4a0ad7f360a71c2685b5430a897588b3812c027",
+    "copies": 1
+  },
+  "c12": {
+    "file": "cards/c12.webp",
+    "sheet": 0,
+    "index": 11,
+    "width": 480,
+    "height": 672,
+    "sha256": "dda92770c8360023101991664316ad30f8ceefc55bc585631f7a0702c720ec89",
+    "copies": 1
+  },
+  "c13": {
+    "file": "cards/c13.webp",
+    "sheet": 0,
+    "index": 12,
+    "width": 480,
+    "height": 672,
+    "sha256": "5e80fbf7e4c842a298483542cb433796102541355a501d7d619e2b369ff57a03",
+    "copies": 1
+  },
+  "c14": {
+    "file": "cards/c14.webp",
+    "sheet": 0,
+    "index": 13,
+    "width": 480,
+    "height": 672,
+    "sha256": "159e83e0da6a81c444b34d4906977ee5f9b1e1f4a3536c23148dee0b02e9b540",
+    "copies": 1
+  },
+  "c15": {
+    "file": "cards/c15.webp",
+    "sheet": 0,
+    "index": 14,
+    "width": 480,
+    "height": 672,
+    "sha256": "80d88885f5174c2315350cdbc60adf6a68f848c1c76a024a8e699685ec2e5d1e",
+    "copies": 1
+  },
+  "c16": {
+    "file": "cards/c16.webp",
+    "sheet": 0,
+    "index": 15,
+    "width": 480,
+    "height": 672,
+    "sha256": "057f58ac763a38ecc61de17a9f24dcc9eb487d7b27c0d45b60bd86470de5bb4d",
+    "copies": 1
+  },
+  "c17": {
+    "file": "cards/c17.webp",
+    "sheet": 0,
+    "index": 16,
+    "width": 480,
+    "height": 672,
+    "sha256": "63716da4867724bfc287ebcfbe8d962c75e0853d4d4e4f10dc5f47a5b2c7ceac",
+    "copies": 1
+  },
+  "c18": {
+    "file": "cards/c18.webp",
+    "sheet": 0,
+    "index": 17,
+    "width": 480,
+    "height": 672,
+    "sha256": "c7c9e5ce2dd7112c9f34500cb5e08ed0e1ec3d23027aaa4c75f21c1e7472be24",
+    "copies": 1
+  },
+  "c19": {
+    "file": "cards/c19.webp",
+    "sheet": 0,
+    "index": 18,
+    "width": 480,
+    "height": 672,
+    "sha256": "ccd8c19edfdc6df8bc480438ea21708a9e76153a84dea066f1fee9f3784c23e7",
+    "copies": 1
+  },
+  "c20": {
+    "file": "cards/c20.webp",
+    "sheet": 0,
+    "index": 19,
+    "width": 480,
+    "height": 672,
+    "sha256": "56424846aa65b094452f944eda30b1b41eb99dd9ee038150bd1ac7096ae1ea24",
+    "copies": 1
+  },
+  "c21": {
+    "file": "cards/c21.webp",
+    "sheet": 0,
+    "index": 20,
+    "width": 480,
+    "height": 672,
+    "sha256": "c4e3b21eb9955ea763b4c644bbd424450344fdfdae897243ae7e8739783f1bef",
+    "copies": 1
+  },
+  "c22": {
+    "file": "cards/c22.webp",
+    "sheet": 0,
+    "index": 21,
+    "width": 480,
+    "height": 672,
+    "sha256": "c2c91542dbcd78ea8597fdd07e477bf7747bb868626157939e104f35aa73036b",
+    "copies": 1
+  },
+  "c23": {
+    "file": "cards/c23.webp",
+    "sheet": 0,
+    "index": 22,
+    "width": 480,
+    "height": 672,
+    "sha256": "5807cab2ef7e7d088f64051730b82cd4805d66096d5e6de4c89b775a0ea14445",
+    "copies": 1
+  },
+  "c24": {
+    "file": "cards/c24.webp",
+    "sheet": 0,
+    "index": 23,
+    "width": 480,
+    "height": 672,
+    "sha256": "6a886234d120b22d1c7b1920426e3ac98a62d3153614b1f79eb0872a456fa810",
+    "copies": 1
+  },
+  "c25": {
+    "file": "cards/c25.webp",
+    "sheet": 0,
+    "index": 24,
+    "width": 480,
+    "height": 672,
+    "sha256": "12fac08d4694ebefed4ae316b969c78f2cbe4a3d5b60a84003b0bf537e50fadf",
+    "copies": 1
+  },
+  "c26": {
+    "file": "cards/c26.webp",
+    "sheet": 0,
+    "index": 25,
+    "width": 480,
+    "height": 672,
+    "sha256": "d124665a428617aaf18458cbbdc13ffa419b7b46a1412e58c76ddbe45db3f5c0",
+    "copies": 1
+  },
+  "c27": {
+    "file": "cards/c27.webp",
+    "sheet": 0,
+    "index": 26,
+    "width": 480,
+    "height": 672,
+    "sha256": "2d8ef8b2a0352131ce57c07451115c97c2ded1376392c8f10944ab3807342813",
+    "copies": 1
+  },
+  "c28": {
+    "file": "cards/c28.webp",
+    "sheet": 0,
+    "index": 27,
+    "width": 480,
+    "height": 672,
+    "sha256": "d10e6f4572d1f6125d4e9852136902b7db10002a57688cb7d44c53c37ccd4358",
+    "copies": 1
+  },
+  "c29": {
+    "file": "cards/c29.webp",
+    "sheet": 0,
+    "index": 28,
+    "width": 480,
+    "height": 672,
+    "sha256": "23b5b5406b5a89a3166e158f0f77c62953944bb51116b48772b8ea4759906485",
+    "copies": 1
+  },
+  "c30": {
+    "file": "cards/c30.webp",
+    "sheet": 0,
+    "index": 29,
+    "width": 480,
+    "height": 672,
+    "sha256": "fcd3d1319b40f548f71077ed7a16e7f49a2e78430ed6844f46b683caae21c1c8",
+    "copies": 1
+  },
+  "c31": {
+    "file": "cards/c31.webp",
+    "sheet": 0,
+    "index": 30,
+    "width": 480,
+    "height": 672,
+    "sha256": "368969599af3fa971821dee328498a7a6ed37579d29cd70b4dc0c0ce76bb4763",
+    "copies": 1
+  },
+  "c32": {
+    "file": "cards/c32.webp",
+    "sheet": 0,
+    "index": 31,
+    "width": 480,
+    "height": 672,
+    "sha256": "e83be41568abccfd91a3c94a6f3b72989a1c218120db2177fa88db33ef6e41eb",
+    "copies": 1
+  },
+  "c33": {
+    "file": "cards/c33.webp",
+    "sheet": 0,
+    "index": 32,
+    "width": 480,
+    "height": 672,
+    "sha256": "f96884fb5320005376bf0d16212a8b7ecbf2e9d33fe7b767bb8d3848ea749449",
+    "copies": 1
+  },
+  "c34": {
+    "file": "cards/c34.webp",
+    "sheet": 0,
+    "index": 33,
+    "width": 480,
+    "height": 672,
+    "sha256": "ddbc269590c3f6b6887bee586dea50bcfe4695ef138c34a506b35bde5afdaed8",
+    "copies": 1
+  },
+  "c35": {
+    "file": "cards/c35.webp",
+    "sheet": 0,
+    "index": 34,
+    "width": 480,
+    "height": 672,
+    "sha256": "8ec07566bf9d262cb04e840ca602f89ce5aab449fc093ec2b788d5cc5efe9eaa",
+    "copies": 1
+  },
+  "c36": {
+    "file": "cards/c36.webp",
+    "sheet": 0,
+    "index": 35,
+    "width": 480,
+    "height": 672,
+    "sha256": "af0ca9061803b4cec6386f53c19c1737fd7cfe524ab641da6c9cfd93d3e23f83",
+    "copies": 1
+  },
+  "c37": {
+    "file": "cards/c37.webp",
+    "sheet": 0,
+    "index": 36,
+    "width": 480,
+    "height": 672,
+    "sha256": "d4674fd8049447d068e3b9b25b32bda050261c593d6637d809d98681bb868956",
+    "copies": 1
+  },
+  "c38": {
+    "file": "cards/c38.webp",
+    "sheet": 0,
+    "index": 37,
+    "width": 480,
+    "height": 672,
+    "sha256": "827a6e5ad94387ec1c69055d1b702912736b29ab3192d69b602a34ab48579f8e",
+    "copies": 1
+  },
+  "c39": {
+    "file": "cards/c39.webp",
+    "sheet": 0,
+    "index": 38,
+    "width": 480,
+    "height": 672,
+    "sha256": "2b77fbc45aa000d125764835d4cf222d67961be0da2f7f8bc35384bfe9bed847",
+    "copies": 1
+  },
+  "c40": {
+    "file": "cards/c40.webp",
+    "sheet": 0,
+    "index": 39,
+    "width": 480,
+    "height": 672,
+    "sha256": "59b26e97395b17b958026fdf647668e280f1f0875c9bc6806b8c29d46d7f80fb",
+    "copies": 1
+  },
+  "c41": {
+    "file": "cards/c41.webp",
+    "sheet": 0,
+    "index": 40,
+    "width": 480,
+    "height": 672,
+    "sha256": "9199881b60ce34edadbe39320ca3c66eb9722e91e185db2c3135bee68ec6b6fe",
+    "copies": 1
+  },
+  "c42": {
+    "file": "cards/c42.webp",
+    "sheet": 0,
+    "index": 41,
+    "width": 480,
+    "height": 672,
+    "sha256": "0fae1b905cf01a2e7e25f879660453a1a0093e0168607ed9b30347b97f6dd2d6",
+    "copies": 1
+  },
+  "c43": {
+    "file": "cards/c43.webp",
+    "sheet": 0,
+    "index": 42,
+    "width": 480,
+    "height": 672,
+    "sha256": "8fcbcedaf5de2d04ece994c6681e7525611eb14280c47b294fdd8fbbfc675975",
+    "copies": 1
+  },
+  "c44": {
+    "file": "cards/c44.webp",
+    "sheet": 0,
+    "index": 43,
+    "width": 480,
+    "height": 672,
+    "sha256": "4350ceef2ad74bc4a01f2bdbffee2da6cbfcd2c19043fd0b6ff94c5f31fff94c",
+    "copies": 1
+  },
+  "t01": {
+    "file": "cards/t01.webp",
+    "sheet": 1,
+    "index": 0,
+    "width": 529,
+    "height": 907,
+    "sha256": "2b8459a8af365fe36db3f5e9677e0c607fb6f9a9b7c4497b583f8ac4b9722b63",
+    "copies": 1
+  },
+  "t02": {
+    "file": "cards/t02.webp",
+    "sheet": 1,
+    "index": 1,
+    "width": 529,
+    "height": 907,
+    "sha256": "6d5deafa7cf32bcebbf1becd62c2ca83370ebcb0ede14ecc73f53156a87f678a",
+    "copies": 1
+  },
+  "t03": {
+    "file": "cards/t03.webp",
+    "sheet": 1,
+    "index": 2,
+    "width": 529,
+    "height": 907,
+    "sha256": "94c2ca2a16dc1a532b12db7c8e286c6114919ecd18e55b6076ed2d421f885ec2",
+    "copies": 1
+  },
+  "t04": {
+    "file": "cards/t04.webp",
+    "sheet": 1,
+    "index": 3,
+    "width": 529,
+    "height": 907,
+    "sha256": "267d86b35ae158eb0be74a2ac61ec5c6ba3fc93921f8569d41837950600db6d7",
+    "copies": 1
+  },
+  "r01": {
+    "file": "cards/r01.webp",
+    "sheet": 2,
+    "index": 0,
+    "width": 480,
+    "height": 672,
+    "sha256": "f7a8ca10f24f781be327d4928736a78a3c27cdd4ff889c810faf44a1090784a4",
+    "copies": 4
+  },
+  "a01": {
+    "file": "cards/a01.webp",
+    "sheet": 3,
+    "index": 0,
+    "width": 480,
+    "height": 672,
+    "sha256": "6c04cb6fef4552f35f7cb4fc1113718ee2b178a9820d8c8f7c4dea643c0e1256",
+    "copies": 1
+  },
+  "a02": {
+    "file": "cards/a02.webp",
+    "sheet": 3,
+    "index": 1,
+    "width": 480,
+    "height": 672,
+    "sha256": "22c4b5ebfdffe54ed011d3514e00e366d2b16c1a4ba103a8740422ce0df56b80",
+    "copies": 1
+  },
+  "a03": {
+    "file": "cards/a03.webp",
+    "sheet": 3,
+    "index": 2,
+    "width": 480,
+    "height": 672,
+    "sha256": "122b17fc1eff0566b58b58cee83df83e9aced4ce5a80c7368f9c2572364e18af",
+    "copies": 1
+  },
+  "a04": {
+    "file": "cards/a04.webp",
+    "sheet": 3,
+    "index": 3,
+    "width": 480,
+    "height": 672,
+    "sha256": "0bcbb284f043b57ef258a510935b792e3cf37a5e3f2f432231bfb45f0ecf1d36",
+    "copies": 1
+  },
+  "a05": {
+    "file": "cards/a05.webp",
+    "sheet": 3,
+    "index": 4,
+    "width": 480,
+    "height": 672,
+    "sha256": "a545bc0b22c1eb204458af550c12eb8b5b9d80c013e1c0768a14f45dc7eb4a4c",
+    "copies": 1
+  },
+  "a06": {
+    "file": "cards/a06.webp",
+    "sheet": 3,
+    "index": 5,
+    "width": 480,
+    "height": 672,
+    "sha256": "b5fc603455f23fb3a2c9dcd6d7245e69ba7e7f167f683a868689a23ff368ac10",
+    "copies": 1
+  },
+  "a07": {
+    "file": "cards/a07.webp",
+    "sheet": 3,
+    "index": 6,
+    "width": 480,
+    "height": 672,
+    "sha256": "f85117e86bb2dbefe4983392c56ab915259d621dc1065043e2bc26e76ae34edd",
+    "copies": 1
+  },
+  "a08": {
+    "file": "cards/a08.webp",
+    "sheet": 3,
+    "index": 7,
+    "width": 480,
+    "height": 672,
+    "sha256": "cc2d7cf740d1db4f43199039d934f61cc5361cf290add647158e8775c61800ec",
+    "copies": 1
+  },
+  "a09": {
+    "file": "cards/a09.webp",
+    "sheet": 3,
+    "index": 8,
+    "width": 480,
+    "height": 672,
+    "sha256": "2ad482bfca41961e39bb4335e3e3fe980c321afe44088ccf876729c36e86a3ae",
+    "copies": 1
+  },
+  "a10": {
+    "file": "cards/a10.webp",
+    "sheet": 3,
+    "index": 9,
+    "width": 480,
+    "height": 672,
+    "sha256": "3e5adbc4b5869ce3e2dc09239c4d0d7ceb23113b08eecc8ca83e6b3c7185f893",
+    "copies": 1
+  },
+  "a11": {
+    "file": "cards/a11.webp",
+    "sheet": 3,
+    "index": 10,
+    "width": 480,
+    "height": 672,
+    "sha256": "45602c51e7aef3b658cce64103b164abdda669957f74026d5cc8619c7aa06c9c",
+    "copies": 1
+  },
+  "a12": {
+    "file": "cards/a12.webp",
+    "sheet": 3,
+    "index": 11,
+    "width": 480,
+    "height": 672,
+    "sha256": "df550bb1203678af6223dafa7cd61380286d7ebf025a990d40c261907409169c",
+    "copies": 1
+  },
+  "a13": {
+    "file": "cards/a13.webp",
+    "sheet": 3,
+    "index": 12,
+    "width": 480,
+    "height": 672,
+    "sha256": "39446bb94956ba3705a9c8a89a5f4efcf9b1c270b5e3491199b97027e7cbc8c9",
+    "copies": 1
+  }
+}

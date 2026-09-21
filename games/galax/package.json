@@ -1,7 +1,7 @@
 {
   "name": "galax-prototype",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,9 @@
     "test": "vitest run",
     "sim": "node scripts/sim.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "verify": "npm test && npm run build && npm run smoke",
-    "browser:install": "playwright install chromium"
+    "verify": "npm run assets && npm test && npm run build && npm run smoke",
+    "browser:install": "playwright install chromium",
+    "assets": "node scripts/assets.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

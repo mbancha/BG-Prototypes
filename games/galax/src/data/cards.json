@@ -1,8 +1,1331 @@
 [
- {"id":1,"systemName":"Azure Reach","color":"Science","rank":1,"planetData":{"resource":"science","resistance":1},"techName":"Assimilation Agents","techText":"Advance Science 1.","techType":"Discovery","burstCount":0,"shieldCount":0},
- {"id":2,"systemName":"Verdant Gate","color":"Exploration","rank":2,"planetData":{"resource":"card","resistance":2},"techName":"Blackhole Extraction","techText":"Advance Science and gain a Trophy per controlled Anomaly.","techType":"Discovery","burstCount":0,"shieldCount":1},
- {"id":3,"systemName":"Crimson Forge","color":"Military","rank":3,"planetData":{"resource":"fleet","resistance":3},"techName":"Military Technocracy","techText":"Gain Battle Power from Technologies in tableau.","techType":"Technology","burstCount":1,"shieldCount":0},
- {"id":4,"systemName":"Guildark","color":"Commerce","rank":4,"planetData":{"resource":"trophy","resistance":4},"techName":"Science Guildark","techText":"First opponent Science advance each turn draws a card.","techType":"Technology","burstCount":1,"shieldCount":1},
- {"id":5,"systemName":"Psion","color":"Science","rank":4,"planetData":{"resource":"science","resistance":2},"techName":"PsyDomination","techText":"Advance Science per opponent Civ at occupied locations.","techType":"Discovery","burstCount":0,"shieldCount":1},
- {"id":6,"systemName":"Override","color":"Science","rank":2,"planetData":{"resource":"science","resistance":3},"techName":"Tech Override","techText":"Science Capacity +5 this turn; Trophy per later Technology.","techType":"Technology","burstCount":1,"shieldCount":0}
+  {
+    "id": "c01",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 2,
+    "techName": "Research Downlink",
+    "techText": "For each system you control, gain a trophy per opponent Civ there.",
+    "techType": "Discovery",
+    "name": "Kepler-452",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c02",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 2,
+    "techName": "Dyson Terraformer",
+    "techText": "Replace a system you control with one from your hand, replacing as many Civs onto planets there as you are able and discarding the rest.",
+    "techType": "Discovery",
+    "name": "Kepler-1544",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c03",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 2,
+    "techName": "Dark Matter Charting",
+    "techText": "Place a card from your hand adjacent to a location (adding to the map), then gain a trophy per adjacent location occupied by an enemy.",
+    "techType": "Discovery",
+    "name": "Gliese 433",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c04",
+    "kind": "system",
+    "color": "Green",
+    "rank": 2,
+    "techName": "Hologrammatic Mass",
+    "techText": "Start a battle anywhere. The player of your choosing adds $burst$burst$burst to their played card(s).",
+    "techType": "Discovery",
+    "name": "GJ 514",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 2,
+    "shield": 0
+  },
+  {
+    "id": "c05",
+    "kind": "system",
+    "color": "Red",
+    "rank": 2,
+    "techName": "Universal Communication",
+    "techText": "Gain 2 Trophies per Civ you have at a location with at least one opponent Civ.",
+    "techType": "Discovery",
+    "name": "Kepler-438",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 2
+  },
+  {
+    "id": "c06",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 2,
+    "techName": "Light Fields",
+    "techText": "You may move each fleet up to twice, even through nebulae, ignoring all costs.",
+    "techType": "Discovery",
+    "name": "Kepler-22",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c07",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 3,
+    "techName": "Deep Space Labs",
+    "techText": "Remove all Exploit tokens at systems you control. Gain 1 Trophy and draw 1 per token removed.",
+    "techType": "Discovery",
+    "name": "TOI-1452",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c08",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 3,
+    "techName": "Matter Recomposition",
+    "techText": "Build a fleet at each system you occupy.",
+    "techType": "Discovery",
+    "name": "Kepler-440",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c09",
+    "kind": "system",
+    "color": "Green",
+    "rank": 3,
+    "techName": "PsyDomination",
+    "techText": "Take another turn after this one unless opponents collectively give you 2 trophies (losing a total of 2 between them).",
+    "techType": "Discovery",
+    "name": "YZ Ceti",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c10",
+    "kind": "system",
+    "color": "Green",
+    "rank": 3,
+    "techName": "Nano Construction",
+    "techText": "Upgrade every fleet at a location.",
+    "techType": "Discovery",
+    "name": "GG 845",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c11",
+    "kind": "system",
+    "color": "Red",
+    "rank": 3,
+    "techName": "Nanodistributed Compute",
+    "techText": "Upgrade 1 fleet in each of your armadas.",
+    "techType": "Discovery",
+    "name": "Ross 128",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c12",
+    "kind": "system",
+    "color": "Red",
+    "rank": 3,
+    "techName": "Gravwell Terraforming",
+    "techText": "Exploit a planet at each system you occupy with an upgraded fleet for free.",
+    "techType": "Discovery",
+    "name": "Gliese 251",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c13",
+    "kind": "system",
+    "color": "Red",
+    "rank": 3,
+    "techName": "Xenonite Plating",
+    "techText": "Place up to 5 Exploit tokens on any planets. *(If there are not enough in the pool, remove them from one of the locations furthest from the targeted planet.)*",
+    "techType": "Discovery",
+    "name": "GJ 1289",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c14",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "Star Lensing",
+    "techText": "Choose an enemy armada, its owner must either let you move it once or destroy one of its fleets. Repeat this twice more with different armadas.",
+    "techType": "Discovery",
+    "name": "Gliese 832",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c15",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 4,
+    "techName": "Neural Synthesizer",
+    "techText": "Take one military action per armada you have. You have +2 Power this turn.",
+    "techType": "Discovery",
+    "name": "K2-18",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c16",
+    "kind": "system",
+    "color": "Green",
+    "rank": 4,
+    "techName": "Molecular Printing",
+    "techText": "Draw until your hand is full. If you draw at least 5 cards, gain 2 trophies.",
+    "techType": "Discovery",
+    "name": "HD 7924",
+    "planets": [
+      {
+        "resource": "research",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c17",
+    "kind": "system",
+    "color": "Red",
+    "rank": 4,
+    "techName": "Blackhole Extraction",
+    "techText": "Choose a color: at each of that color's location that you occupy, build a fleet at any waypoint.",
+    "techType": "Discovery",
+    "name": "Kepler-442",
+    "planets": [
+      {
+        "resource": "fleet",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c18",
+    "kind": "system",
+    "color": "Red",
+    "rank": 4,
+    "techName": "Tech Override",
+    "techText": "Choose any two fleets. For each, their owner must discard them or a total of exactly 4. ",
+    "techType": "Discovery",
+    "name": "Proxima Centauri",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c19",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 4,
+    "techName": "Propaganda Net",
+    "techText": "For each of your level II fleets, conquer an empty planet at a location it occupies with a Civ from your pool.",
+    "techType": "Discovery",
+    "name": "Teegarden’s Star",
+    "planets": [
+      {
+        "resource": "research",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c20",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 4,
+    "techName": "Cloning",
+    "techText": "Build a Civ at each system where you have at least 1 Civ.",
+    "techType": "Discovery",
+    "name": "Kepler-441",
+    "planets": [
+      {
+        "resource": "fleet",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c21",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 4,
+    "techName": "Entanglement Laser",
+    "techText": "At each location you occupy, select an aramda. Its owner must discard a $shield and retreat it, or discard it.",
+    "techType": "Discovery",
+    "name": "K2-155",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c22",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 2,
+    "techName": "Antimatter Torpedos",
+    "techText": "When attacking, your {red:Military} cards have an additional $burst.",
+    "techType": "Technology",
+    "name": "GJ 357",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c23",
+    "kind": "system",
+    "color": "Green",
+    "rank": 2,
+    "techName": "Spacetime Deflection",
+    "techText": "For 3 {yellow:Commerce} actions, you may build up to one Civ in an anomaly you control if it doesn't already have one. Anomalies count as all system types for System Benefits.",
+    "techType": "Technology",
+    "name": "Gliese 12",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 2,
+    "shield": 0
+  },
+  {
+    "id": "c24",
+    "kind": "system",
+    "color": "Green",
+    "rank": 2,
+    "techName": "Entangled Construction",
+    "techText": "Each turn, you may place the first fleet you build at any unoccupied waypoint.",
+    "techType": "Technology",
+    "name": "TOI-715",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 2,
+    "shield": 0
+  },
+  {
+    "id": "c25",
+    "kind": "system",
+    "color": "Green",
+    "rank": 2,
+    "techName": "Science Guildark",
+    "techText": "Your upgraded fleets have +1 power.",
+    "techType": "Technology",
+    "name": "GJ 3138",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 2,
+    "shield": 0
+  },
+  {
+    "id": "c26",
+    "kind": "system",
+    "color": "Red",
+    "rank": 2,
+    "techName": "Brain Rentals",
+    "techText": "{green:Explore} action points may be used as {blue:Science} or {yellow:Commerce}.",
+    "techType": "Technology",
+    "name": "Wolf 1069",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 2
+  },
+  {
+    "id": "c27",
+    "kind": "system",
+    "color": "Red",
+    "rank": 2,
+    "techName": "Asteroid Netting",
+    "techText": "Asteroids give you an additional +1 to **Draw** and **Build Fleet**, and reduce the cost of building each Civ by 1, at adjacent systems.",
+    "techType": "Technology",
+    "name": "LP 890-9 (SPECULOOS-2)",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 2
+  },
+  {
+    "id": "c28",
+    "kind": "system",
+    "color": "Red",
+    "rank": 2,
+    "techName": "Self-Evolving Robots",
+    "techText": "In battle, your opponent must play one of their cards face-up before you select yours.",
+    "techType": "Technology",
+    "name": "Wolf 1061",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 2
+  },
+  {
+    "id": "c29",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "The Gorb",
+    "techText": "If you win a battle, place one of the opponent's battling fleets under one of your nearest Civs and gain a Trophy. If that Civ is removed, the opponent gains any uncovered fleet(s) at that system, and a Trophy.",
+    "techType": "Technology",
+    "name": "Kepler-993",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c30",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 2,
+    "techName": "Cultural Replicator",
+    "techText": "When you Exploit a planet, place one a token from your supply on this card OR discard each token on this card to gain a Trophy per token discarded.",
+    "techType": "Technology",
+    "name": "Kepler-1229",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 1
+  },
+  {
+    "id": "c31",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 4,
+    "techName": "The ExpirationSun",
+    "techText": "At a system you control, place a fleet onto an Exploit token. It is now **The ExpirationSun**, a 4-power fleet. Once per turn, you may discard a {red:Military} card to discard a location you control with The ExpirationSun and gain a trophy.",
+    "techType": "Technology",
+    "name": "Lacaille 9352 (GJ 887)",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c32",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 3,
+    "techName": "Defense Grid",
+    "techText": "In combat, you have +2 power for each of your Civs in that system.",
+    "techType": "Technology",
+    "name": "Kepler-1652",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c33",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 3,
+    "techName": "Hyperspace Lanes",
+    "techText": "When you move, moving through systems where you have a Civ does not cost an action.",
+    "techType": "Technology",
+    "name": "Gliese 1061",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c34",
+    "kind": "system",
+    "color": "Green",
+    "rank": 3,
+    "techName": "Warp Tactics",
+    "techText": "When Battling, you have +2 power per Armada after the first.",
+    "techType": "Technology",
+    "name": "L 98-59",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 1,
+    "shield": 0
+  },
+  {
+    "id": "c35",
+    "kind": "system",
+    "color": "Green",
+    "rank": 2,
+    "techName": "Colony Ship",
+    "techText": "As an {green:Explore} action, you may move one of your Civs to a planet with an Exploit token in an adjacent system, removing the token.",
+    "techType": "Technology",
+    "name": "Gliese 581",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 2,
+    "shield": 0
+  },
+  {
+    "id": "c36",
+    "kind": "system",
+    "color": "Red",
+    "rank": 3,
+    "techName": "Full-Spectrum Holography",
+    "techText": "You may play an additional Tactic card in battle.",
+    "techType": "Technology",
+    "name": "HIP 38594",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c37",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "Bioform Fleets",
+    "techText": "On your turn, if you play at least one {yellow:Commerce} action card, you may upgrade any fleet.",
+    "techType": "Technology",
+    "name": "Gliese 555",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c38",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "Shield Generator",
+    "techText": "Choose a system (mark it with a non-game token). If you have a Civ there, opponents cannot Exploit or Conquer your other Civs.",
+    "techType": "Technology",
+    "name": "LHS 1140",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c39",
+    "kind": "system",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "Subsurface Development",
+    "techText": "When building Civs, you may build a second Civ on a planet for 2 Commerce points.",
+    "techType": "Technology",
+    "name": "HD 176051",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 1
+  },
+  {
+    "id": "c40",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 4,
+    "techName": "Anti Space Guns",
+    "techText": "Enemies who Exploit or Attack you must first discard a fleet or per Civ you have at that system.",
+    "techType": "Technology",
+    "name": "Kepler-1649",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c41",
+    "kind": "system",
+    "color": "Blue",
+    "rank": 4,
+    "techName": "Unification Theory",
+    "techText": "When you conquer an opponent's $researchPlanet, place their Civ on this card. If you have 2 Civs on this card, you win.",
+    "techType": "Technology",
+    "name": "Kepler-69",
+    "planets": [
+      {
+        "resource": "research",
+        "resistance": 1
+      },
+      {
+        "resource": "cards",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c42",
+    "kind": "system",
+    "color": "Green",
+    "rank": 4,
+    "techName": "Military Technocracy",
+    "techText": "In combat, gain +1 power for each completed Tech you have.",
+    "techType": "Technology",
+    "name": "Gliese 625",
+    "planets": [
+      {
+        "resource": "fleet",
+        "resistance": 1
+      },
+      {
+        "resource": "research",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c43",
+    "kind": "system",
+    "color": "Green",
+    "rank": 4,
+    "techName": "Biomechanized Workforce",
+    "techText": "Building Civs costs 1 less (minimum 1).",
+    "techType": "Technology",
+    "name": "82 G. Eridani",
+    "planets": [
+      {
+        "resource": "cards",
+        "resistance": 1
+      },
+      {
+        "resource": "fleet",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "c44",
+    "kind": "system",
+    "color": "Red",
+    "rank": 2,
+    "techName": "Assimilation Agents",
+    "techText": "When you place a Civ, draw a card and gain 1 {blue:Science}",
+    "techType": "Technology",
+    "name": "Luyten's Star (GJ 273)",
+    "planets": [
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      },
+      {
+        "resource": "none",
+        "resistance": 1
+      }
+    ],
+    "burst": 0,
+    "shield": 2
+  },
+  {
+    "id": "a01",
+    "kind": "asteroid",
+    "color": "Blue",
+    "rank": 2,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Asteroid Blue",
+    "planets": [],
+    "burst": 1,
+    "shield": 2
+  },
+  {
+    "id": "a02",
+    "kind": "asteroid",
+    "color": "Green",
+    "rank": 2,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Asteroid Green",
+    "planets": [],
+    "burst": 3,
+    "shield": 0
+  },
+  {
+    "id": "a03",
+    "kind": "asteroid",
+    "color": "Red",
+    "rank": 2,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Asteroid Red",
+    "planets": [],
+    "burst": 0,
+    "shield": 3
+  },
+  {
+    "id": "a04",
+    "kind": "asteroid",
+    "color": "Yellow",
+    "rank": 2,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Asteroid Yellow",
+    "planets": [],
+    "burst": 2,
+    "shield": 1
+  },
+  {
+    "id": "a05",
+    "kind": "nebula",
+    "color": "Blue",
+    "rank": 3,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Nebula Blue",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a06",
+    "kind": "nebula",
+    "color": "Green",
+    "rank": 3,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Nebula Green",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a07",
+    "kind": "nebula",
+    "color": "Red",
+    "rank": 3,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Nebula Red",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a08",
+    "kind": "nebula",
+    "color": "Yellow",
+    "rank": 3,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Nebula Yellow",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a09",
+    "kind": "wormhole",
+    "color": "Blue",
+    "rank": 5,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Wormhole Blue",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a10",
+    "kind": "wormhole",
+    "color": "Green",
+    "rank": 5,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Wormhole Green",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a11",
+    "kind": "wormhole",
+    "color": "Red",
+    "rank": 5,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Wormhole Red",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a12",
+    "kind": "wormhole",
+    "color": "Yellow",
+    "rank": 5,
+    "techName": "",
+    "techText": "",
+    "techType": "",
+    "name": "Wormhole Yellow",
+    "planets": [],
+    "burst": 0,
+    "shield": 0
+  },
+  {
+    "id": "a13",
+    "kind": "supernova",
+    "color": "Blue",
+    "rank": 0,
+    "name": "Super Nova",
+    "planets": [],
+    "burst": 0,
+    "shield": 0,
+    "techName": "",
+    "techText": "",
+    "techType": ""
+  }
 ]

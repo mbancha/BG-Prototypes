@@ -1,0 +1,13 @@
+{
+  "name": "Galax",
+  "version": "0.2.0",
+  "maturity": "human-playable",
+  "rulesVersion": "dextrous-2026-09-20",
+  "rulesComplete": false,
+  "source": "September 20 Dextrous export, live cards sheet snapshot, newer Current Rules notes, older rulebook for remaining procedures",
+  "players": [2, 3, 4],
+  "modes": ["hotseat", "human-and-bots", "bots", "headless-simulation"],
+  "gameplayCards": 57,
+  "uniqueImageFaces": 62,
+  "limitations": ["Conflicting source editions require documented playtest rulings", "Basic heuristic bots, not competitive balance evidence", "Local hotseat privacy, no network security boundary"]
+}
