@@ -31,7 +31,7 @@ export default function SetupScreen({
           your hand into the technologies that shape your future.
         </p>
         <div className="edition">
-          Dextrous playtest · September 20, 2026
+          Card-table playtest · September 23, 2026
           <br />
           2–4 players · Hotseat + basic bots
         </div>
@@ -104,7 +104,7 @@ export default function SetupScreen({
           />
         </label>
         <p className="small">
-          Uses the supplied card artwork and September reference rules. Rule
+          Uses supplied artwork with the September 23 on-screen rules. Rule
           interpretations are documented in the in-game reference. This is a
           development playtest.
         </p>

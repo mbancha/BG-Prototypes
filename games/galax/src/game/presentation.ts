@@ -36,7 +36,7 @@ export const FAMILY: Record<string, string> = {
   endTurn: "End turn",
   choose: "Resolve choice",
 };
-const wpLabel = (s: GameState, wp: string) =>
+export const wpLabel = (s: GameState, wp: string) =>
   at(s, wp)
     .map(
       (l) =>
@@ -71,7 +71,12 @@ export function actionLabel(s: GameState, a: Action): string {
             " · " +
             (CARDS[a.card]?.rank ?? 0),
     );
-  if (a.cards) parts.push(a.cards.map((id) => CARDS[id].name).join(" + "));
+  if (a.cards)
+    parts.push(
+      a.cards
+        .map((id) => (id === "r01" ? "Zero card" : CARDS[id].name))
+        .join(" + "),
+    );
   if (a.location !== undefined) {
     const l = s.locations.find((l) => l.id === a.location);
     if (l) parts.push(locationName(l));
@@ -80,16 +85,41 @@ export function actionLabel(s: GameState, a: Action): string {
     parts.push("planets " + a.planets.map((i) => i + 1).join(", "));
   if (a.planet !== undefined) parts.push("planet " + (a.planet + 1));
   if (a.color) parts.push(COLOR_ACTION[a.color]);
-  if (a.mode) parts.push(a.mode);
-  if (a.fleet !== undefined) {
+  if (a.mode)
+    parts.push(
+      a.mode === "safe"
+        ? "draw one safely"
+        : a.mode === "push"
+          ? "push your luck"
+          : a.mode,
+    );
+  if (a.fleets) parts.push("selected fleets " + a.fleets.join(", "));
+  if (a.fleet !== undefined && !a.fleets) {
     const fleet = s.fleets.find((f) => f.id === a.fleet);
-    parts.push(fleet ? "Fleet " + (fleet.level === 2 ? "II" : "I") + " at " + wpLabel(s, fleet.wp) : "fleet " + a.fleet);
+    parts.push(
+      fleet
+        ? "Fleet " +
+            (fleet.level === 2 ? "II" : "I") +
+            " at " +
+            wpLabel(s, fleet.wp)
+        : "fleet " + a.fleet,
+    );
   }
   if (a.to) parts.push("→ " + wpLabel(s, a.to));
   if (a.amount !== undefined)
-    parts.push(a.a === "exploit" ? "guess " + a.amount : a.amount + " AP");
+    parts.push(
+      a.a === "exploit"
+        ? a.amount === 0
+          ? "no flip"
+          : "name " + a.amount
+        : a.amount + " AP",
+    );
   if (a.target !== undefined)
-    parts.push(s.players[a.target]?.name ?? "target " + a.target);
+    parts.push(
+      a.a === "colony"
+        ? "→ " + locationName(s.locations.find((l) => l.id === a.target)!)
+        : (s.players[a.target]?.name ?? "target " + a.target),
+    );
   return parts.join(" · ");
 }
 export function instruction(s: GameState) {
@@ -107,5 +137,5 @@ export function instruction(s: GameState) {
     return "Begin your turn to check victory and resolve system benefits.";
   if (s.phase === "generate")
     return "Select an action card, use a wild or dual action, or take one free action.";
-  return "Select a location or fleet, choose an action, then confirm. End your turn to draw.";
+  return "Click a planet, fleet, or card to act. Highlighted pieces have available actions.";
 }

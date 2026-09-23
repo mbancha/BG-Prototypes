@@ -261,8 +261,17 @@ function removeFleet(s: GameState, id: number) {
   s.fleets = s.fleets.filter((f) => f.id !== id);
 }
 function placeCiv(s: GameState, p: number, l: Location, pi: number) {
-  if (supply(s, p) <= 0) return;
   const t = l.planets[pi];
+  if (supply(s, p) <= 0) {
+    gainTrophy(s, p, CONFIG.EXHAUSTED_SUPPLY_TROPHIES);
+    t.exploited = false;
+    record(
+      s,
+      s.players[p].name +
+        " has no supply tokens: gain a trophy instead of building a Civ.",
+    );
+    return;
+  }
   t.civs.push({ id: s.nextId++, owner: p, captives: [] });
   t.exploited = false;
   if (has(s, p, "c44")) {
@@ -445,6 +454,32 @@ function moveCost(s: GameState, p: number, f: Fleet, to: string) {
     )
   );
 }
+function movingGroups(s: GameState, f: Fleet): number[][] {
+  // Canonical smallest ID anchors each group, so pairs are not enumerated twice.
+  const others = s.fleets
+    .filter((q) => q.owner === f.owner && q.wp === f.wp && q.id > f.id)
+    .map((q) => q.id);
+  return subsets(others, CONFIG.GREEN_MOVE_LIMIT - 1).map((ids) => [
+    f.id,
+    ...ids,
+  ]);
+}
+function moveSelected(s: GameState, ids: number[], to: string) {
+  for (const f of s.fleets) if (ids.includes(f.id)) f.wp = to;
+}
+function exploitChoices(a: string, l: Location, planet: number): Action[] {
+  const base = { a, location: l.id, planet };
+  return [
+    { ...base, mode: "safe", amount: 0 },
+    ...(l.planets[planet].resource === "none"
+      ? []
+      : Array.from({ length: CONFIG.EXPLOIT_MAX_GUESS }, (_, i) => ({
+          ...base,
+          mode: "push",
+          amount: i + 1,
+        }))),
+  ];
+}
 export function legalActions(s: GameState): Action[] {
   const p = s.active,
     x = s.players[p];
@@ -552,8 +587,7 @@ export function legalActions(s: GameState): Action[] {
                 fleet: fleet.id,
               });
         if (!t.exploited && enemy === 0 && payment(s, p, "Green", 1))
-          for (let amount = 1; amount <= 5; amount++)
-            out.push({ a: "exploit", location: l.id, planet, amount });
+          out.push(...exploitChoices("exploit", l, planet));
       });
     }
     if (occupies(s, l, p) && !x.commerceUsed.includes(l.id)) {
@@ -563,7 +597,7 @@ export function legalActions(s: GameState): Action[] {
           { a: "commerce", location: l.id, mode: "fleet" },
           { a: "commerce", location: l.id, mode: "research" },
         );
-      if (supply(s, p) > 0) {
+      {
         const eligible = l.planets
           .map((t, i) => ({ t, i }))
           .filter(
@@ -574,9 +608,7 @@ export function legalActions(s: GameState): Action[] {
                 t.civs[0].owner === p),
           )
           .map((v) => v.i);
-        for (const planets of subsets(eligible, supply(s, p)).filter(
-          (v) => v.length,
-        )) {
+        for (const planets of subsets(eligible).filter((v) => v.length)) {
           const cost = planets.reduce(
             (n, i) => n + buildCost(s, l, p, i),
             enemy,
@@ -613,14 +645,18 @@ export function legalActions(s: GameState): Action[] {
       const cost = moveCost(s, p, f, to);
       for (const color of ["Green", "Red"] as Color[])
         if (payment(s, p, color, cost))
-          out.push({
-            a: "move",
-            fleet: f.id,
-            from: f.wp,
-            to,
-            color,
-            amount: cost,
-          });
+          for (const fleets of color === "Green"
+            ? movingGroups(s, f)
+            : [undefined])
+            out.push({
+              a: "move",
+              fleet: f.id,
+              from: f.wp,
+              to,
+              color,
+              amount: cost,
+              ...(fleets ? { fleets } : {}),
+            });
     }
   if (has(s, p, "c31") && !x.flags.sun)
     for (const f of s.fleets.filter((f) => f.owner === p && f.sun))
@@ -634,14 +670,12 @@ function queue(s: GameState, ...tasks: Task[]) {
 }
 const choice = (label: string, a: Action): Choice => ({ label, action: a });
 function fleetChoices(s: GameState, filter: (f: Fleet) => boolean) {
-  return s.fleets
-    .filter(filter)
-    .map((f) =>
-      choice(s.players[f.owner].name + " fleet " + f.id + " at " + f.wp, {
-        a: "choose",
-        fleet: f.id,
-      }),
-    );
+  return s.fleets.filter(filter).map((f) =>
+    choice(s.players[f.owner].name + " fleet " + f.id + " at " + f.wp, {
+      a: "choose",
+      fleet: f.id,
+    }),
+  );
 }
 function taskOptions(s: GameState, t: Task): Choice[] {
   const p = t.who,
@@ -660,15 +694,23 @@ function taskOptions(s: GameState, t: Task): Choice[] {
               (!t.data?.moves || (t.data.moves[f.id] ?? 0) < 2),
           )
           .flatMap((f) =>
-            destinations(s, f, t.kind === "lightMove").map((to) =>
-              choice(
-                "Move " +
-                  (t.kind === "freeMove" ? "armada" : "fleet") +
-                  " from " +
-                  f.wp +
-                  " to " +
-                  to,
-                { a: "choose", fleet: f.id, to },
+            destinations(s, f, t.kind === "lightMove").flatMap((to) =>
+              (t.kind === "freeMove" ? movingGroups(s, f) : [undefined]).map(
+                (fleets) =>
+                  choice(
+                    "Move " +
+                      (t.kind === "freeMove" ? "up to two fleets" : "fleet") +
+                      " from " +
+                      f.wp +
+                      " to " +
+                      to,
+                    {
+                      a: "choose",
+                      fleet: f.id,
+                      to,
+                      ...(fleets ? { fleets } : {}),
+                    },
+                  ),
               ),
             ),
           ),
@@ -722,7 +764,7 @@ function taskOptions(s: GameState, t: Task): Choice[] {
           .filter((q) => (!t.ids || t.ids.includes(q.id)) && q.faceUp)
           .flatMap((q) =>
             q.planets.flatMap((pl, planet) =>
-              !pl.civs.length && supply(s, p) > 0
+              !pl.civs.length
                 ? [
                     choice(
                       "Build on " + locationName(q) + " P" + (planet + 1),
@@ -746,15 +788,16 @@ function taskOptions(s: GameState, t: Task): Choice[] {
               !pl.exploited &&
               !pl.civs.some((c) => c.owner === p) &&
               !protectedPlanet(s, q, planet, p)
-                ? [1, 2, 3, 4, 5].map((amount) =>
+                ? exploitChoices("choose", q, planet).map((action) =>
                     choice(
                       "Exploit " +
                         locationName(q) +
                         " P" +
                         (planet + 1) +
-                        " · guess " +
-                        amount,
-                      { a: "choose", location: q.id, planet, amount },
+                        (action.mode === "safe"
+                          ? " · draw one safely"
+                          : " · push for " + action.amount),
+                      action,
                     ),
                   )
                 : [],
@@ -951,7 +994,7 @@ function taskOptions(s: GameState, t: Task): Choice[] {
       ];
     case "entangleResponse":
       return [
-        choice("Discard the armada", { a: "choose", mode: "destroy" }),
+        choice("Discard the fleet group", { a: "choose", mode: "destroy" }),
         ...x.hand
           .filter((id) => CARDS[id].shield > 0)
           .map((card) =>
@@ -1041,7 +1084,7 @@ function taskOptions(s: GameState, t: Task): Choice[] {
       );
       return to.length
         ? to.map((w) =>
-            choice("Retreat armada to " + w, { a: "choose", to: w }),
+            choice("Retreat fleet group to " + w, { a: "choose", to: w }),
           )
         : [
             choice("No retreat: lose another fleet", {
@@ -1083,7 +1126,7 @@ function taskOptions(s: GameState, t: Task): Choice[] {
   }
 }
 const TITLES: Record<string, string> = {
-  freeMove: "Green system benefit: move an armada",
+  freeMove: "Green system benefit: move up to two fleets",
   lightMove: "Light Fields: move each fleet up to twice",
   upgrade: "Choose a fleet to upgrade",
   buildFleet: "Choose where to build a fleet",
@@ -1099,19 +1142,19 @@ const TITLES: Record<string, string> = {
   nano: "Nano Construction: choose a location",
   colorBuild: "Blackhole Extraction: choose a color",
   psy: "PsyDomination: contribute trophies to stop an extra turn",
-  targetArmada: "Star Lensing: choose an enemy armada",
+  targetArmada: "Star Lensing: choose an enemy fleet group",
   starResponse: "Star Lensing: allow movement or lose a fleet",
-  enemyMove: "Move the chosen enemy armada",
+  enemyMove: "Move the chosen enemy fleet group",
   targetFleet: "Tech Override: select a fleet",
   overrideResponse: "Tech Override: pay exactly rank 4 or lose the fleet",
-  entangle: "Entanglement Laser: choose an armada",
-  entangleResponse: "Discard a shield and retreat, or lose the armada",
+  entangle: "Entanglement Laser: choose a fleet group",
+  entangleResponse: "Discard a shield and retreat, or lose the fleet group",
   battleTarget: "Hologrammatic Mass: start a battle",
   battleBoost: "Choose who receives 3 bursts",
   commit: "Secretly commit battle cards",
   expose: "Self-Evolving Robots: expose one battle card",
   casualty: "Choose a fleet casualty",
-  retreat: "Retreat the losing armada",
+  retreat: "Retreat the losing fleet group",
   capture: "The Gorb: choose a prison Civ",
 };
 function pump(s: GameState) {
@@ -1201,8 +1244,14 @@ function exploit(
   guess: number,
 ) {
   const t = l.planets[pi],
-    rank = flip(s);
-  if (guess <= rank) resource(s, p, l, t.resource, guess);
+    lastEmpty =
+      !t.civs.length &&
+      l.planets.every((pl, i) => i === pi || pl.civs.length || pl.exploited),
+    rank = guess === 0 ? null : flip(s),
+    success = guess === 0 || guess < rank!;
+  if (guess === 0) draw(s, p);
+  else if (success) resource(s, p, l, t.resource, guess);
+  if (lastEmpty && success) gainTrophy(s, p, CONFIG.COMPLETE_EXPLOIT_TROPHIES);
   if (t.civs.length) gainTrophy(s, p, research(s, p) >= 6 ? 2 : 1);
   else markExploit(s, l, pi);
   s.players[p].stats.exploits++;
@@ -1211,11 +1260,14 @@ function exploit(
     s.players[p].name +
       " exploited " +
       locationName(l) +
-      ": guessed " +
-      guess +
-      ", revealed " +
-      rank +
-      ".",
+      (guess === 0
+        ? ": drew one safely."
+        : ": named " +
+          guess +
+          ", revealed " +
+          rank +
+          (success ? " — success." : " — no resource reward.")) +
+      (lastEmpty && success ? " Last empty planet: +1 trophy." : ""),
   );
   if (has(s, p, "c30")) {
     trigger(s, p, "c30");
@@ -1387,6 +1439,7 @@ function invent(s: GameState, p: number, id: string) {
     return;
   }
   s.resolving.push(id);
+  gainTrophy(s, p, CONFIG.DISCOVERY_TROPHIES);
   trigger(s, p, id);
   const occupied = s.locations.filter((l) => occupies(s, l, p) && l.faceUp);
   switch (id) {
@@ -1543,7 +1596,7 @@ function answer(s: GameState, a: Action) {
     case "freeMove":
       if (f) {
         x.flags["visited:" + a.to] = (x.flags["visited:" + a.to] ?? 0) + 1;
-        moveArmada(s, f, a.to!);
+        moveSelected(s, a.fleets!, a.to!);
       }
       break;
     case "lightMove":
@@ -1909,7 +1962,7 @@ export function applyAction(s: GameState, a: Action): string | null {
       if (a.amount === 0) trigger(s, p, "c33");
       const f = s.fleets.find((f) => f.id === a.fleet)!;
       spend(s, p, a.color!, a.amount!);
-      if (a.color === "Green") moveArmada(s, f, a.to!);
+      if (a.color === "Green") moveSelected(s, a.fleets!, a.to!);
       else f.wp = a.to!;
       break;
     }
@@ -2072,7 +2125,7 @@ export function assertInvariants(s: GameState) {
   for (let p = 0; p < s.players.length; p++) {
     if (supply(s, p) < 0 || supply(s, p) > 15)
       throw Error("Token conservation");
-    if (s.players[p].hand.length > 7) throw Error("Hand limit");
+    if (s.players[p].hand.length > CONFIG.HAND_LIMIT) throw Error("Hand limit");
     if (Object.values(s.players[p].pools).some((n) => n < 0))
       throw Error("Negative actions");
   }

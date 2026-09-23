@@ -44,7 +44,7 @@ function Handoff({
             : "Your cards are hidden until you are ready."}
         </p>
         <button className="primary" autoFocus onClick={onReveal}>
-          I am {name} � reveal
+          I am {name} — reveal
         </button>
       </div>
     </dialog>
@@ -132,7 +132,7 @@ export default function App() {
   async function loadReplay(file: File) {
     try {
       const r = JSON.parse(await file.text());
-      if (r.schemaVersion !== 1 || r.rulesVersion !== "dextrous-2026-09-20")
+      if (r.schemaVersion !== 1 || r.rulesVersion !== CONFIG.RULES_VERSION)
         throw Error("Unsupported replay version");
       let state = newGame(r.initial.players, { seed: r.initial.seed });
       let history = [structuredClone(state)];
@@ -302,7 +302,7 @@ export default function App() {
               downloadJson(
                 {
                   schemaVersion: 1,
-                  rulesVersion: "dextrous-2026-09-20",
+                  rulesVersion: CONFIG.RULES_VERSION,
                   initial: session!.initial,
                   actions: session!.actions,
                 },
