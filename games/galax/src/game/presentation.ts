@@ -115,7 +115,11 @@ export function actionLabel(s: GameState, a: Action): string {
         : a.amount + " AP",
     );
   if (a.target !== undefined)
-    parts.push(s.players[a.target]?.name ?? "target " + a.target);
+    parts.push(
+      a.a === "colony"
+        ? "→ " + locationName(s.locations.find((l) => l.id === a.target)!)
+        : (s.players[a.target]?.name ?? "target " + a.target),
+    );
   return parts.join(" · ");
 }
 export function instruction(s: GameState) {

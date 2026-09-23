@@ -10,7 +10,9 @@ import { FAMILY, actionLabel, wpLabel } from "./presentation";
 export const actionKey = (a: Action) => JSON.stringify(a);
 export const valueKey = (value: unknown) => JSON.stringify(value) ?? "none";
 export function actionLocation(s: GameState, a: Action) {
-  return a.location ?? (a.a === "setupCiv" ? s.homeChosen : undefined);
+  return a.a === "colony"
+    ? a.target
+    : (a.location ?? (a.a === "setupCiv" ? s.homeChosen : undefined));
 }
 export function cardActions(actions: Action[], id: string) {
   return actions.filter((a) => a.card === id || a.cards?.includes(id));
@@ -66,6 +68,7 @@ export function describeValue(
   s: GameState,
   key: string,
   value: any,
+  action?: Action,
 ): { label: string; image?: string; hint?: string } {
   if (value === undefined)
     return { label: key === "mode" ? "Continue" : "No selection" };
@@ -115,6 +118,10 @@ export function describeValue(
   }
   if (key === "from" || key === "to")
     return { label: wpLabel(s, value) || "New system position " + value };
+  if (key === "target" && action?.a === "colony") {
+    const location = s.locations.find((l) => l.id === value)!;
+    return { label: locationName(location), image: location.card ?? undefined };
+  }
   if (key === "target")
     return { label: s.players[value]?.name ?? "Target " + value };
   if (key === "mode")
@@ -163,15 +170,27 @@ export function decisionStep(s: GameState, actions: Action[]) {
       const value = a[key],
         id = valueKey(value);
       if (!groups.has(id))
-        groups.set(id, { value, ...describeValue(s, key, value), actions: [] });
+        groups.set(id, {
+          value,
+          ...describeValue(s, key, value, a),
+          actions: [],
+        });
       groups.get(id)!.actions.push(a);
     }
     if (groups.size > 1)
-      return { key, title: titles[key], groups: [...groups.values()] };
+      return {
+        key,
+        title:
+          key === "target" && actions[0].a === "colony"
+            ? "Choose the destination system"
+            : titles[key],
+        groups: [...groups.values()],
+      };
   }
   return null;
 }
 export function actionPreview(s: GameState, a: Action) {
+  if (a.mode === "skip") return "Skip this optional effect and continue.";
   if (a.a === "invent")
     return (
       CARDS[a.card!].techText +
@@ -179,10 +198,20 @@ export function actionPreview(s: GameState, a: Action) {
         ? " Also gain 1 trophy for this Discovery."
         : "")
     );
-  if (a.a === "exploit" || s.pending?.task.kind === "freeExploit")
-    return a.amount === 0
-      ? "Draw one card without a flip. Mark this empty planet −1. A successful last empty planet earns a trophy."
-      : `Name ${a.amount}. The flipped rank must be strictly higher. Success grants ${a.amount} of this planet’s specialty resource; failure still marks an empty planet −1.`;
+  if (a.a === "exploit" || s.pending?.task.kind === "freeExploit") {
+    const planet = s.locations.find((l) => l.id === a.location)?.planets[
+      a.planet!
+    ];
+    const marking = planet?.civs.length
+      ? "The enemy Civ stays in place and grants the enemy-Civ trophy reward."
+      : "Mark this empty planet −1 even on a failed flip. A successful last empty planet earns one trophy.";
+    return (
+      (a.amount === 0
+        ? "Draw one card without a flip. "
+        : `Name ${a.amount}. The flipped rank must be strictly higher. Success grants ${a.amount} of this planet’s specialty resource. `) +
+      marking
+    );
+  }
   if (a.a === "build") {
     return "Build on the selected planets. Each costs 2 Commerce AP, or 1 with a −1 marker, before modifiers. If your supply runs out, gain 1 trophy for each remaining build instead; its marker is still consumed.";
   }

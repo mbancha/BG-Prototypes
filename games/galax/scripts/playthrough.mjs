@@ -127,8 +127,11 @@ async function choose(a) {
       ["cards", "fleets", "planets"].includes(step.key) &&
       step.groups.every((g) => Array.isArray(g.value))
     ) {
-      for (const value of g.value)
-        await attr("data-pick", valueKey(value)).click();
+      for (const value of g.value) {
+        const pick = attr("data-pick", valueKey(value));
+        if ((await pick.getAttribute("aria-pressed")) !== "true")
+          await pick.click();
+      }
       await page
         .getByRole("button", { name: "Use selection", exact: true })
         .click();

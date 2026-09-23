@@ -29,11 +29,19 @@ export default function ActionDialog({
   onConfirm: (a: Action) => void;
 }) {
   const step = decisionStep(s, actions);
-  const [selected, setSelected] = useState<(string | number)[]>([]);
   const collection =
     step &&
     ["fleets", "planets", "cards"].includes(step.key) &&
     step.groups.every((g) => Array.isArray(g.value));
+  const [selected, setSelected] = useState<(string | number)[]>(() =>
+    collection
+      ? (step.groups[0].value as (string | number)[]).filter((value) =>
+          step.groups.every((g) =>
+            (g.value as (string | number)[]).includes(value),
+          ),
+        )
+      : [],
+  );
   const values = collection
     ? [...new Set(step.groups.flatMap((g) => g.value as (string | number)[]))]
     : [];
