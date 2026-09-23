@@ -16,43 +16,18 @@ import {
 } from "../game/engine";
 import { FAMILY, actionLabel, instruction } from "../game/presentation";
 import { downloadJson } from "./dump";
-export function Modal({
-  title,
-  children,
-  onClose,
-}: {
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}) {
-  const ref = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const old = document.activeElement as HTMLElement;
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-      old?.focus();
-    };
-  }, []);
-  return (
-    <dialog
-      ref={ref}
-      aria-label={title}
-      onCancel={(e) => {
-        e.preventDefault();
-        onClose();
-      }}
-    >
-      <header>
-        <h2>{title}</h2>
-        <button aria-label="Close dialog" onClick={onClose}>
-          ×
-        </button>
-      </header>
-      {children}
-    </dialog>
-  );
-}
+import { Modal } from "./Modal";
+export { Modal } from "./Modal";
+import ActionDialog from "./ActionDialog";
+import ReferenceCards from "./ReferenceCards";
+import {
+  decisionStep,
+  actionLocation,
+  cardActions,
+  waypointActions,
+  planetActions,
+  valueKey,
+} from "../game/interaction";
 const img = (id: string) => "./cards/" + id + ".webp";
 export default function GameScreen({
   s,
@@ -82,52 +57,48 @@ export default function GameScreen({
   const p = seatOnClock(s),
     player = s.players[p],
     human = !player.isBot;
-  const [family, setFamily] = useState(""),
-    [selected, setSelected] = useState<number | null>(null),
-    [selectedCard, setSelectedCard] = useState<string | null>(null),
-    [selectedWp, setSelectedWp] = useState<string | null>(null),
-    [option, setOption] = useState(0),
-    [zoom, setZoom] = useState(0.45),
+  const [zoom, setZoom] = useState(0.45),
     [inspect, setInspect] = useState<string | null>(null),
     [rules, setRules] = useState(false),
-    [tab, setTab] = useState<"hand" | "techs">("hand");
+    [references, setReferences] = useState(false),
+    [notice, setNotice] = useState(""),
+    [tab, setTab] = useState<"hand" | "techs">("hand"),
+    [trail, setTrail] = useState<{ actions: Action[]; title: string }[]>([]),
+    [showMapChoices, setShowMapChoices] = useState(false);
+  const current = trail.at(-1),
+    step = current ? decisionStep(s, current.actions) : null;
+  function openChoices(options: Action[], title: string) {
+    setNotice("");
+    setShowMapChoices(false);
+    if (!options.length) {
+      setNotice("No available action here right now. " + instruction(s));
+      return;
+    }
+    setTrail([{ actions: options, title }]);
+  }
+  function advance(options: Action[], title: string) {
+    setShowMapChoices(false);
+    setTrail((t) => [...t, { actions: options, title }]);
+  }
+  function back() {
+    setShowMapChoices(false);
+    setTrail((t) => t.slice(0, -1));
+  }
+  function cancel() {
+    setTrail([]);
+    setShowMapChoices(false);
+  }
   useEffect(() => {
-    setFamily("");
-    setSelected(null);
-    setSelectedCard(null);
-    setSelectedWp(null);
-    setOption(0);
     setInspect(null);
-  }, [s.serial]);
-  const allFamilies = [...new Set(actions.map((a) => a.a))],
-    fam = allFamilies.includes(family)
-      ? family
-      : s.pending
-        ? "choose"
-        : (allFamilies[0] ?? "");
-  let filtered = actions.filter((a) => a.a === fam);
-  if (selected !== null) {
-    const narrow = filtered.filter(
-      (a) => a.location === selected || a.target === selected,
+    setNotice("");
+    setShowMapChoices(false);
+    setTrail(
+      human && handVisible && actions.length && s.pending
+        ? [{ actions, title: s.pending.title }]
+        : [],
     );
-    if (narrow.length) filtered = narrow;
-  }
-  if (selectedCard) {
-    const narrow = filtered.filter(
-      (a) => a.card === selectedCard || a.cards?.includes(selectedCard),
-    );
-    if (narrow.length) filtered = narrow;
-  }
-  if (selectedWp) {
-    const narrow = filtered.filter(
-      (a) =>
-        a.to === selectedWp ||
-        a.from === selectedWp ||
-        s.fleets.some((f) => f.id === a.fleet && f.wp === selectedWp),
-    );
-    if (narrow.length) filtered = narrow;
-  }
-  const chosen = filtered[Math.min(option, filtered.length - 1)];
+  }, [s.serial, handVisible]);
+  const allFamilies = [...new Set(actions.map((a) => a.a))];
   const xs = s.locations.map((l) => l.x),
     ys = s.locations.map((l) => l.y),
     minX = Math.min(...xs),
@@ -135,14 +106,21 @@ export default function GameScreen({
     width = (Math.max(...xs) - minX + 1) * 240 + 60,
     height = (Math.max(...ys) - minY) * 168 + 336 + 70;
   const boardRef = useRef<HTMLDivElement>(null);
-  function fitBoard() {
+  function fitBoard(overview = false) {
     const area = boardRef.current;
-    if (area) setZoom(Math.min(1, (area.clientWidth - 16) / width, (area.clientHeight - 16) / height));
+    if (area) {
+      const fit = Math.min(
+        1,
+        (area.clientWidth - 16) / width,
+        (area.clientHeight - 16) / height,
+      );
+      setZoom(overview ? fit : Math.max(0.45, fit));
+    }
   }
   useEffect(() => {
     const area = boardRef.current;
     if (!area) return;
-    const observer = new ResizeObserver(fitBoard);
+    const observer = new ResizeObserver(() => fitBoard());
     observer.observe(area);
     return () => observer.disconnect();
   }, [width, height]);
@@ -151,23 +129,64 @@ export default function GameScreen({
     return { left: (x / 2 - minX) * 240 + 30, top: (y / 2 - minY) * 168 + 30 };
   };
   const wps = [...new Set(s.locations.flatMap(waypoints))];
+  const mapStep =
+    !!step &&
+    !showMapChoices &&
+    (step.key === "location" ||
+      step.key === "planet" ||
+      ((step.key === "to" || step.key === "from") &&
+        step.groups.every(
+          (g) => typeof g.value === "string" && wps.includes(g.value),
+        )));
+  const available = current?.actions ?? actions;
   const legalLocs = new Set(
-    actions
-      .filter((a) => a.a === fam)
-      .flatMap((a) => (a.location !== undefined ? [a.location] : [])),
+    available.flatMap((a) =>
+      actionLocation(s, a) === undefined ? [] : [actionLocation(s, a)!],
+    ),
   );
   const legalWps = new Set(
-    actions
-      .filter((a) => a.a === fam)
-      .flatMap(
-        (a) =>
-          [
-            a.to,
-            a.from,
-            ...s.fleets.filter((f) => f.id === a.fleet).map((f) => f.wp),
-          ].filter(Boolean) as string[],
-      ),
+    available.flatMap(
+      (a) =>
+        [
+          a.from,
+          a.to,
+          ...s.fleets
+            .filter((f) => f.id === a.fleet || a.fleets?.includes(f.id))
+            .map((f) => f.wp),
+        ].filter(Boolean) as string[],
+    ),
   );
+  function clickLocation(id: number) {
+    const l = s.locations.find((l) => l.id === id)!;
+    if (mapStep && step?.key === "location") {
+      const group = step.groups.find((g) => g.value === id);
+      if (group) advance(group.actions, group.label);
+    } else if (!current)
+      openChoices(
+        actions.filter((a) => actionLocation(s, a) === id),
+        locationName(l),
+      );
+  }
+  function clickPlanet(location: number, planet: number) {
+    if (mapStep && step?.key === "planet") {
+      const options = planetActions(s, current!.actions, location, planet);
+      if (options.length) advance(options, "Planet " + (planet + 1));
+    } else if (!current)
+      openChoices(
+        planetActions(s, actions, location, planet),
+        "Planet " +
+          (planet + 1) +
+          " · " +
+          locationName(s.locations.find((l) => l.id === location)!),
+      );
+  }
+  function clickWaypoint(wp: string) {
+    if (mapStep && (step?.key === "to" || step?.key === "from")) {
+      const group = step.groups.find((g) => g.value === wp);
+      if (group) advance(group.actions, group.label);
+    } else if (!current)
+      openChoices(waypointActions(s, actions, wp), "Fleet group");
+  }
   return (
     <div className="game">
       <header className="topbar">
@@ -187,6 +206,7 @@ export default function GameScreen({
             Undo
           </button>
           <button onClick={() => setRules(true)}>How to play</button>
+          <button onClick={() => setReferences(true)}>Table references</button>
           <button onClick={onPause}>
             {botPaused ? "Resume bots" : "Pause bots"}
           </button>
@@ -206,7 +226,7 @@ export default function GameScreen({
               {x.isBot ? " · BOT" : ""}
             </strong>
             <span>
-              {score(s, i)} points · {x.trophies} trophies
+              {score(s, i)} projected end-game points · {x.trophies} trophies
             </span>
             <span>
               Research {research(s, i)}/12 · {s.handCounts[i]} cards ·{" "}
@@ -220,7 +240,7 @@ export default function GameScreen({
             </small>
             <details>
               <summary>Empire reference &amp; technologies</summary>
-              <button onClick={() => setInspect("t0" + (i + 1))}>
+              <button onClick={() => setReferences(true)}>
                 Player reference
               </button>
               {x.techs.map((id) => (
@@ -232,6 +252,23 @@ export default function GameScreen({
           </article>
         ))}
       </section>
+      {mapStep && (
+        <div className="map-prompt" role="status">
+          <strong>{step!.title}</strong>
+          <span>{current!.title}</span>
+          <button onClick={back}>← Back</button>
+          <button onClick={() => setShowMapChoices(true)}>
+            Show option cards
+          </button>
+          <button onClick={cancel}>Cancel</button>
+        </div>
+      )}
+      {notice && (
+        <div className="map-prompt" role="status">
+          {notice}
+          <button onClick={() => setNotice("")}>Dismiss</button>
+        </div>
+      )}
       <main className="table-layout">
         <section className="board-panel" aria-label="Galaxy map">
           <div className="board-toolbar">
@@ -248,7 +285,7 @@ export default function GameScreen({
               >
                 −
               </button>
-              <button onClick={fitBoard}>Fit</button>
+              <button onClick={() => fitBoard(true)}>Fit</button>
               <button
                 aria-label="Zoom in"
                 onClick={() => setZoom(Math.min(1.5, zoom + 0.1))}
@@ -280,7 +317,11 @@ export default function GameScreen({
                     className={
                       "location " +
                       (legalLocs.has(l.id) ? "eligible " : "") +
-                      (selected === l.id ? "selected" : "")
+                      (mapStep &&
+                      step?.key === "location" &&
+                      step.groups.some((g) => g.value === l.id)
+                        ? "targeted"
+                        : "")
                     }
                     style={{
                       left: (l.x - minX) * 240 + 30,
@@ -290,10 +331,8 @@ export default function GameScreen({
                     <button
                       className="location-face"
                       aria-label={"Select " + locationName(l)}
-                      onClick={() => {
-                        setSelected(l.id);
-                        setOption(0);
-                      }}
+                      data-location={l.id}
+                      onClick={() => clickLocation(l.id)}
                     >
                       {l.card || !l.faceUp ? (
                         <img
@@ -320,9 +359,19 @@ export default function GameScreen({
                       </button>
                     )}
                     {l.planets.map((pl, i) => (
-                      <div
+                      <button
                         key={i}
-                        className="planet-tokens"
+                        className={
+                          "planet-tokens planet-target " +
+                          (planetActions(s, available, l.id, i).length
+                            ? "eligible"
+                            : "")
+                        }
+                        data-planet={l.id + ":" + i}
+                        aria-label={
+                          "Planet " + (i + 1) + " of " + locationName(l)
+                        }
+                        onClick={() => clickPlanet(l.id, i)}
                         style={{
                           left: (i % 2 === 0 ? 27 : 70) + "%",
                           top: (i < 2 ? 28 : 59) + "%",
@@ -339,11 +388,17 @@ export default function GameScreen({
                           </span>
                         ))}
                         {pl.exploited && (
-                          <span className="exploit" title="Exploited planet">
-                            E
+                          <span
+                            className="exploit"
+                            title="Exploited: construction costs 1 less"
+                          >
+                            −1
                           </span>
                         )}
-                      </div>
+                        {!pl.civs.length && !pl.exploited && (
+                          <span className="planet-ring" />
+                        )}
+                      </button>
                     ))}
                   </div>
                 ))}
@@ -355,7 +410,11 @@ export default function GameScreen({
                       className={
                         "waypoint " +
                         (legalWps.has(w) ? "eligible " : "") +
-                        (selectedWp === w ? "selected" : "")
+                        (mapStep &&
+                        (step?.key === "to" || step?.key === "from") &&
+                        step.groups.some((g) => g.value === w)
+                          ? "targeted"
+                          : "")
                       }
                       style={point(w)}
                       aria-label={
@@ -371,10 +430,8 @@ export default function GameScreen({
                               .join(", ")
                           : " · empty")
                       }
-                      onClick={() => {
-                        setSelectedWp(w);
-                        setOption(0);
-                      }}
+                      data-waypoint={w}
+                      onClick={() => clickWaypoint(w)}
                     >
                       {fleets.length
                         ? fleets.map((f) => (
@@ -448,84 +505,95 @@ export default function GameScreen({
                 </p>
               ) : (
                 <>
-                  <label>
-                    Action
-                    <select
-                      aria-label="Action"
-                      value={fam}
-                      onChange={(e) => {
-                        setFamily(e.target.value);
-                        setOption(0);
-                        setSelectedCard(null);
-                        setSelectedWp(null);
-                        setSelected(null);
-                      }}
-                    >
-                      {allFamilies.map((f) => (
-                        <option key={f} value={f}>
-                          {FAMILY[f] ?? f}
-                        </option>
+                  <p className="table-instruction">
+                    {s.phase === "home"
+                      ? "Click a card in your hand to choose your home."
+                      : s.phase === "forces"
+                        ? "Click a home planet to place a Civ, or a star beside your home to place a fleet."
+                        : s.pending
+                          ? "Resolve the highlighted decision. You can reopen its choices below."
+                          : "Click a card, planet or fleet to see what it can do."}
+                  </p>
+                  <div className="quick-actions">
+                    {allFamilies
+                      .filter((f) =>
+                        [
+                          "beginTurn",
+                          "finishSetup",
+                          "endTurn",
+                          "rest",
+                          "free",
+                          "study",
+                          "draw",
+                          "choose",
+                        ].includes(f),
+                      )
+                      .map((f) => (
+                        <button
+                          key={f}
+                          data-family={f}
+                          onClick={() =>
+                            openChoices(
+                              actions.filter((a) => a.a === f),
+                              s.pending?.title ?? FAMILY[f],
+                            )
+                          }
+                        >
+                          {FAMILY[f]}
+                        </button>
                       ))}
-                    </select>
-                  </label>
-                  <div className="selection-summary">
-                    {selected !== null && <span>Location selected</span>}
-                    {selectedCard && <span>Card selected</span>}
-                    {selectedWp && <span>Waypoint selected</span>}
-                    {(selected !== null || selectedCard || selectedWp) && (
-                      <button
-                        onClick={() => {
-                          setSelected(null);
-                          setSelectedCard(null);
-                          setSelectedWp(null);
-                          setOption(0);
-                        }}
-                      >
-                        Clear / back
-                      </button>
-                    )}
                   </div>
-                  <label>
-                    {s.pending
-                      ? "Choose a response"
-                      : "Choose target and options"}
-                    <select
-                      aria-label="Action options"
-                      value={Math.min(option, Math.max(0, filtered.length - 1))}
-                      onChange={(e) => setOption(+e.target.value)}
-                    >
-                      {filtered.map((a, i) => (
-                        <option key={i} value={i}>
-                          {actionLabel(s, a)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  {chosen && (
-                    <div className="preview">
-                      <strong>{actionLabel(s, chosen)}</strong>
-                      <div className="cost">Cost: {actionCost(s, chosen)}</div>
-                      <p>
-                        {chosen.a === "endTurn"
-                          ? "Draw one card and pass play to the next empire."
-                          : chosen.a === "invent"
-                            ? CARDS[chosen.card!].techText
-                            : chosen.a === "conquer"
-                              ? "Your fleet power plus the chosen card faces a random deck card. Success converts one fleet to a Civ."
-                              : chosen.a === "move"
-                                ? "Highlighted waypoints are legal destinations. Green moves the whole armada; Red moves one fleet."
-                                : chosen.a === "exploit"
-                                  ? "Gain the guessed resource amount if it is at most the revealed rank. Empty planets receive an Exploit token."
-                                  : "Confirm to resolve this choice. You can change the selection before committing."}
-                      </p>
-                      <button
-                        className="primary"
-                        onClick={() => dispatch(chosen)}
-                      >
-                        Confirm {FAMILY[chosen.a]?.toLowerCase() ?? "choice"} →
-                      </button>
+                  <button
+                    className="deck-pile"
+                    disabled={!actions.some((a) => a.a === "draw")}
+                    onClick={() =>
+                      openChoices(
+                        actions.filter((a) => a.a === "draw"),
+                        "Draw from the deck",
+                      )
+                    }
+                    aria-label="Draw from the deck"
+                  >
+                    <img src={img("back-0")} alt="Draw deck" />
+                    <span>{s.deckCount} cards · draw 1</span>
+                  </button>
+                  <details className="action-reference">
+                    <summary>Available actions</summary>
+                    <p>
+                      Shortcut reference. You can also click the matching cards
+                      and pieces.
+                    </p>
+                    <div className="quick-actions">
+                      {allFamilies
+                        .filter(
+                          (f) =>
+                            ![
+                              "beginTurn",
+                              "finishSetup",
+                              "endTurn",
+                              "rest",
+                              "free",
+                              "study",
+                              "draw",
+                              "choose",
+                            ].includes(f),
+                        )
+                        .map((f) => (
+                          <button
+                            key={f}
+                            data-family={f}
+                            onClick={() =>
+                              openChoices(
+                                actions.filter((a) => a.a === f),
+                                FAMILY[f],
+                              )
+                            }
+                          >
+                            {FAMILY[f]}
+                          </button>
+                        ))}
                     </div>
-                  )}
+                  </details>
                 </>
               )}
             </>
@@ -569,14 +637,16 @@ export default function GameScreen({
             {(tab === "hand" ? player.hand : player.techs).map((id) => (
               <article
                 key={id}
-                className={selectedCard === id ? "selected" : ""}
+                className={cardActions(actions, id).length ? "usable" : ""}
               >
                 <button
                   className="card-select"
                   aria-label={"Select card " + CARDS[id].name}
+                  data-hand-card={id}
                   onClick={() => {
-                    setSelectedCard(id);
-                    setOption(0);
+                    const options = cardActions(actions, id);
+                    if (options.length) openChoices(options, CARDS[id].name);
+                    else setInspect(id);
                   }}
                 >
                   <img
@@ -599,6 +669,13 @@ export default function GameScreen({
                 </button>
               </article>
             ))}
+            <article className="mini-reference">
+              <button onClick={() => setReferences(true)}>
+                CARD ACTIONS
+                <br />
+                <small>Current reference · hand limit 8</small>
+              </button>
+            </article>
             <article className="zero-card">
               <button onClick={() => setInspect("r01")}>
                 <img
@@ -610,11 +687,39 @@ export default function GameScreen({
           </div>
         </section>
       )}
+      {current && !mapStep && handVisible && human && (
+        <ActionDialog
+          key={s.serial + ":" + trail.length + ":" + current.title}
+          s={s}
+          actions={current.actions}
+          title={current.title}
+          onChoose={advance}
+          onBack={back}
+          onClose={cancel}
+          onConfirm={(a) => {
+            cancel();
+            dispatch(a);
+          }}
+        />
+      )}
+      {references && (
+        <Modal
+          title="Current table references"
+          onClose={() => setReferences(false)}
+        >
+          <ReferenceCards />
+        </Modal>
+      )}
       {inspect && (
         <Modal
           title={CARDS[inspect]?.name ?? "Action reference"}
           onClose={() => setInspect(null)}
         >
+          <p className="art-note">
+            Original September 20 artwork. September 23 on-screen rules override
+            older wording: hand limit 8, Green moves up to two fleets, and every
+            Discovery awards 1 trophy.
+          </p>
           <div className="card-detail">
             <img
               src={img(inspect)}
@@ -653,7 +758,7 @@ export default function GameScreen({
             <ol>
               <li>
                 Check for victory. Each civilized Green system gives an optional
-                armada move.
+                move of up to two fleets.
               </li>
               <li>
                 Play a card for its rank in actions; matching colors can add 1
@@ -666,23 +771,24 @@ export default function GameScreen({
                 then confirm.
               </li>
               <li>
-                End your turn and draw 1 card (hand limit 7). The zero battle
+                End your turn and draw 1 card (hand limit 8). The zero battle
                 card is permanent.
               </li>
             </ol>
             <h3>Actions</h3>
             <p>
               <b>Explore:</b> reveal an occupied card, exploit an undefended
-              planet, or move an armada. Fleets block exploitation; bracketed
-              actions pay +1 AP per enemy fleet. A green move moves all your
-              fleets on that waypoint.
+              planet, or move an fleet group. Fleets block exploitation;
+              bracketed actions pay +1 AP per enemy fleet. A green move moves up
+              to two selected fleets on that waypoint.
             </p>
             <p>
               <b>Military:</b> move one fleet, conquer a planet, or battle an
               opponent at a shared location. Conquer compares fleet power + a
               hand card against a deck card. Battle cards are committed in
-              private, one per armada; attacker wins ties. Bursts destroy fleets
-              unless blocked by shields. The loser loses a fleet and retreats.
+              private, one per fleet group; attacker wins ties. Bursts destroy
+              fleets unless blocked by shields. The loser loses a fleet and
+              retreats.
             </p>
             <p>
               <b>Commerce:</b> build a Civ for 2 AP (1 if exploited), or
@@ -713,14 +819,17 @@ export default function GameScreen({
             </p>
             <h3>Playtest rulings</h3>
             <p>
-              Uses the September 20 cards over older wording. Normal planets
-              have no resource reward. Starting deployment follows the
-              rulebook's 4-point budget. Anti Space Guns means one attacking
-              fleet discarded per defending Civ. Tech Override requires
-              discarded cards totaling rank 4. Research's level-10 draw occurs
-              when crossing the threshold. The Gorb's prison location and some
-              multi-target choices remain explicit playtest interpretations; see
-              source audit.
+              Uses the September 23 playtest changes over older printed wording.
+              Normal planets can now safely draw one card through Exploit.
+              Specialty planets may push for more, requiring a strictly higher
+              flipped rank. Discoveries also give one trophy. No-token builds
+              give a trophy at the same cost and consume the Exploit marker.
+              Starting deployment follows the rulebook's 4-point budget. Anti
+              Space Guns means one attacking fleet discarded per defending Civ.
+              Tech Override requires discarded cards totaling rank 4. Research's
+              level-10 draw occurs when crossing the threshold. The Gorb's
+              prison location and some multi-target choices remain explicit
+              playtest interpretations; see source audit.
             </p>
             <p>
               Hotseat hides hands between decisions. Undo and full replay
@@ -733,7 +842,7 @@ export default function GameScreen({
                 setInspect("r01");
               }}
             >
-              Inspect the actual reference card
+              Inspect the original reference card
             </button>
           </div>
         </Modal>

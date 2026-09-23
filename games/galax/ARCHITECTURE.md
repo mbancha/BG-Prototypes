@@ -14,7 +14,7 @@ Plain JSON state owns a seeded RNG, setup, deck/discard/resolving zones, locatio
 
 The 2/3/4-player layouts reproduce the rulebook's staggered card arrangement. Logical card coordinates are independent of CSS pixel dimensions. Each location has six semantic waypoint keys; shared keys occupy both neighboring locations. Fleets belong to waypoints, not to an arbitrary single system. Civs and exploitation markers belong to individual planets. Movement crosses explored cards, checks enemy waypoint occupancy, blocks travel across nebulae, and connects wormholes to anomalies.
 
-The browser renders authored cards with token overlays, highlighted legal locations/waypoints, selectable hands, enlarged card inspection and accessible structured text. The action tray filters engine-provided actions by family, selected card, location or waypoint and displays costs before confirmation. Multiple-Civ construction is one activation. Public technology inspection is available for every empire. Desktop and tablet layouts offer map zoom and internal scrolling.
+The browser renders authored cards with token overlays, highlighted legal locations/waypoints, selectable hands, enlarged card inspection and accessible structured text. Card, planet and fleet clicks filter engine-provided legal actions. A pure interaction query partitions those candidates into visual option tiles; multiple cards/fleets/planets are selected individually, and destinations are highlighted on the board. Native dialogs provide back/cancel and a cost/consequence preview before confirmation. Gameplay has no dropdowns. Multiple-Civ construction is one activation. Public technology inspection is available for every empire. Desktop and tablet layouts offer map zoom and internal scrolling.
 
 ## Privacy, replay and bots
 
@@ -35,6 +35,8 @@ Headless runs use the same engine. A bounded action count reports censored/trunc
 - src/game/views.ts: private/public projection seam.
 - src/game/bot.ts: legal-action heuristic bot.
 - src/game/presentation.ts: human labels and instructions.
+- src/game/interaction.ts: legal-action grouping, component references and consequence previews.
+- src/ui/ActionDialog.tsx / ReferenceCards.tsx: card/tile choices and editable current table references.
 - src/App.tsx: snapshots, undo, private handoff, replay and bot scheduling.
 - src/ui/: setup, map/hand/action display, dialogs and downloads.
 - src/sim/: DOM-free simulation and browser worker.
@@ -43,3 +45,5 @@ Headless runs use the same engine. A bounded action count reports censored/trunc
 ## Change log
 
 2026-09-21: Replace the prior representative scaffold with the source-backed spatial game, local Dextrous card faces, hotseat/private combat, unique effects, basic bots and shared-engine simulation. Existing top-level architecture work and other games were left untouched in the original checkout.
+
+2026-09-23: Apply actionable newest playtest notes; add selected one/two-fleet movement, safe/strict-push exploitation, hand limit 8, Discovery and exhausted-supply trophies. Replace gameplay dropdowns with component clicks, map targeting and visual choice dialogs. Keep authored art and explicitly defer incomplete technology/victory edits.

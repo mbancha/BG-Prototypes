@@ -26,3 +26,8 @@ The export and its Google-hosted bearer URLs remain local and ignored. Runtime b
 ## Maturity
 
 Human-playable development playtest with hotseat, bots, replay, and simulation. **Not designated rules-complete** because source conflicts and several ambiguous effect details remain provisional. See DECISIONS.md and VERIFICATION.md before using simulation results for balance changes.
+
+
+## September 23 supplement
+
+The current design document was fetched again for the newest Playtest Notes block only. The designer explicitly authorized implementing it without new card images. This edition implements the unambiguous changes and documents the safe-exploit/completion and exhausted-supply interpretations in rulings 16–21. The incomplete trophy-only victory and technology replacement notes remain unresolved. Original 62 image files and spreadsheet fields are unchanged; two editable reference panels and action previews explain the current edition. No claim of rules completeness is made.

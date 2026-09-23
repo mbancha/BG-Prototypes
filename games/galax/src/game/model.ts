@@ -93,6 +93,7 @@ export interface Action {
   from?: string;
   to?: string;
   fleet?: number;
+  fleets?: number[];
   target?: number;
   amount?: number;
   mode?: string;

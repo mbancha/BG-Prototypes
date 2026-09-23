@@ -145,7 +145,7 @@ export function runSimulation(
   }
   return {
     schemaVersion: 1,
-    rulesVersion: "dextrous-2026-09-20",
+    rulesVersion: CONFIG.RULES_VERSION,
     policy:
       "heuristic-v1; public information only; home policy: " +
       (opts.homePolicy ?? "rotate"),

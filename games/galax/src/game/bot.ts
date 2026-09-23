@@ -119,7 +119,7 @@ export function actionUtility(s: GameState, a: Action) {
       u = research(s, p) < 4 ? 7 : research(s, p) < 10 ? 4 : 2;
       break;
     case "invent":
-      u = c?.techType === "Technology" ? 7 : 3;
+      u = c?.techType === "Technology" ? 7 : 4;
       break;
     case "draw":
       u = x.hand.length < 5 ? 4 : 0;
@@ -156,7 +156,7 @@ export function actionUtility(s: GameState, a: Action) {
     case "exploit":
       u =
         3 +
-        (a.amount === 2 ? 2 : 0) +
+        (a.amount === 0 && x.hand.length < 6 ? 3 : a.amount === 2 ? 2 : 0) +
         (l?.planets[a.planet!].resource !== "none" ? 3 : 0);
       break;
     case "attack":

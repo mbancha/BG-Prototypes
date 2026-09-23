@@ -1,13 +1,28 @@
 {
   "name": "Galax",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "maturity": "human-playable",
-  "rulesVersion": "dextrous-2026-09-20",
+  "rulesVersion": "playtest-2026-09-23",
   "rulesComplete": false,
-  "source": "September 20 Dextrous export, live cards sheet snapshot, newer Current Rules notes, older rulebook for remaining procedures",
-  "players": [2, 3, 4],
-  "modes": ["hotseat", "human-and-bots", "bots", "headless-simulation"],
+  "source": "September 20 Dextrous export, live cards sheet snapshot, newer Current Rules notes, older rulebook for remaining procedures; September 23 first Playtest Notes block",
+  "players": [
+    2,
+    3,
+    4
+  ],
+  "modes": [
+    "hotseat",
+    "human-and-bots",
+    "bots",
+    "headless-simulation"
+  ],
   "gameplayCards": 57,
   "uniqueImageFaces": 62,
-  "limitations": ["Conflicting source editions require documented playtest rulings", "Basic heuristic bots, not competitive balance evidence", "Local hotseat privacy, no network security boundary"]
+  "limitations": [
+    "Conflicting source editions require documented playtest rulings",
+    "Basic heuristic bots, not competitive balance evidence",
+    "Local hotseat privacy, no network security boundary",
+    "Original card artwork retained; current on-screen rules override it",
+    "Trophy-only victory and incomplete technology edits await designer clarification"
+  ]
 }

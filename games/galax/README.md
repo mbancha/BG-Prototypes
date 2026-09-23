@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Use npm.cmd on Windows if PowerShell blocks npm scripts. Select 2–4 human/bot seats and a seed. Choose a home card, deploy your forces, then use the map and guided action panel. Click a card's inspection button for the readable full face and structured text. The in-game rules reference describes the implemented edition and rulings.
+Use npm.cmd on Windows if PowerShell blocks npm scripts. Select 2–4 human/bot seats and a seed. Choose a home card, deploy your forces, then click the cards, planets and fleets themselves. Follow highlighted map destinations or choose visual option tiles; Back/cancel changes nothing until you confirm. Click a card's inspection button for the readable full face and structured text. The in-game rules reference describes the implemented edition and rulings.
 
 ## Build and verify
 
@@ -46,3 +46,8 @@ Review the images and structured data together. The importer crops sprite cells 
 ## Save and resume
 
 Use Save / replay to export a versioned full replay; load it from setup or in-game. Full replays reveal hidden information, so share after a game or with player agreement. Undo rewinds both state and action history. Local hotseat privacy does not protect against someone inspecting the browser's runtime memory.
+
+
+## September 23 playtest edition
+
+Hand limit 8; Green movement selects up to two fleets; exploitation offers a safe card or a strictly-higher specialty flip, with −1 markers and a last-empty-planet success trophy. Discoveries award one trophy, and otherwise legal construction with exhausted supply can award a trophy instead. See the current in-game table references and DECISIONS.md for exact behavior and provisional interpretations. The original artwork remains pending the designer's new export. Trophy-only victory and incomplete technology edits are deferred. Old-edition replays are deliberately rejected.
