@@ -40,6 +40,14 @@ build`, `npm run sim` (headless bot games + telemetry), `npm run smoke`
 To get the latest changes: `git pull` from the repo root. If the dev server
 is running, Vite hot-reloads the moment the files land — no restart.
 
+## Player experience standards
+
+Read [AGENTS.md](AGENTS.md) and [the player experience standard](docs/PLAYER_EXPERIENCE.md)
+before implementation. Proper component shapes, graphical hands and supplies,
+compact readable card costs, direct board interaction, automatic turns and bots,
+and verified desktop/tablet usability are required defaults for future prototypes.
+Existing games and the template have not been retroactively certified.
+
 ## Starting a new prototype
 
 Copy `kernel/template/` to `games/<your-game>/`, rename it in

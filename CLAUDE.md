@@ -4,6 +4,13 @@ Monorepo of playable digital prototypes for tabletop games in design. Each
 game under `games/` is a standalone Vite + React + TypeScript app; nothing
 is shared at runtime.
 
+## Player experience requirement
+
+Read [docs/PLAYER_EXPERIENCE.md](docs/PLAYER_EXPERIENCE.md). Its component, card,
+icon, direct-interaction, automatic-turn and accessibility standards are required
+for new prototypes and changed UI flows. Record browser and visual acceptance
+evidence; do not defer basic usability as polish. See also [AGENTS.md](AGENTS.md).
+
 ## Default for every session
 
 **Before changing a game, read its `ARCHITECTURE.md`.** It holds the rules

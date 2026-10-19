@@ -7,11 +7,12 @@ description: Playbook for building and iterating on digital board-game prototype
 
 This repo exists to turn a written game idea into something playable within
 one session, and then to survive dozens of rounds of "actually, change the
-core mechanic". Optimize for **iteration speed and legibility**, not polish.
+core mechanic". Optimize for **iteration speed and legibility**, with usable component graphics from the first playable version.
 
 ## Before touching anything
 
-1. Read the root `CLAUDE.md` for the game index.
+1. Read the root `AGENTS.md` and `CLAUDE.md`, then the required
+   [player experience standard](../../../docs/PLAYER_EXPERIENCE.md).
 2. For an existing game, read `games/<name>/ARCHITECTURE.md` (rules as
    built, module map, recipes) and skim `DECISIONS.md` (rulings already
    made). These replace the conversation you weren't part of. Do not
@@ -180,4 +181,12 @@ simulation → polish.
 - Balance claims from vibes when a 10,000-game simulation takes 90 seconds.
 - Shipping a rule change without a fuzz run — the invariant checks catch the
   wedge you didn't think of.
-- Chasing visual polish while a mechanic is still moving.
+- Delaying readable components or usable turn flow until final polish. Keep art
+  lightweight while mechanics change, but verify actual player usability.
+
+## Player experience acceptance
+
+Use the acceptance checklist in [PLAYER_EXPERIENCE.md](../../../docs/PLAYER_EXPERIENCE.md).
+Record the real human journey, automatic bot response, privacy and Undo checks,
+and inspected desktop/tablet screenshots in the game verification notes. A menu
+of engine actions alone is not a completed playable interface.
