@@ -81,3 +81,20 @@ handwriting.
   model, when it's faster than describing it.
 - **What you'll playtest first** — the question the prototype exists to
   answer, which decides what the telemetry should count.
+
+## 10. Player interface and acceptance
+
+Follow [the player experience standard](../../../../docs/PLAYER_EXPERIENCE.md).
+Specify or choose sensible defaults for:
+
+- Component shapes, physical orientation/adjacency, player colors plus insignia.
+- Card art placeholder, title/rules layout, prominent power and compact icon costs.
+- Graphical hand, public hand counts, supplies, resource tracks and overflow trays.
+- Direct piece/card selection and legal targets; automatic steps versus meaningful
+  optional spending, rewards and passing.
+- Automatic bot turns, privacy handoffs, cancel/reselect and meaningful Undo.
+- Compact reference/Library panels, desktop/tablet layout and keyboard/tap access.
+- Concrete browser journey and crowded-state screenshots to inspect.
+
+Record deliberate exceptions and playtest questions. Do not require the designer
+to answer every styling detail before building sensible, reviewable defaults.
