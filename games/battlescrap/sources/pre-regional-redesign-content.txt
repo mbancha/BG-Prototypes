@@ -1,0 +1,47 @@
+export const VERSION='tactical-update-v4';
+export const suits=['Fire','Lightning','Water'];
+export const heroes=[
+ ['h01','Brakka Bellward','Guard','Support','Bellfoundry Vale',3,5,2,1,30,'Shelter','Other allies within 2 gain +1 Defense against ranged attacks.'],
+ ['h02','Hobb Kilnhand','Striker','Guard','Kilnstep Hills',4,3,5,1,34,'Demolish','After a basic hit, optionally Push the surviving target 2.'],
+ ['h03','Tavi Windrunner','Scout','Support','Windgrass Roads',6,1,2,1,23,'Follow the Wind','Recruits starting a group Move within 2 gain +1 Move.'],
+ ['h04','Orro Tidepull','Controller','Striker','Tideglass Coast',4,2,2,3,23,'Repel','1 AP, once: Push an enemy within 3 up to 3 and give 1 Dazed.'],
+ ['h05','Marda Graftpot','Support','Guard','Graftgarden Valley',4,2,2,1,19,'Patch Up','2 AP, once: heal another adjacent ally 1 wound.'],
+ ['h06','Burl Rootback','Guard','Controller','Graftgarden Valley',4,4,3,1,29,'Deep Roots','Cannot be Pushed.'],
+ ['h07','Vexa Glassclaw','Striker','Scout','Mirror Salt Flats',6,1,4,1,28,'Pursuit','After a basic hit, optionally move 1.'],
+ ['h08','Nell Reedmark','Scout','Striker','Whistling Reeds',5,2,2,1,23,'Surround','Recruits gain +1 Attack against enemies adjacent to Nell.'],
+ ['h09','Frill, the Bellshout','Controller','Scout','Bellfoundry Vale',5,1,2,1,17,'Startle','1 AP, once: give an adjacent enemy 1 Dazed.'],
+ ['h10','Edda Sporebell','Support','Scout','Lanterncap Woods',5,2,2,2,22,'Wild Vigor','1 AP, once: give another ally within 2 one Boosted.'],
+].map(([id,name,job,secondary,region,move,defense,attack,range,cost,ability,text])=>({id,name,job,secondary,region,move,defense,attack,range,cost:Math.ceil(Number(cost)/2)*2,ability,text} as any));
+export const H=Object.fromEntries(heroes.map(h=>[h.id,h]));
+export const cards=[
+ ['t01','Sure Strike',0,'attackBoost','Fire','+1 Attack die this combat; attacker response.'],['t02','Kindle',0,'boost','Fire','Give the active hero 1 Boosted.'],
+ ['t03','Sidestep',0,'move1','Lightning','Move the active hero up to 1.'],['t04','Quick Signal',0,'haste','Lightning','Haste another friendly hero within 3.'],
+ ['t05','Steady Guard',0,'defenseBoost','Water','+1 Defense die this combat; defender response.'],['t06','Clear Mind',0,'clearOne','Water','Remove one Dazed from the active hero.'],
+ ['h01a','Bell Rush',1,'rush','','Move up to 1, then optionally Push an adjacent enemy up to 2 and give 1 Dazed.'],['h01b','Resounding Blow',2,'attack','','Melee attack with +1 Attack.'],
+ ['h02a','Kiln Hammer',2,'attack','','Melee attack with +1 Attack.'],['h02b','Set the Mold',1,'boost','','Gain 1 Boosted.'],
+ ['h03a','Forward Party',1,'moveRecruits2','','Move up to two friendly recruits within 2 up to 1 each.'],['h03b','Rally Whistle',1,'boostRecruit','','Boost a friendly recruit within 2.'],
+ ['h04a','Undertow',1,'slow','','Slow an enemy hero within 3.'],['h04b','Tidebreak',2,'tideattack','','Ranged attack with +1 Attack; gain Dazed after combat.'],
+ ['h05a','Field Graft',1,'heal','','Heal another friendly unit within 2.'],['h05b','Brace Up',1,'boostOther','','Boost another friendly unit within 2.'],
+ ['h06a','Root Heave',1,'push','','Push one adjacent enemy up to 2 and give 1 Dazed.'],['h06b','Barkmend',1,'selfHeal','','Heal yourself 1.'],
+ ['h07a','Sweeping Reflection',1,'push2','','Push up to two adjacent enemies up to 2 each and give each 1 Dazed.'],['h07b','Pounce',1,'pounce','','Move up to 2; gain Boosted if ending adjacent to an enemy.'],
+ ['h08a','Mark the Opening',1,'daze3','','Give an enemy within 3 one Dazed.'],['h08b','Change the Angle',1,'moveRecruits3','','Move up to two friendly recruits within 3 up to 1 each.'],
+ ['h09a','Frill Flash',1,'daze2','','Give up to two adjacent enemies one Dazed each.'],['h09b','Scatter!',1,'scatter','','Move up to 2, then optionally Push an adjacent enemy up to 2 and give 1 Dazed.'],
+ ['h10a','Springstep',1,'haste','','Haste another friendly hero within 3.'],['h10b','Clear Spores',1,'clearOther','','Remove all Dazed from another friendly unit within 2.'],
+].map(([id,name,cost,effect,suit,text])=>({id,name,cost,effect,suit,text,hero:String(id).startsWith('h')?String(id).slice(0,3):null} as any));
+export const C=Object.fromEntries(cards.map(c=>[c.id,c]));
+export const objectives=[['Hold the Line','Hero on a control with no adjacent enemy.'],['Two Fronts','Two friendly heroes on different controls.'],['Deep Scout','Hero within 2 of an enemy starting hex.'],['Rally the Troops','Hero adjacent to two friendly recruits.'],['Encircle','Enemy adjacent to two friendly heroes.'],['Clear the Point','Defeat an enemy on a control this activation.'],['Drive Them Off','Push an enemy off a control; leave it free of enemies.'],['Hero Hunter','Defeat an enemy hero this activation.'],['Break the Rank','Defeat two distinct recruits since eligibility.'],['Survey the Field','Same surviving hero visits two controls since eligibility.']];
+export const equipment=[{id:'boots',name:'Trail Boots',cost:4,text:'+1 Move (item maximum 7)'},{id:'shield',name:'Bellmetal Shield',cost:8,text:'+1 Defense against melee'},{id:'weapon',name:'Balanced Weapon',cost:8,text:'+1 basic Attack'},{id:'lens',name:'Sighting Lens',cost:8,text:'+1 ranged basic range'}];
+export const profile=[0,1,2,2,3,3,4,4];
+export const money=(n:number)=>String(n/2);
+export const hexes:any[]=[];
+// Flat-top odd-column layout calibrated against the unmodified supplied raster.
+for(let col=0;col<=14;col++)for(let row=0;row<=9;row++){
+ const x=-3+128.7*col,y=148.5*row+(col%2?74.25:0);
+ if(x<0||x>1824||y<0||y>1368)continue;
+ const blue=(col>=3&&col<=12&&row===0)||([4,6,7,8,10].includes(col)&&row===1);
+ const stone=(col===1&&row>=6)||(col===2&&row>=7)||(col===3&&y>=1180)||(col===4&&y>=1300)||(col===5&&y>=1180)||(col===6&&y>=1300);
+ hexes.push({id:`${col},${row}`,q:col,r:row-(col-(col&1))/2,x,y,zone:blue?'blue':stone?'stone':null,level:0});
+}
+export const board={hexes,controls:['2,4','10,3','7,5'],stones:['3,1','6,3','12,5','10,7','5,7'],walls:[] as string[]};
+export const B=Object.fromEntries(hexes.map(h=>[h.id,h]));
+export function distance(a:string,b:string){if(!B[a]||!B[b])return Infinity;let q=B[a].q-B[b].q,r=B[a].r-B[b].r;return (Math.abs(q)+Math.abs(r)+Math.abs(q+r))/2;}

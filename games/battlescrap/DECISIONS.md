@@ -1,0 +1,237 @@
+> Portability audit, 22 October 2026: this file describes the older turn-rules-v8 digital implementation. Current design authority is starter-test-v11 in the live Drive documents. Read [START-HERE.md](START-HERE.md) before development. No digital rules update is authorized in this handoff.
+
+# Current decisions and provisional rules
+
+Battlescrap — Design Draft
+Current consolidated reference ·20 October 2026 ·turn-rules-v8
+Companion: https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU
+
+Core Mechanics
+Tactical starfall-fantasy skirmish. Bid for position, muster three distinct regional heroes plus three recruits, activate through a shared eight-slot action queue, fight with opposed D6 pools, collect Brightstone and complete tactical objectives. Current digital scope is local 1v1; broader design may support 1v1–3v3 without prescribing an unimplemented team UI.
+
+Setup and Preparation
+Each side starts with 20 preparation points (PP), or 21 PP after losing the preceding battle. PP resets each battle; RP is separate and never enters bidding. Submit secret deployment-zone choices and nonnegative whole-PP bids. Different zones: ignore bids, grant each chosen zone and own base budget, choose first side randomly. Same zone: higher cumulative bidder gets that zone and first deployment/activation at its own base budget; opponent gets the other zone and its own base plus the winning bid. Ties add secret positive whole-PP increments until unequal. There is no bid cap.
+Field exactly three distinct available heroes and three free recruits. Buy equipment, extra recruits, group upgrades and extra starting draws with PP before seeing cards. Only unused bid compensation survives preparation as the attacker-reroll bank; ordinary leftovers expire. A hero's acquired roster access never waives its PP fielding cost.
+Assign one hero each to Fire, Lightning and Water holders. Suits and faction ownership belong to the holder/instance, not the character identity or illustration. Recruits have no suit. Deploy heroes and individual recruits in your zone; if full, choose a nearest reachable empty hex, choosing ties. After deployment draw starting Battle hands and one hidden tactical objective per side.
+
+Turns and Action Queue
+Eight activation tiles: three heroes and one recruit group per side. Bottom-to-top slots: 0, 1, 2, 2D, 3, 3D, 4, 4D. At setup owners alternate: high bidder/first side in slots 0,2,4,6 and the other side in 1,3,5,7. Shuffle each side's four cards independently into its assigned slots. Different-zone setup uses the randomly selected first side in the same slot pattern. Do not shuffle all eight identities together.
+At the start of a side's turn, score the scenario and immediately check victory. Choose a friendly tile above slot0; capture its AP and D entitlement, then move it to bottom, shifting intervening tiles. Spend AP using that hero or individual models of that recruit group. Haste/Slow immediately shifts a tile one slot, clamping at ends; it cannot change AP/D already captured. Wrong Foot uses the pre-selection queue snapshot. No extra anti-stall rule.
+A turn is one activation for the recruit action limit. Each recruit may Move, Attack, Push, Remove Daze and respawn at most once each during that turn; track each action separately per model. Moving one recruit costs 1 AP, up to its Move. There is no move-all-recruits action. A recruit may move and attack in either order. A repeat Move remains unavailable after another action or respawn. Card-granted recruit movement also uses that recruit's Move allowance for that turn; involuntary Push and direct swaps are not voluntary Moves. Defensive rolls do not consume actions. A recruit's optional Riposte consumes its attack allowance and cannot repeat an attack that turn.
+End-activation order: physical pickups and both draws, enforcing limits; at most one eligible objective claim/reward; captured queue-D Battle draw; remove expiring Stunned; discard unused AP; pass play. D means one Battle card. Paid cores marked once reset each own activation. Queue hero cards show portrait, name, region, jobs, stats, health, suit and core ability only; linked deck-card effects appear in hand/detail views, not on the queue card.
+
+Movement, Combat and Statuses
+Hero Move costs 1 AP up to Move; basic Attack costs 2 AP. Recruit Move and Attack each cost1 AP per individual model, subject to its once-per-action limit. Units cannot move through one another. All units may Push for 1 AP: Defense versus Defense; success Push1 and give1 Dazed. Explicit Push steps increase distance from the fixed source by exactly1, obey walls/occupancy/board bounds, stop if blocked or target dies. Orro cannot be Pushed, but may swap voluntarily. A legal blocked displacement still spends its cost and may apply its printed status.
+Attack/Defense are D6 pool sizes. Both roll simultaneously. Compare highest face; if both are 6, compare counts of6; attacker wins every remaining tie. Never sum pips or compare other sorted faces. A hit deals 1 wound. Two more attacker sixes deals 2 wounds total; two more defender sixes grants 1 Boosted. Blocking does not automatically Daze. Examples: [5] attacks [5,5] hits; [6] attacks [6,6] blocks; [6,6,1] attacks [6,6,5] hits.
+Defender and attacker alternate pre-roll card/pass; a play resets consecutive passes. Two passes close responses. After all modifiers attacker may choose heavy attack: halve final Attack dice, round up; hit adds1 damage, miss gives new1 Dazed. Roll, then only attacker may reroll any own die for 1 PP from banked bid compensation, repeatedly while affordable. Explicitly finish rerolls; resolve damage, old-token cleanup and printed after-effects. Counterattacks use normal response/range/heavy/reroll rules and never chain.
+Boosted adds one own die per token; Dazed subtracts one own die per token. Apply each side's modifiers independently, minimum final pool 1, no maximum. After the whole combat consume one old Boosted and one old Dazed from each participant if present; newly earned tokens survive. Ketu's Dazed instead adds Attack dice; it still penalizes Defense and Defense-based Push.
+Heroes have 3 HP; recruits 2. Stunned permits only movement and movement-only effects during the next entire activation and expires at its end; passive defenses and defensive reactions remain legal. Remove Daze costs 2 AP and clears its whole stack. Heavy, if present, converts exactly one wound to new Daze only when not already Dazed, checking before old-token cleanup; a critical may still deal a wound.
+A hero death draws exactly one Battle card for that hero's owner and moves its tile to bottom. An ordinary lost combat, blocked attack, nonlethal wound or recruit death gives no consolation draw. Every death drops one physical Brightstone at the last hex; secured stones never redrop. Recruit deaths never reset their group tile. Respawn costs 2 AP per model, fully healed and status-free, using zone overflow rules; remaining AP may be spent within recruit action limits. Draw/overflow decisions remain private even when a hero dies off-turn.
+
+Three Fires Scenario and Terrain
+Use the supplied Three Fires raster and calibrated axial hexes. Centers inside the raster are playable, clipped edge-hex acceptance remains provisional. Blue/north and stone/south are deployment zones; bonfires are controls and X marks initial Brightstones. Do not infer water/stone movement penalties from map artwork. One unit per hex. Current map has no permanent walls or default elevation.
+At each side's turn start, north scores 1 VP unless south occupies at least two bonfires; south scores 1 VP if it occupies at least two. Each enemy defeat gives the killer's side1 VP, including counterattacks and enemy flame kills; friendly fire gives none. Default victory target 8. Check victory immediately, settle once, and do not invent another cleanup/claim checkpoint after victory.
+Walls block movement, melee and Push across their edge, not ranged visibility. Units never block ranged sight. Ranged attacks may target adjacent units, reach twice printed range at−1 die, and suffer−1 Attack die whenever any enemy is adjacent to attacker. Flank:+1 Attack die if another ally is adjacent to target and to no other enemy. Ranged cover:+1 Defense if crossing the supporting line of a wall adjacent to defender; multiple walls count once. Heavily Armored:+1 Defense against melee, not Defense Push contests.
+Elevation TEST: map level Low0/High1; ranged High-to-Low attacks gain+1 Attack die, stacking with cover. No other elevation costs/bonuses, vertical range, climbing, falling or sight rules. Off by default unless map enables it.
+
+Battle Decks and Card Use
+Baseline:18 tactics (6 per suit) + one copy of each of two cards for each of three selected heroes =24 cards; starting hand2, limit8. Exposure TEST:12 tactics (4 per suit) +6 hero cards =18; starting hand5, limit8. Presets cannot mix; save/result records identify preset. Complete each draw then enforce limit. Reshuffle Battle discard when empty; both zones empty means no draw. No extra periodic or lost-combat draw.
+A tactic can be used by any legal participant for its printed effect, or discarded outside combat during a matching-suit hero activation for+1 AP. Ability card is suitless; only linked active hero may use printed effect or discard for+1 AP. Never both uses; no generic dice-bonus alternate. Recruits have no suit/AP discard. Most printed ability effects are own-activation actions outside combat; explicit attacks enter normal combat pipeline. Zero-AP cards still discard once.
+
+Brightstone and Tactical Objectives
+Use one shared, separately shuffled 10-card objective deck, one of each card below. Deal one hidden objective to each side after deployment and starting Battle hands. Hold at most two; on overflow privately keep two and discard the rest. Completed objectives are revealed and removed for this battle; discarded objectives do not reshuffle. Objectives have no suit, AP alternate or scenario VP.
+Eligibility begins at the start of the owner’s next activation after drawing (first activation for starting objectives). Only attacks resolved while the objective is held and eligible count. Record the owner’s attacks AND successful defenses, including during the opponent’s activation and counterattacks. A successful defense means an enemy attack missed; ties follow the normal attacker-wins rule. Push contests, terrain wounds, card draws and objective rewards do not count.
+Progress persists while held except Press the Advantage, which requires the same hero to hit twice during the current activation. The same model’s recruit defeat counts only once for Break the Rank, even after respawn. Hold Together requires distinct defender IDs. Trade Blows requires a hero still alive/on-board at claim. Against the Odds compares the final rolled pool sizes after all modifiers and heavy-attack halving. Crushing Blow counts wounds actually dealt after prevention.
+At the end of the owner’s activation, after pickups and before queue-D, claim at most one eligible objective. Each awards exactly 3 RP and one Battle Deck draw. It gives no stone and no objective draw. RP is credited once at claim; do not pay it again at battle settlement. Resolve limits before passing play. Off-turn progress waits for the owner’s next end-of-activation claim; no final checkpoint is invented after scenario victory.
+to01 — Draw Blood: Hit an enemy with an attack.
+to02 — Stand Fast: Block an enemy attack.
+to03 — Hero Hunter: Defeat an enemy hero with an attack.
+to04 — Break the Rank: Defeat two different enemy recruits with attacks.
+to05 — Cut Down: Defeat an enemy recruit with an attack.
+to06 — Press the Advantage: Hit twice with the same hero in one activation.
+to07 — Against the Odds: Block an attack whose final pool exceeds your Defense pool.
+to08 — Crushing Blow: Deal at least 2 wounds with one attack.
+to09 — Hold Together: Block attacks with two different friendly units.
+to10 — Trade Blows: The same surviving hero both hits and blocks an attack.
+
+Brightstone pickup: only living heroes collect, automatically at activation end or via 1 AP Grab. Permanently remove the physical stone, record one secured Brightstone for post-battle income, and draw BOTH one tactical objective and one Battle card. Resolve existing hand limits (Battle 8/objectives 2); objective deck exhaustion yields no objective. Newly drawn objectives first become eligible at the start of the owner’s next activation. No choice between reward decks.
+
+Preparation and Recruitment Economy — TEST
+Whole player-facing PP/RP. Base PP20, next battle after a loss21, nonstacking. Three free recruits. Extra recruit3 PP; group Boots2 PP (+1 Move), Shields3 (+1 Defense), Weapons3 (+1 Attack), each upgrade once and retained on respawn. Hero equipment: Trail Boots1 PP, Bellmetal Shield2, Balanced Weapon2, Sighting Lens2. Extra starting Battle card1 PP, capped by preset starting hand and hand limit. Reroll1 PP per own die, attacker only, from unused bid compensation. No PP/RP conversion.
+Between battles add 10 RP +1 RP per physically secured Brightstone +1 RP for victory, once per battle. Each completed tactical objective independently awards 3 RP when claimed; do not give it a physical/secured stone or count it again in stone income. Claim also draws one Battle card. RP is tracked separately for later recruitment; a supplied-offer purchase adds roster access at that hero's listed PP-equivalent RP cost. No full campaign offer/travel system is implied.
+Keep PP, RP, VP, AP, physical pickups and completed objective rewards separate. Winning VP gives no extra RP beyond the victory bonus. Only PP resets next battle; RP and acquired roster access persist.
+Equipment is a switchable TEST module, enabled in baseline. Buy after selecting heroes; one item per hero, one of each item per army. Assigned items persist through respawn; deselection during preparation fully refunds. No trading, drops, inventory puzzle or battlefield equipment pickup.
+Trail Boots1 PP:+1 Move, item maximum7; legal on printed Move6. Reject if it has no effect. Other abilities can exceed7. Bellmetal Shield2 PP:+1 Defense die versus melee; reject on Orro because his core already grants the identical bonus. Balanced Weapon2 PP:+1 basic Attack die, not ability-card attacks. Sighting Lens2 PP:+1 printed range on ranged basic attacks, doubling extended range accordingly; reject on melee heroes. Recruit upgrades are separate.
+
+World and Regions
+Magic belongs to everyone—but who gets to decide how it is used?
+About thirty years ago, stars fell across Surlune, a world that had never known magic. They landed in orchards, harbors, villages and mountains. Civilization endured; people still farm, trade, build and celebrate. Magic brought new possibilities, unfamiliar creatures and a struggle over who should control them. The world is experiencing its first miracles.
+Brightstone is the common name for the fallen material. Small wonders are possible in ordinary hands; rare stonebinders can awaken its greater power and equip a company with it. A stone can irrigate a field, help build a bridge, guide a ship or empower a fighter. Each stone consumed in war could have been somebody’s miracle. Moon-touched birth conditions are not required canon.
+The land teaches the magic what to become. Stones in orchards learn growth; stones among bells learn resonance; stones on open plains learn motion. Over decades, local crafts, landscapes and living things develop distinctive wonders. This explains regional heroes and varied abilities without requiring a destroyed precursor civilization.
+The Concord promises safety above all. Its leaders claim that starfall is making the world wilder and more dangerous: untamed magic corrupts the land, threatens ordinary lives and could undo generations of progress. In their view, civilized society—shared law, protected settlements, disciplined stonecraft and common institutions—is the only barrier against that future. They offer shelter, roads and dependable protection in exchange for obedience. Their fear is sincere, but protection can become annexation and the defense of progress can justify suppressing unfamiliar ways of life. Their claim that wild magic is inherently corrupting is a faction belief, not an established truth of the setting.
+The Wildmoon chooses freedom over safety. Proud, tough and fiercely independent, its wandering clans and free communities meet the changing world with audacity, revelry and a mystical reverence for the moon and fallen stars. Their traditions include moonlit gatherings, celestial omens, oath-swearing and roaming warbands; magic is a wild inheritance to live alongside, not a force civilization is entitled to tame. They swear allegiance to a leader who will defend their right to govern themselves, not rule every aspect of their lives. Loyalty is personal and rests on that promise of self-rule. They accept hardship and danger rather than surrender their independence; their freedom can also make collective restraint and mutual protection difficult. Neither faction has a mandatory universal faction ability.
+Five home regions — 20 October 2026
+Windlands — Tall-grass plains, proud clan leaders and prized lion-shifters. Brown, green and red grass-woven dress; Bantu-inspired fictional cultures. Ambush, speed and misdirection.
+Highholm — Frozen peaks, frost giants, heavy furs and leather. Longhouses ring with feasts of mead and meat. Norse-inspired warriors turn stone-hard to endure.
+Cinder’s Rim — A mysterious volcanic settlement of masked fire-priests and many fire gods. Carved tiki-inspired forms, ember rituals, magma and dangerous bursts of power.
+Timberwood — Powerfully built, beardless woodland elves: axe-workers, growers and master joiners. Living public avenues meet towering timber halls. Hardwood arms and armor draw on medieval Japanese forms; every harvest is replanted.
+Port Windlass — Starfall whipped the island seas into a frenzy. A few sailors travel behind tamed whales or sharks; many now raid the rivers. Age-of-sail and Polynesian maritime influences meet wind-calling warriors.
+These are fictional microcultures with the supplied broad visual influences; neither a region nor a real-world cultural influence determines allegiance. The Concord promises safety through shared institutions; Wildmoon promises freedom and self-rule. Both recruit from all five regions.
+
+Each player leads a stonebinder’s traveling company serving one of these movements. Both pursue the same deposits, routes and communities. Lesser star showers keep creating opportunities. A regional victory can secure access and earn local trust without ending the wider struggle.
+Heroes fight for their homes, livelihoods and ambitions. Any regional hero may join either side: the same orchard keeper might seek Concord irrigation works in one campaign and resist its claims to the valley in another. Winning a battle gives first recruitment choice from that region’s shared pool; subsequent choices create different available rosters in different campaigns.
+Every deployed unit carries an awakened Brightstone. Defeat releases one recoverable stone. Heroes secure stones immediately into their side’s reserve; recruits cannot collect them. Each physical pickup draws one tactical objective and one Battle card and contributes to post-battle recruitment income. Completing an objective awards 3 RP and one Battle card, without adding a stone. Magical recall remains optional flavor for respawning.
+Side ownership is indicated by the existing standee holders and normal player ownership in the digital game. Do not add sticker banners, badges, faction costume variants or an origin-versus-allegiance customization system. Holder suits remain independently assigned Fire, Lightning and Water.
+
+Shared Regional Roster
+Default starter rosters: Concord A = h01 Kalawi (Windlands), h02 Brynja (Highholm), h03 Voru (Cinder’s Rim), h04 Tavi (Port Windlass), h05 Marda (Timberwood). Wildmoon B = h06 Niala (Windlands), h07 Eirik (Highholm), h08 Ketu (Cinder’s Rim), h09 Ren (Timberwood), h10 Orro (Port Windlass). Each begins with one hero per region and all five main jobs. Paired regional heroes have different main roles; Niala is neither Striker nor Scout. Choose three under the preparation budget. Retain the swap-rosters test option and shared campaign recruitment: starter assignment is not a permanent faction lock.
+
+At 20 PP all 10 triples from each fixture are affordable: Concord13–17; Wildmoon14–20. Kalawi5, Brynja7, Voru5, Tavi4, Marda4, Niala3, Eirik5, Ketu8, Ren6, Orro6. Pricing is TEST, not validated faction balance.
+All heroes HP 3. Printed Move 3–6, Attack 2–6, Defense 1–5; modifiers can exceed bands. Main/secondary jobs are descriptive, grant no automatic abilities. Each hero has one core and two suitless linked cards.
+
+h01 — Kalawi Bloodmane
+STRIKER / Scout · Windlands
+Cost 5 PP / RP; Move5; Attack3 melee; Defense 1.
+Ambush — Start my activation with no adjacent enemy: +3 Attack this activation.
+h01a — Surprise Strike (1 AP): Attack at +1, then you may move 3.
+h01b — Pride’s Feint (0 AP): Swap places with a friendly recruit, then you may move 1.
+
+h02 — Brynja Stonehide
+GUARD / Support · Highholm
+Cost 7 PP / RP; Move 3; Attack3 melee; Defense5.
+Living Rampart — Other allies within 2 gain +1 Defense.
+h02a — Stone-Skin (1 AP): Gain +3 Defense until my next activation.
+h02b — Shield the Hearth (0 AP): Move up to 2.
+
+h03 — Voru Cinderveil
+CONTROLLER / Striker · Cinder’s Rim
+Cost 5 PP / RP; Move4; Attack3 ranged(2); Defense 1.
+Magma Surge — 1 AP, once: Push an enemy within 4 up to 3; give it 1 Dazed.
+h03a — Wall of Flame (1 AP): Place a flame edge within 4 until my next activation. Crossing: 1 wound.
+h03b — Magma Eruption (2 AP): Attack at +2. Then gain 1 Dazed.
+
+h04 — Tavi Sailwhistle
+SCOUT / Support · Port Windlass
+Cost 4 PP / RP; Move6; Attack 2 melee; Defense 1.
+Follow the Wind — Recruits starting a Move within 3 gain +1 Move.
+h04a — Boarding Party (1 AP): Move up to two friendly recruits within 3 up to 2 each.
+h04b — Fair Wind (0 AP): Haste another friendly hero within 3.
+
+h05 — Marda Oakweaver
+SUPPORT / Guard · Timberwood
+Cost 4 PP / RP; Move4; Attack 2 melee; Defense3.
+Living Graft — 1 AP, once: heal another adjacent ally 1 wound.
+h05a — Graftwood Brace (1 AP): Heal another ally within 3 by 1; give it 1 Boosted.
+h05b — Rootwalk (0 AP): Move up to 3.
+
+h06 — Niala Grassveil
+CONTROLLER / Support · Windlands
+Cost 3 PP / RP; Move5; Attack 2 melee; Defense 1.
+False Trail — 1 AP, once: give an enemy within 3 one Dazed.
+h06a — Lion’s False Roar (1 AP): Give up to two enemies within 2 one Dazed each.
+h06b — Vanish in the Grass (1 AP): Move up to 3, then you may Push an adjacent enemy 2 and give it 1 Dazed.
+
+h07 — Eirik Hearthkeeper
+SUPPORT / Guard · Highholm
+Cost 5 PP / RP; Move 3; Attack 2 melee; Defense4.
+Hearth Oath — 1 AP, once: give another ally within 2 one Boosted.
+h07a — Winter Feast (1 AP): Heal another ally within 2 by 1; give it 2 Boosted.
+h07b — Hearthward (1 AP): Move another ally within 3 up to 3.
+
+h08 — Ketu Ashheart
+STRIKER / Controller · Cinder’s Rim
+Cost 8 PP / RP; Move4; Attack5 ranged(2); Defense 1.
+Feed the Fire — My Dazed adds Attack dice instead of subtracting them.
+h08a — Stoke the Furnace (0 AP): Gain 2 Dazed.
+h08b — Ashen Lance (2 AP): Attack at +2. Then gain 1 Dazed.
+
+h09 — Ren Timberwright
+SCOUT / Guard · Timberwood
+Cost 6 PP / RP; Move4; Attack3 ranged(2); Defense3.
+Felling Line — Friendly recruits gain +2 Attack against enemies adjacent to me.
+h09a — Raise the Timber (0 AP): Build an adjacent timber wall until my next activation.
+h09b — Work Crew (1 AP): Move up to two friendly recruits within 3 up to 2 each.
+
+h10 — Orro Stormanchor
+GUARD / Controller · Port Windlass
+Cost 6 PP / RP; Move 3; Attack 2 melee; Defense5.
+Anchor Stance — I cannot be Pushed. +1 Defense against melee attacks.
+h10a — Anchor Exchange (1 AP): Swap places with another ally within 3.
+h10b — Breakwater (1 AP): Push an adjacent enemy 3; give it 1 Dazed.
+
+Hero Ability Resolution
+Distances use board hex distance. “Another ally” excludes self, includes friendly recruits, and requires a living on-board unit. Healing removes at most existing wounds; heal-plus-Boosted cards can target an unwounded ally because Boosted still has an effect. Core Living Graft requires a wounded target.
+
+Paid cores resolve once per activation, with their usage reset on a new own activation. Passive cores do not use an action or usage flag. Aura effects require their source alive/on board and check position when the applicable roll/action is declared. Follow the Wind checks the moving recruit at the start of its individual Move; it does not extend card movement, respawn, Push or swaps. Felling Line applies to friendly recruit attacks, including a legal counterattack, not Push contests.
+
+Ambush snapshots adjacency before the active tile moves to bottom and before any movement. It buffs all attacks made during that activation, including Surprise Strike. A dead/off-board Kalawi cannot obtain Ambush by activating to respawn. Attack cards use current hero range, engagement penalty, flanking, heavy-attack choice, responses and ordinary status cleanup; they are not basic attacks for basic-only equipment effects.
+
+Surprise Strike movement is optional after a hit OR miss, after the entire attack resolves. It is unavailable if Kalawi has been defeated. Pride's Feint retains its existing unrestricted on-board friendly recruit target; swap first, then optional movement from the new hex. Both swapped units must be legal living targets. Swaps bypass intervening walls/flames and do not trigger crossings.
+
+Ordinary card movement follows occupancy, walls, actual paths and flame crossings. Select up to two distinct recruits for Boarding Party / Work Crew from the initial eligible set, then resolve one at a time with an explicit skip; each uses that recruit’s once-per-turn Move allowance. Hearthward moves its chosen ally under the same rules. Zero-AP cards still require possession, discard exactly once, and cannot also grant their +1 AP alternate.
+
+Vanish allows zero to three movement spaces, then optional enemy selection from the new position. If Niala dies during movement, stop. If no adjacent legal enemy remains, finish the card. A chosen Push target can receive Dazed even if displacement is blocked; Orro remains immune to displacement, not status. Pushes use the fixed source and existing legal step checks; stop on defeat. Magma Surge and Breakwater use the same rules.
+
+For Wall of Flame, both endpoint hexes must be within 4 of Voru. Keep one legal edge, no overlapping walls/temporary terrain, both sides affected, and at most one flame wound per unit per activation across all flame edges. Flame deaths retain the current v6 defeat scoring; they do not become attacks for objective purposes. Timber still blocks movement, melee and Push and grants directional ranged cover. Terrain expires at its source's next activation or defeat. 
+
+
+Do not add new keywords, status types, reaction windows, resource pools or per-round trackers.
+
+Stone-Skin adds+3, does not stack with itself, and expires at Brynja’s next activation or defeat. Stunned allows movement-only Shield the Hearth, Rootwalk, Pride’s Feint, Anchor Exchange and Hearthward; disallow healing, buff, attack, build and Push effects. Passive defenses remain.
+
+Playable Tactics
+Both factions use the same six simple tactic effects. Suit variants change only the matching-suit +1 AP alternate, not the effect’s legality. All printed tactics cost 0 AP. Keep printed copy succinct; the timing and resolution notes below belong in the reference, not as card-footer boilerplate.
+Press the Attack — Combat: +1 die; +2 if attacking.
+Stand Firm — Combat: +1 die; +2 if defending.
+Twist the Blade — Before attacking: a hit deals +1 wound.
+Riposte — Before defending: if you block, counterattack.
+Shake It Off — Remove all negative statuses from an ally.
+Wrong Foot — Give an enemy lower in the queue 2 Dazed.
+Baseline counts: Press the Attack 6 (2 per suit); Stand Firm 6 (2 per suit); Twist the Blade 2 Fire; Riposte 2 Water; Shake It Off 1 Lightning; Wrong Foot 1 Lightning. Total 18 tactics, 6 of each suit, plus six selected-hero cards = 24. Starting hand2, limit8.
+Exposure TEST counts: Press the Attack 3 (1 per suit); Stand Firm 3 (1 per suit); Twist the Blade 2 Fire; Riposte 2 Water; Shake It Off 1 Lightning; Wrong Foot 1 Lightning. Total 12 tactics, 4 of each suit, plus six selected-hero cards = 18. Starting hand5, limit8. Preserve the two-copy/singleton requests in both presets; record preset in saves/results. No extra periodic draws.
+Timing: the first four are pre-roll combat responses and may affect heroes or recruits. Both flexible dice effects modify the playing side’s own participating pool; bonuses never cancel an opponent’s bonus. Twist the Blade adds no dice and adds one wound only on a hit, stacking with critical/heavy damage. Multiple legal dice/wound cards may stack. Riposte adds no dice; only one Riposte may be committed per defense. After a block, finish wounds/status cleanup, then offer one optional free attack by that defender against the original attacker if both survive and normal range permits. Use normal response, heavy-attack and reroll rules; no AP payment; a recruit consumes its attack allowance for that turn and cannot counterattack if already used. Counterattacks cannot trigger further counterattacks. Defensive Riposte remains legal while Stunned.
+Shake It Off and Wrong Foot are played during a friendly hero’s activation outside combat. Shake It Off may target any on-board ally (including self or a recruit) with Dazed and/or Stunned; remove all of both, preserving Boosted. Haste/Slow are immediate queue changes, not removable status tokens. A Stunned active hero cannot play either action tactic.
+Wrong Foot uses the queue snapshot taken immediately before the active hero’s tile moved to the bottom, so lower has a meaningful reference. No range limit. Target an on-board enemy hero whose tile was lower, or an individual enemy recruit whose group tile was lower; give only that model 2 Dazed. The active hero still needs to be on-board. This is the explicit implementation interpretation of lower-in-queue wording.
+Tactic IDs: t01/t03/t05 are Press the Attack in Fire/Lightning/Water; t02/t04/t06 are Stand Firm in Fire/Lightning/Water; t07 Twist the Blade; t08 Riposte; t09 Shake It Off; t10 Wrong Foot. Ten suit-specific definitions encode six effects. Ability cards remain one copy each, suitless, with the linked-hero +1 AP alternate. Do not print redundant AP-alternate footers.
+
+Hero Costing Heuristic — TEST
+Design the role first, then calculate:
+
+Estimate = 2 + Move + Attack + Defense + Range + Core + Card pair + Synergy.
+
+Keep the estimate in half-point increments in design/balance data. Printed PP/RP cost = ceiling of the estimate, evaluated once. Never round individual terms. The reference body and ability weights support the 20 PP economy.
+
+Reference: HP 3, Move4, Attack 2 melee, Defense2, before abilities.
+
+
+Core tiers: 0.5 for a paid single-target status effect; 1 for paid healing or narrow personal protection; 1.5 for a strong conditional attack, positional group benefit or flexible support; 2 for repeatable long-distance displacement plus status or a strong scaling Attack engine. These are judgments about actual usage, not automatic keyword prices.
+
+Card pair: +0.5 for two normal useful cards, +1 for a pair containing especially efficient attacks or a strong engine enabler. Price the pair once: each card is only one copy in the selected hero's deck contribution. Add +0.5 to +1 synergy only for interactions not already captured in Core/Card pair; current records use zero. No extra fragility or melee discount beyond the terms already present.
+
+Current target is 3–8 PP, not a universal clamp. Future results outside this band require design review; do not silently squash them to 3 or 8. Costing is a starting hypothesis and includes no claim of matched win rates.
+
+
+Every row also includes reference 2 and synergy 0. Tavi's movement aura is valued at 1 because it improves travel but not attacks, and requires recruits to begin near a fragile hero. Ren's attack aura is valued at 1.5 because it can improve multiple attacks but requires him next to their target. Orro's protection has no ally benefit or action saving. These particular tier judgments deserve playtesting.
+
+Breakdowns (reference + Move + Attack + Defense + Range + Core + Cards + Synergy):
+Kalawi Bloodmane: 2 + 0.5 + 0.5 + -0.5 + 0 + 1.5 + 1 + 0 = 5; printed 5.
+Brynja Stonehide: 2 + -0.5 + 0.5 + 2.5 + 0 + 1.5 + 0.5 + 0 = 6.5; printed 7.
+Voru Cinderveil: 2 + 0 + 0.5 + -0.5 + 0.5 + 2 + 0.5 + 0 = 5; printed 5.
+Tavi Sailwhistle: 2 + 1 + 0 + -0.5 + 0 + 1 + 0.5 + 0 = 4; printed 4.
+Marda Oakweaver: 2 + 0 + 0 + 0.5 + 0 + 1 + 0.5 + 0 = 4; printed 4.
+Niala Grassveil: 2 + 0.5 + 0 + -0.5 + 0 + 0.5 + 0.5 + 0 = 3; printed 3.
+Eirik Hearthkeeper: 2 + -0.5 + 0 + 1.5 + 0 + 1.5 + 0.5 + 0 = 5; printed 5.
+Ketu Ashheart: 2 + 0 + 2.5 + -0.5 + 0.5 + 2 + 1 + 0 = 7.5; printed 8.
+Ren Timberwright: 2 + 0 + 0.5 + 0.5 + 0.5 + 1.5 + 0.5 + 0 = 5.5; printed 6.
+Orro Stormanchor: 2 + -0.5 + 0 + 2.5 + 0 + 1 + 0.5 + 0 = 5.5; printed 6.
+Move modifiers:3→−0.5,4→0,5→0.5,6→1. Attack:2→0,3→0.5,4→1.5,5→2.5,6→4. Defense:1→−0.5,2→0,3→0.5,4→1.5,5→2.5. Ranged replacement:range2→0.5,3→1,4→1.5.
+
+Presentation, Prototype and Open Decisions
+Ten original 1024×1536 PNG illustrations are installed at public/heroes-v7, mapped by stable h01–h10 IDs in assets/hero-refresh-v7-manifest.json. Simple bold illustrated silhouettes, regional themes, warm ivory opaque backgrounds, no baked text/suits/ownership. Reuse one master on character card and both linked ability cards; portrait crops appear on tokens, queue and roster. Preserve original masters, keep crop/layout metadata separate. Art is provisional, not approved final print production. 
+Character cards show name, region, cost, portrait, main job bold / secondary smaller, Move, Attack/range, Defense and core. Standard HP 3 need not be printed. Queue cards omit linked deck abilities. Ability cards show linked hero, live effect text and AP. Holder shows ownership and assigned suit independently. Teach AP alternates in rules; omit repeated footer boilerplate. Future standees may reuse masters; no print-ready dimensions are claimed.
+Current evidence:90 tests pass; production build and installed-asset check pass. Desktop1440×1000/tablet820×1180 browser journeys pass without console errors: bidding, muster, six-model deployment per side, queue activation, movement, undo, card dialog/cancel, private handoff, pending combat/pickup saves and automatic bots. Fifty seeded games complete, averaging18.5 activations; these are implementation checks, not balance validation. Evidence: game VERIFICATION.md and artifacts/browser-report.json, simulation.json and screenshots.
+Required regression coverage: alternating ownership with per-side shuffle; three recruits; one AP per model Move and per-action limits; hero-only death draw and off-turn overflow; BOTH pickup draws; objective3 RP/card without stone/double settlement; 20/21 budgets and half-unit display; exact ten heroes/twenty linked cards; both deck presets/suits; Ambush snapshot; core/card targeting and modifiers; Ketu statuses; terrain crossings/expiry; counterattack/no chains; current asymmetric bonfire/defeat scoring; privacy, undo, save/replay, bot completion.
+Remaining decisions: final map edge acceptance, human balance testing and final art approval. Full regional recruitment offers/travel, multiplayer/networking and print production remain future scope. Current/target maturity: human playable / playtest release.
+
+
+

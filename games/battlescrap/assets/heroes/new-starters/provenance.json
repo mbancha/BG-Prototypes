@@ -1,0 +1,26 @@
+[
+  {
+    "id": "h11-hester-wellward",
+    "prompt": "Hester Wellward: broad powerful female municipal well warden, cobalt glazed ceramic heavy armor, circular well lid shield, small chained drinking cup, chalk ration tallies. Cobalt and sour lime graphic background.",
+    "method": "built-in image_gen",
+    "path": "assets/heroes/new-starters/h11-hester-wellward.png"
+  },
+  {
+    "id": "h12-perrin-lastdrop",
+    "prompt": "Perrin Lastdrop: wiry male well keeper with ceramic reservoir backpack, measuring ladles, immaculate apron over battered armor, carefully guarded drinking cup. Mulberry and butter yellow graphic background.",
+    "method": "built-in image_gen",
+    "path": "assets/heroes/new-starters/h12-perrin-lastdrop.png"
+  },
+  {
+    "id": "h13-demea-lastbanner",
+    "prompt": "Demea Lastbanner: scarred female last stand army standard bearer, repaired bronze interlocking shield, banner sewn from regiment cloak fragments, thin glowing mineral seams. Bone white and oxidized copper graphic background.",
+    "method": "built-in image_gen",
+    "path": "assets/heroes/new-starters/h13-demea-lastbanner.png"
+  },
+  {
+    "id": "h14-ilex-marchstep",
+    "prompt": "Ilex Marchstep: lean agile male formation scout, narrow interlocking shield, broken cavalry standard back brace, long greaves and three short marching pennants. Vermilion and pale lilac graphic background.",
+    "method": "built-in image_gen",
+    "path": "assets/heroes/new-starters/h14-ilex-marchstep.png"
+  }
+]

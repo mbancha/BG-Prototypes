@@ -1,0 +1,520 @@
+{
+  "date": "2026-10-22",
+  "files": [
+    {
+      "path": "assets/factions/concord.png",
+      "bytes": 1321370,
+      "sha256": "65db35050a51a3cc1c1167472028243abf57c0cc09b730f4f2f33a9cef0266be"
+    },
+    {
+      "path": "assets/factions/wildmoon.png",
+      "bytes": 1751583,
+      "sha256": "95d24de6ed7bc4c615037f2736cc0d9b62cb855d6000e92bbf254810c9cac2c2"
+    },
+    {
+      "path": "assets/hero-refresh-v7-manifest.json",
+      "bytes": 15014,
+      "sha256": "280fc488d697988b263de46645cad9befd4b492d1a6cb62a1110f9a3cff90de6"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h01-kalawi-bloodmane.png",
+      "bytes": 2288514,
+      "sha256": "79e55177af9216de0336e47fefd13e963b31b48429557310af3f442fc6d7b887"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h02-brynja-stonehide.png",
+      "bytes": 2469086,
+      "sha256": "ebb83c0ed6fe7deedcd335ec962612f95f396072854ccd0cc7cf7e318176eff2"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h03-voru-cinderveil.png",
+      "bytes": 1957812,
+      "sha256": "ee8ff27ec15f11617549e2aea98bfa22ac80ef0d0ca5699431f7fdc751c0e5bf"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h04-tavi-sailwhistle.png",
+      "bytes": 2224070,
+      "sha256": "5e55edc8deb84b0eb356690aa19a9c9b1120eeb021084db01b505c887dc28730"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h05-marda-oakweaver.png",
+      "bytes": 1946343,
+      "sha256": "7583a4d43e3d77660c066507c8dd19b632f9c37ab0b583d67a114d8ca2e188eb"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h06-niala-grassveil.png",
+      "bytes": 2194914,
+      "sha256": "b9555cca6647cf51d48cba423816a9eff726044f98f403f24d2939a47dfe8d65"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h07-eirik-hearthkeeper.png",
+      "bytes": 2202160,
+      "sha256": "8a229284f4c414a5f02ce3e2f2f956994d4b9e90b3a7ac3576b6a84e70a6b049"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h08-ketu-ashheart.png",
+      "bytes": 1907303,
+      "sha256": "82b34f61a78566d3d306d60d07cc399e0b75dd18eaabc97db03630fb42e66d42"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h09-ren-timberwright.png",
+      "bytes": 2113497,
+      "sha256": "8f2429f58370e47c9cb1d40c958bfee20494c172cdd02e470584159bf20fb7be"
+    },
+    {
+      "path": "assets/heroes/approved-v9/h10-orro-stormanchor.png",
+      "bytes": 2410512,
+      "sha256": "c3c56fd9cf6c068c6e9513b63d619ae50ed2b3603ca7e1056c7b0a0fa12f1d45"
+    },
+    {
+      "path": "assets/heroes/new-starters/h11-hester-wellward.png",
+      "bytes": 2496374,
+      "sha256": "5af9647d6cd79f6acd25d98ee6c02901b4847a71826fb441cd020938fa3747a6"
+    },
+    {
+      "path": "assets/heroes/new-starters/h12-perrin-lastdrop.png",
+      "bytes": 2229293,
+      "sha256": "a7a409cb0dd2b99ed3ba7ce3e8d7078716231a2d5363b8f8b0e4d8410ce312ca"
+    },
+    {
+      "path": "assets/heroes/new-starters/h13-demea-lastbanner.png",
+      "bytes": 2561792,
+      "sha256": "a8cd9b15bf447c6d2b57de2443d829472014bc5d87cc0a2894fcabae23a8a505"
+    },
+    {
+      "path": "assets/heroes/new-starters/h14-ilex-marchstep.png",
+      "bytes": 2351653,
+      "sha256": "91c92c3ba44dc2525311c8aefb04360ac58612238614706201283ef0aa2f778e"
+    },
+    {
+      "path": "assets/heroes/new-starters/provenance.json",
+      "bytes": 1495,
+      "sha256": "11f7070bf4c49a14045fe39875aa3afe80ac33d32c4fc15eb1de0238e6383011"
+    },
+    {
+      "path": "assets/manifest.json",
+      "bytes": 10721,
+      "sha256": "6f64bd9c9f00da0efdc77880559befdfd6d4505616463416c6a9af2aa4d5c1ef"
+    },
+    {
+      "path": "assets/maps/three-fires-2026-10-21.png",
+      "bytes": 7575808,
+      "sha256": "dbfebd5889f406a746613c05a8c2973c3cd1ae871cb8c62856f6f626c13721e8"
+    },
+    {
+      "path": "assets/maps/three-fires-original.png",
+      "bytes": 7568627,
+      "sha256": "efc0a5cfbb6b878ff2b0a4a744ce056b47d055e7dedc11e3a0ca1e9d21afd281"
+    },
+    {
+      "path": "assets/masters/h01.png",
+      "bytes": 2046314,
+      "sha256": "b0dd3320db1a0a2d98dc2b84b7eb44b052d60ea3fb3dec287a3a36d5a273eb1c"
+    },
+    {
+      "path": "assets/masters/h02.png",
+      "bytes": 2561125,
+      "sha256": "4a27f651b497691ca52445f42bf462d7dfe2950f4903784874bc414832745b0e"
+    },
+    {
+      "path": "assets/masters/h03.png",
+      "bytes": 2129177,
+      "sha256": "ea50b864d8f11422f59e077073f87fda7c6ae103b1737a800c1870d5c86e35e1"
+    },
+    {
+      "path": "assets/masters/h04.png",
+      "bytes": 2397993,
+      "sha256": "a16909a8dffd9f70a31593f021c757420c1fc09eb6a01cc13acf7a70aa35954b"
+    },
+    {
+      "path": "assets/masters/h05.png",
+      "bytes": 2172493,
+      "sha256": "8da95da6c8391f886a833a05d6e7d4ccff295f3ab36c878563d981e0cc95007a"
+    },
+    {
+      "path": "assets/masters/h06.png",
+      "bytes": 2435259,
+      "sha256": "8bc8d6d61fb62debac52a7c38f210b6a51d050eeee1304adb543413eb03887ea"
+    },
+    {
+      "path": "assets/masters/h07.png",
+      "bytes": 2559725,
+      "sha256": "3cc6a636136d73a5c546fc981930858d2eea5cba7197680a104f5d4eb3d07c98"
+    },
+    {
+      "path": "assets/masters/h08.png",
+      "bytes": 2616839,
+      "sha256": "06d529a8e3d7267a99ce513ffb2d8d072052f2726e1a58ffa43a85b7ccf58b1a"
+    },
+    {
+      "path": "assets/masters/h09.png",
+      "bytes": 2564787,
+      "sha256": "7f9e29ac7f73f0f54f06aeef65234f49385a9e85a64c5cbde23792b1cfb675fc"
+    },
+    {
+      "path": "assets/masters/h10.png",
+      "bytes": 2198335,
+      "sha256": "be256b761250f4dfa9adf5a12192d1fc70a3d21f47336e37f3c6a485d87934de"
+    },
+    {
+      "path": "planning/build-spec-current.txt",
+      "bytes": 37915,
+      "sha256": "07404f64c521c071ebf2dfefeb6b2a2ed62f7320d97db62accef2defd7afef08"
+    },
+    {
+      "path": "planning/design-draft-current.txt",
+      "bytes": 38862,
+      "sha256": "eafa6421ade6da282c8e89d2dedfb9e6cdffaaed28e806a970a849a140317253"
+    },
+    {
+      "path": "planning/hero-refresh-v9/manifest.json",
+      "bytes": 8344,
+      "sha256": "b644524ca3771cfda66dccbc4a74cedaf496f79f62ced8f066ee1e661d8a8ac6"
+    },
+    {
+      "path": "planning/hero-refresh-v9/review.html",
+      "bytes": 2295,
+      "sha256": "37c1a585278eeb65447ba88957d076b52bc517d73eda41963eb6a7973f710013"
+    },
+    {
+      "path": "print-and-play/build.py",
+      "bytes": 23614,
+      "sha256": "097749ca5364609c554a95baae914d9ee4301f3a591956554a0f8bad9479ff2e"
+    },
+    {
+      "path": "print-and-play/build_current.py",
+      "bytes": 16031,
+      "sha256": "fec1fe709dfa4a76e84438b037921250e3403514abc7809431f0fa7cfa8a0308"
+    },
+    {
+      "path": "print-and-play/current/00-rules-and-legend.pdf",
+      "bytes": 77816,
+      "sha256": "dad41c7a271ef8385d6efe2e406a79902b0e104e1bd4fc2f0814184b62417992"
+    },
+    {
+      "path": "print-and-play/current/01-tableau-cards.pdf",
+      "bytes": 3271257,
+      "sha256": "012b48be827b898d835e328048b143413fe4b7678db6a6fa4839452260100d69"
+    },
+    {
+      "path": "print-and-play/current/02-folding-standees.pdf",
+      "bytes": 3022615,
+      "sha256": "8cebfe014f63c4c56ef48ce74981d2c39c04be3053e48abc8ff54936676b9377"
+    },
+    {
+      "path": "print-and-play/current/02-portrait-cards.pdf",
+      "bytes": 3703457,
+      "sha256": "977106e56d0c3d4521f5b52a95d4216f60ffc75ee718d38de5694f92b0ebe6ce"
+    },
+    {
+      "path": "print-and-play/current/03-tactics.pdf",
+      "bytes": 38330,
+      "sha256": "d1d2dbc2c0ee523b6d3390ce8696ced231bb235d2e90d1800ad7391a166637b7"
+    },
+    {
+      "path": "print-and-play/current/04-tokens.pdf",
+      "bytes": 35096,
+      "sha256": "cb6cb865fce28f8f5fb6cff5da0e506ed71499aff5d7d816349d43355cd7f8d6"
+    },
+    {
+      "path": "print-and-play/current/05-ownership-holders.pdf",
+      "bytes": 4199063,
+      "sha256": "4ac7b33de5816417221b27aae0efc52c0724b712f0e90818ace7996216f1c63b"
+    },
+    {
+      "path": "print-and-play/current/06-action-queue.pdf",
+      "bytes": 73552,
+      "sha256": "af72d209388984d5a2b3562b038a10fba37e57f637348ada5b30f4812ef41a19"
+    },
+    {
+      "path": "print-and-play/current/07-objectives.pdf",
+      "bytes": 73911,
+      "sha256": "1d9a62a0811e172314fd2798044b875bc29415fc254cf5b62998e1a227c3bcd1"
+    },
+    {
+      "path": "print-and-play/current/08-recruit-reference.pdf",
+      "bytes": 4231266,
+      "sha256": "3f64cebedf3d374edef803e8ba3cac566c5028e1cc12b56fab1060b9ad06b3c8"
+    },
+    {
+      "path": "print-and-play/current/09-equipment.pdf",
+      "bytes": 74084,
+      "sha256": "2a5052ddc69df1fefd3085bcbc4d761cfcf1d5b85737219fa93c69abb7b037b8"
+    },
+    {
+      "path": "print-and-play/current/10-map.pdf",
+      "bytes": 11904799,
+      "sha256": "dbeed65a5b3519e05e161f73528876d5fefc7bc4ad21b3467e90bed868b657ae"
+    },
+    {
+      "path": "print-and-play/current/Battlescrap-print-and-play.pdf",
+      "bytes": 30696215,
+      "sha256": "bcd2dfde44f6123aa4c4c8c4702a654f08a30ece010875ab531b485b87c5050b"
+    },
+    {
+      "path": "print-and-play/current/COMPONENTS.md",
+      "bytes": 2481,
+      "sha256": "a97086ca568e3f5d7155c110d47316f35e955cd6e278a1136b666904dac102e7"
+    },
+    {
+      "path": "print-and-play/current/contact-1.png",
+      "bytes": 444268,
+      "sha256": "76fa2261ef26299a30f90c2c132178a806193a8cf0785d9b11f22ba43e4c5261"
+    },
+    {
+      "path": "print-and-play/current/contact-2.png",
+      "bytes": 66310,
+      "sha256": "45d34d7f6dce67bd03caabe180c9f1320e336cc34243cd86c0bf261be4d53d1c"
+    },
+    {
+      "path": "print-and-play/current/contact-3.png",
+      "bytes": 410236,
+      "sha256": "ea6805bea45851fe4fb7b0ba998ec191a4c7d643cddd94eed55bf7dd0f4c6697"
+    },
+    {
+      "path": "print-and-play/current/contact-4.png",
+      "bytes": 208727,
+      "sha256": "d90de643c4d6661454b122fa8874c37cd402cc93e2aa8d6f367656afcb8f26ca"
+    },
+    {
+      "path": "print-and-play/current/manifest.json",
+      "bytes": 4308,
+      "sha256": "56f61e23a3c16c27bcc10aa1f45f693cc15b7af44691c070274da5269b049237"
+    },
+    {
+      "path": "print-and-play/current/preview-01.png",
+      "bytes": 207007,
+      "sha256": "99698d97815141f4b2ef4d88f06e216f2be6226bdb94d95eeffaca6c2e014443"
+    },
+    {
+      "path": "print-and-play/current/preview-02.png",
+      "bytes": 435588,
+      "sha256": "2d768a5eab311f52e71f12603c99cd771ad23c87eb30c7de0eda4c938d410642"
+    },
+    {
+      "path": "print-and-play/current/preview-03.png",
+      "bytes": 59821,
+      "sha256": "0bcdd1026facc6baccd4be9127814500d4f625e181452162583eb419a17bac95"
+    },
+    {
+      "path": "print-and-play/current/preview-04.png",
+      "bytes": 450969,
+      "sha256": "4f5b420159243b4f7baae7b4ceea83aa060c29f86240923583681530e7abc88c"
+    },
+    {
+      "path": "print-and-play/current/preview-05.png",
+      "bytes": 19418,
+      "sha256": "e4f5e6e7b6c2ac5e50b71c8c22dd2cd85ce46aeb12eb2a827b9c5b7e99a11056"
+    },
+    {
+      "path": "print-and-play/current/preview-06.png",
+      "bytes": 18594,
+      "sha256": "024abd54d02eaf8be0487e0b5e9e0868af4faf5349e6301276295c39f2ad1a39"
+    },
+    {
+      "path": "print-and-play/current/preview-07.png",
+      "bytes": 15938,
+      "sha256": "38272567e25e1f224f22ff9ea65779d5a6f2fa5e017f53888051860769e7192e"
+    },
+    {
+      "path": "print-and-play/current/preview-08.png",
+      "bytes": 19455,
+      "sha256": "4c29bce6d127d0e384114ac4c14ffc55a4b27cfce8ec63cfca7760efc41b57c3"
+    },
+    {
+      "path": "print-and-play/current/preview-09.png",
+      "bytes": 18642,
+      "sha256": "5eb9bc382711211e64dab27958b7a5c2a20ce34b49451f131c644a81b927d24d"
+    },
+    {
+      "path": "print-and-play/current/preview-10.png",
+      "bytes": 7236,
+      "sha256": "d22ccc87a5a8aa59d5d68fbab5cc707737c00e5e68475407e8740877ab3fd280"
+    },
+    {
+      "path": "print-and-play/current/preview-11.png",
+      "bytes": 50305,
+      "sha256": "1e457c0543eb1e4c0c0fbd0f56519a1c8fc60a2b814af3112c5f6b3387f84cf5"
+    },
+    {
+      "path": "print-and-play/current/preview-12.png",
+      "bytes": 39359,
+      "sha256": "b7fe76d52071885a30e86295868f9cd7cfb7aaf3a96f1db61b4f123e6df9e5f7"
+    },
+    {
+      "path": "print-and-play/current/preview-13.png",
+      "bytes": 59715,
+      "sha256": "5e7e2e023a9db12cb815a790876ab7d0ce613ae929ee1b9e96eeab354c86eff5"
+    },
+    {
+      "path": "print-and-play/current/preview-14.png",
+      "bytes": 21833,
+      "sha256": "0e9f14eaf67be482315e291c546a63079d0917e707792220ae78f6f6d0745671"
+    },
+    {
+      "path": "print-and-play/current/preview-15.png",
+      "bytes": 6879,
+      "sha256": "0c37ac29918535b95f1e348375368d7cd8d3d521bd017a5c4ee3a9ceeae7b64e"
+    },
+    {
+      "path": "print-and-play/current/preview-16.png",
+      "bytes": 8479,
+      "sha256": "113e1a02b0fdc908770bc13d123eb1473abd44bcc0d35aeb85d5291206eff8a3"
+    },
+    {
+      "path": "print-and-play/current/preview-17.png",
+      "bytes": 504086,
+      "sha256": "b27fc602c2515591d0ecc8fdc3e768620ca88cee9d2dd42a4374fa7c67c307be"
+    },
+    {
+      "path": "print-and-play/current/preview-18.png",
+      "bytes": 742145,
+      "sha256": "e0a1362bb34cc3e51eaecf22e916f3504338f6ba25ae9539e257005682d926fc"
+    },
+    {
+      "path": "print-and-play/current/preview-19.png",
+      "bytes": 749057,
+      "sha256": "54fab648b738c85b57fe94aa281eece54d0640c9cc8ced9633d710e09617da86"
+    },
+    {
+      "path": "print-and-play/current/verification.json",
+      "bytes": 1899,
+      "sha256": "454af376aac29af316e7403613c31c7d8ecaf257569802f49ea6ca3734a9953c"
+    },
+    {
+      "path": "print-and-play/manifest.json",
+      "bytes": 48035,
+      "sha256": "7b51ad4f8894f35646f61802fce096d62a431d09250f3da7c50d2cf6223d54d6"
+    },
+    {
+      "path": "print-and-play/README.md",
+      "bytes": 727,
+      "sha256": "785eb7fa9664a057e504e851864fda2a384ed6ff7e458fa1f06db18cde8204ba"
+    },
+    {
+      "path": "print-and-play/requirements.txt",
+      "bytes": 87,
+      "sha256": "58f1e25bc411bb673177d5ebed11a4fc6fd0fee29f179e70931fbc1b31f32389"
+    },
+    {
+      "path": "print-and-play/verification.json",
+      "bytes": 10261,
+      "sha256": "8e343e554f8ee9feb3a3b6b457bc7bdf6a268262fd0393907b930ba8a20d88d2"
+    },
+    {
+      "path": "print-and-play/verify.py",
+      "bytes": 3268,
+      "sha256": "0bfc61e4b8b9f8c9a352ecd359ec7ac903e178b1fcedec132f428aee7e53063a"
+    },
+    {
+      "path": "print-and-play/verify_current.py",
+      "bytes": 4949,
+      "sha256": "4f47bb9d42c2e245282836f39faa70443ee83ac0c4aac7b7599136a77e1c18d8"
+    },
+    {
+      "path": "public/heroes-v7/h01-kalawi-bloodmane.png",
+      "bytes": 2524968,
+      "sha256": "c1f38efe1ae0f9de8377d775dc54c793cb95d2eda7baa46ab9038145901f8453"
+    },
+    {
+      "path": "public/heroes-v7/h02-brynja-stonehide.png",
+      "bytes": 2574645,
+      "sha256": "869afae7addd364db126ab60dec5fc4c0ee2f358bc02d6e1a5b6c12b94a74d83"
+    },
+    {
+      "path": "public/heroes-v7/h03-voru-cinderveil.png",
+      "bytes": 2024223,
+      "sha256": "998e9e8a81e9fe139aec126d298dcedd78c891d5d43d3a81b37cc45daa182adc"
+    },
+    {
+      "path": "public/heroes-v7/h04-tavi-sailwhistle.png",
+      "bytes": 2171624,
+      "sha256": "cfa325b6b6b0d4adbedda6b32c83e3b84c772dae5464de1e46d7ec16fc88263d"
+    },
+    {
+      "path": "public/heroes-v7/h05-marda-oakweaver.png",
+      "bytes": 1828393,
+      "sha256": "7323cc5f3ca44d76495e70d1d1d11f8039ac3aec1fb458ae900ba8f0ff7383d1"
+    },
+    {
+      "path": "public/heroes-v7/h06-niala-grassveil.png",
+      "bytes": 2044389,
+      "sha256": "c5d43a90ef2555510e9702d7ec0bd62b4347d8f8eb00ae3aa172a523eff7890d"
+    },
+    {
+      "path": "public/heroes-v7/h07-eirik-hearthkeeper.png",
+      "bytes": 2302476,
+      "sha256": "2195a48a846a82226cb1750adb8f7d0c0c64119ea0be94ffacb1272d2a0f23f8"
+    },
+    {
+      "path": "public/heroes-v7/h08-ketu-ashheart.png",
+      "bytes": 1984246,
+      "sha256": "bb4c64426a805849e2b930ca5370a22db285bb265b0cff99a13e60a6a89ef7d8"
+    },
+    {
+      "path": "public/heroes-v7/h09-ren-timberwright.png",
+      "bytes": 2146850,
+      "sha256": "8450362e7f376dd534b8e8056b869b4242a9ca10c91f91babef17ff5b158a40e"
+    },
+    {
+      "path": "public/heroes-v7/h10-orro-stormanchor.png",
+      "bytes": 2303941,
+      "sha256": "db825d23e9f52ba113d0eabbcb9c4e4e3d50cad8e40a4fd0b930403aa2fdf4b5"
+    },
+    {
+      "path": "public/portraits/h01.png",
+      "bytes": 221613,
+      "sha256": "daae132b028186dea472fd4ff5564efc41e11c426b4f75a792dc736601ad678c"
+    },
+    {
+      "path": "public/portraits/h02.png",
+      "bytes": 270959,
+      "sha256": "b6c719fe888a075777faed5b652c94320c3c56eee5f6be08ce08eb248c4fcb97"
+    },
+    {
+      "path": "public/portraits/h03.png",
+      "bytes": 222565,
+      "sha256": "83ef3c545613de6db0b4a5b5a0f100193084aad1715312b25384ba7c466699db"
+    },
+    {
+      "path": "public/portraits/h04.png",
+      "bytes": 257205,
+      "sha256": "3bc05d17ae867b2842c71af07d27a580bdfbc582d712279a04147a6325397df3"
+    },
+    {
+      "path": "public/portraits/h05.png",
+      "bytes": 213933,
+      "sha256": "0dc46185bb67d4e14b8e520d349548e0566a9ffc6fcb69af7197e96ab4b00ac1"
+    },
+    {
+      "path": "public/portraits/h06.png",
+      "bytes": 235116,
+      "sha256": "7887729dd6a7c6efda3b2e4002a83cec9cfc3e9feb9725ff0e8db43cf9a20ba1"
+    },
+    {
+      "path": "public/portraits/h07.png",
+      "bytes": 260484,
+      "sha256": "d984c34fea5ea9f49992f7fbcc8e9ca0764a3d319b5aa4d235ad98ffb29fdfd0"
+    },
+    {
+      "path": "public/portraits/h08.png",
+      "bytes": 277441,
+      "sha256": "e21f4e7f1e6ab315075f985fcae588335b14b59b871d36c89c21e695457a500a"
+    },
+    {
+      "path": "public/portraits/h09.png",
+      "bytes": 270988,
+      "sha256": "3b9358553bf175eeb878444b934a07c52513402628c1260fc07c7d3e911b4d41"
+    },
+    {
+      "path": "public/portraits/h10.png",
+      "bytes": 226651,
+      "sha256": "2f69396d7a34a7c28b5af44f679bc50335a9ab09f0d0328e2e935b9c1070ed58"
+    },
+    {
+      "path": "public/scenario-1.png",
+      "bytes": 8670391,
+      "sha256": "ff6f13be946db314976adb13c7a300be3eb5c891d257fab19c5617a814402a47"
+    }
+  ]
+}
