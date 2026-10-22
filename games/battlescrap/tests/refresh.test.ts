@@ -1,0 +1,13 @@
+import {it,expect} from 'vitest';
+import {newGame,dispatch,actions,unit,pools,owner,qualified,clone,reachable,playerView,bot} from '../src/engine';
+import {cards,heroes,H,tacticCopies,board,distance} from '../src/content';
+const go=(s:any,a:any)=>expect(dispatch(s,a),JSON.stringify(a)).toBe(null);
+function fight(hero='h01',enemy='h06') {const s=newGame(91);s.phase='battle';s.side=0;s.active='0-'+hero;s.activation=1;s.ap=6;s.queue=['0-'+hero,'1-'+enemy,'0-group','1-group','0-h05','1-h07','0-h04','1-h10'];s.activationQueue=[...s.queue].reverse();s.units=[{id:s.active,hero,owner:0,hex:'7,4',wounds:0,boost:0,daze:0,stunned:0,suit:'Fire'},{id:'1-'+enemy,hero:enemy,owner:1,hex:'7,5',wounds:0,boost:0,daze:0,stunned:0,suit:'Water'},{id:'0-r0',hero:null,index:0,owner:0,hex:'6,4',wounds:0,boost:0,daze:0,stunned:0},{id:'1-r0',hero:null,index:0,owner:1,hex:'9,4',wounds:0,boost:0,daze:0,stunned:0}];return s;}
+function roll(s:any,hit:boolean){while(s.combat.stage==='response')go(s,{type:'pass'});go(s,{type:'attackMode',heavy:false});s.combat.attackDice=[hit?5:1];s.combat.defenseDice=[hit?1:5];go(s,{type:'resolve'});}
+const objective=(id:number)=>({id,eligible:1,kills:[],visits:{}});
+
+it('all starter triples fit exactly the smaller budget',()=>{for(const group of [heroes.slice(0,5),heroes.slice(5)]){let n=0;for(let a=0;a<3;a++)for(let b=a+1;b<4;b++)for(let c=b+1;c<5;c++){expect(group[a].cost+group[b].cost+group[c].cost).toBeLessThanOrEqual(40);n++;}expect(n).toBe(10);}expect(newGame().players[0].pp).toBe(40);});
+it('Marda and Eirik have distinct healing reach and Boosted amounts',()=>{for(const [hero,boost] of [['h05',1],['h07',2]] as const){const s=fight(hero);s.players[0].hand=[hero+'a:0'];go(s,{type:'card',card:hero+'a:0'});go(s,{type:'target',unit:'0-r0'});expect(unit(s,'0-r0').boost).toBe(boost);expect(unit(s,'0-r0').wounds).toBe(0);}});
+it('Stoke creates two tokens and costs no AP',()=>{const s=fight('h08');s.players[0].hand=['h08a:0'];go(s,{type:'card',card:'h08a:0'});expect(unit(s,s.active).daze).toBe(2);expect(s.ap).toBe(6);expect(s.players[0].discard).toContain('h08a:0');});
+it('Pride swap offers optional movement and resumes after JSON reload',()=>{let s=fight();s.players[0].hand=['h01b:0'];go(s,{type:'card',card:'h01b:0'});go(s,{type:'target',unit:'0-r0'});expect(s.pending.range).toBe(1);s=JSON.parse(JSON.stringify(s));go(s,{type:'skip'});expect(s.pending).toBe(null);});
+it('Orro cannot purchase a redundant shield',()=>{const s=newGame();go(s,{type:'bid',zone:'stone',amount:0});go(s,{type:'bid',zone:'blue',amount:0});s.side=1;go(s,{type:'hero',hero:'h10'});expect(actions(s)).not.toContainEqual({type:'equip',hero:'h10',item:'shield'});});

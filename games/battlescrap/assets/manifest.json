@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "date": "2026-10-19",
+  "tool": "image_gen built-in",
+  "status": "provisional",
+  "map": {
+    "file": "public/scenario-1.png",
+    "origin": "user-supplied",
+    "modified": false
+  },
+  "portraits": [
+    {
+      "heroId": "h01",
+      "portraitId": "h01-v1",
+      "filename": "public/portraits/h01.png",
+      "master": "assets/masters/h01.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Brakka Bellward, broad dwarven bellkeeper, bronze bell-shaped shield, square beard. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h01.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1237,
+        1271
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2046314,
+      "displayDimensions": [
+        374,
+        384
+      ],
+      "displayBytes": 221613
+    },
+    {
+      "heroId": "h02",
+      "portraitId": "h02-v1",
+      "filename": "public/portraits/h02.png",
+      "master": "assets/masters/h02.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Hobb Kilnhand, massive awakened ceramic kiln tender, cracked terracotta body, hammer. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h02.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2561125,
+      "displayDimensions": [
+        384,
+        384
+      ],
+      "displayBytes": 270959
+    },
+    {
+      "heroId": "h03",
+      "portraitId": "h03-v1",
+      "filename": "public/portraits/h03.png",
+      "master": "assets/masters/h03.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Tavi Windrunner, young human courier, windblown hair, road ribbons. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h03.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1215,
+        1295
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2129177,
+      "displayDimensions": [
+        360,
+        384
+      ],
+      "displayBytes": 222565
+    },
+    {
+      "heroId": "h04",
+      "portraitId": "h04-v1",
+      "filename": "public/portraits/h04.png",
+      "master": "assets/masters/h04.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Orro Tidepull, harbor stoneworker, weathered face, glass fishing float with a tiny tide. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h04.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2397993,
+      "displayDimensions": [
+        384,
+        384
+      ],
+      "displayBytes": 257205
+    },
+    {
+      "heroId": "h05",
+      "portraitId": "h05-v1",
+      "filename": "public/portraits/h05.png",
+      "master": "assets/masters/h05.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Marda Graftpot, orchard healer, round kindly face, kettle of living sap. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h05.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1334,
+        1179
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2172493,
+      "displayDimensions": [
+        384,
+        339
+      ],
+      "displayBytes": 213933
+    },
+    {
+      "heroId": "h06",
+      "portraitId": "h06-v1",
+      "filename": "public/portraits/h06.png",
+      "master": "assets/masters/h06.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Burl Rootback, old walking orchard tree, craggy wooden face, stone heart. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h06.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1312,
+        1199
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2435259,
+      "displayDimensions": [
+        384,
+        351
+      ],
+      "displayBytes": 235116
+    },
+    {
+      "heroId": "h07",
+      "portraitId": "h07-v1",
+      "filename": "public/portraits/h07.png",
+      "master": "assets/masters/h07.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Vexa Glassclaw, long-limbed salt flat hunter, sharp face, translucent claws. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h07.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1261,
+        1247
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2559725,
+      "displayDimensions": [
+        384,
+        380
+      ],
+      "displayBytes": 260484
+    },
+    {
+      "heroId": "h08",
+      "portraitId": "h08-v1",
+      "filename": "public/portraits/h08.png",
+      "master": "assets/masters/h08.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Nell Reedmark, marsh hunt leader, reed spear, alert face. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h08.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2616839,
+      "displayDimensions": [
+        384,
+        384
+      ],
+      "displayBytes": 277441
+    },
+    {
+      "heroId": "h09",
+      "portraitId": "h09-v1",
+      "filename": "public/portraits/h09.png",
+      "master": "assets/masters/h09.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Frill the Bellshout, tiny lizard, extravagant broad neck fan, resonant brass bells. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h09.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1239,
+        1270
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2564787,
+      "displayDimensions": [
+        375,
+        384
+      ],
+      "displayBytes": 270988
+    },
+    {
+      "heroId": "h10",
+      "portraitId": "h10-v1",
+      "filename": "public/portraits/h10.png",
+      "master": "assets/masters/h10.png",
+      "origin": "generated",
+      "status": "provisional",
+      "prompt": "Original simple fantasy skirmish hero portrait. Edda Sporebell, rootfolk herbalist, bell-shaped luminous fungi, expressive wooden face. Cohesive colorful lightly comic junkyard fantasy illustration, improvised medieval crafts, bold readable shapes, clear expressive face and distinct silhouette at 48 px. Head and shoulders, front three-quarter, centered safe margins. No text, numbers, frame, faction markings or background. Transparent background. Save this asset for hero h10.",
+      "transparent": true,
+      "version": 1,
+      "dimensions": [
+        1329,
+        1183
+      ],
+      "focalPoint": [
+        0.5,
+        0.45
+      ],
+      "safeArea": "centered bust",
+      "masterBytes": 2198335,
+      "displayDimensions": [
+        384,
+        342
+      ],
+      "displayBytes": 226651
+    }
+  ]
+}

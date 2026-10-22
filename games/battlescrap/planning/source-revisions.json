@@ -1,0 +1,17 @@
+{
+  "verified_at": "2026-10-22",
+  "design": {
+    "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
+    "revisionId": "AHj4eMRXIIsfaaS-1854ugPQckquI7QeSbRc3aWa3MsoiIzbN-MjUkT_EzN2Atew4se-YyCDDDgoyzFGz8X4kuP04w1vfKjCW5mki_WV",
+    "title": "Battlescrap — Design Draft",
+    "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
+  },
+  "build": {
+    "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
+    "revisionId": "AHj4eMRjcUYUDB-leJETeH4Kz89zDz3xlqO6A6Q61mv31LP_BTn1DcVev_OFilCCYygdD4VIlDrQY8aLwGmlETd0hSpItOZkS4kA3n65",
+    "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
+    "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
+  },
+  "rules_version": "starter-test-v11",
+  "digital_version": "turn-rules-v8"
+}

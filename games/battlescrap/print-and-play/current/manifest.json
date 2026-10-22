@@ -1,0 +1,182 @@
+{
+  "heroes": [
+    {
+      "id": "h01",
+      "name": "Kalawi Bloodmane",
+      "region": "Windlands",
+      "role": "STRIKER / Scout",
+      "hp": 3,
+      "move": 5,
+      "attack": 5,
+      "range": 1,
+      "defense": 2,
+      "cost": 5,
+      "text": "Lightning + 1 AP: move up to 2, then make a melee attack. If another ally is adjacent to the target, add +2 Attack dice."
+    },
+    {
+      "id": "h11",
+      "name": "Hester Wellward",
+      "region": "Wellington",
+      "role": "GUARD / Support",
+      "hp": 5,
+      "move": 3,
+      "attack": 3,
+      "range": 1,
+      "defense": 6,
+      "cost": 6,
+      "text": "Water: gain 2 Fortified."
+    },
+    {
+      "id": "h03",
+      "name": "Voru Cinderveil",
+      "region": "Cinder\u2019s Rim",
+      "role": "CONTROLLER / Striker",
+      "hp": 2,
+      "move": 4,
+      "attack": 4,
+      "range": 3,
+      "defense": 2,
+      "cost": 4,
+      "text": "Fire: gain 1 Enraged, then Pull an enemy within 3 up to 1."
+    },
+    {
+      "id": "h04",
+      "name": "Tavi Sailwhistle",
+      "region": "Port Windlass",
+      "role": "SCOUT / Support",
+      "hp": 2,
+      "move": 6,
+      "attack": 2,
+      "range": 2,
+      "defense": 2,
+      "cost": 3,
+      "text": "Lightning + 1 AP: attack an enemy exactly 2 spaces away, then move up to 2."
+    },
+    {
+      "id": "h13",
+      "name": "Demea Lastbanner",
+      "region": "Phalexia",
+      "role": "SUPPORT / Guard",
+      "hp": 4,
+      "move": 3,
+      "attack": 2,
+      "range": 1,
+      "defense": 2,
+      "cost": 4,
+      "text": "Water: Pull any two other allies up to 2 spaces each toward Demea."
+    },
+    {
+      "id": "h06",
+      "name": "Niala Grassveil",
+      "region": "Windlands",
+      "role": "CONTROLLER / Support",
+      "hp": 3,
+      "move": 5,
+      "attack": 2,
+      "range": 2,
+      "defense": 2,
+      "cost": 3,
+      "text": "Lightning: move another ally within 3 up to 2, then give one enemy adjacent to that ally 1 Dazed."
+    },
+    {
+      "id": "h12",
+      "name": "Perrin Lastdrop",
+      "region": "Wellington",
+      "role": "SUPPORT / Guard",
+      "hp": 4,
+      "move": 3,
+      "attack": 2,
+      "range": 1,
+      "defense": 3,
+      "cost": 4,
+      "text": "Fire: gain 2 Enraged. While Perrin has Enraged, other adjacent allies gain +1 Attack die."
+    },
+    {
+      "id": "h08",
+      "name": "Ketu Ashheart",
+      "region": "Cinder\u2019s Rim",
+      "role": "STRIKER / Controller",
+      "hp": 3,
+      "move": 4,
+      "attack": 6,
+      "range": 2,
+      "defense": 1,
+      "cost": 7,
+      "text": "Fire: gain 2 Enraged and 1 Dazed."
+    },
+    {
+      "id": "h14",
+      "name": "Ilex Marchstep",
+      "region": "Phalexia",
+      "role": "SCOUT / Guard",
+      "hp": 3,
+      "move": 5,
+      "attack": 3,
+      "range": 1,
+      "defense": 2,
+      "cost": 4,
+      "text": "Lightning: move an adjacent ally up to 3, then move Ilex up to 3."
+    },
+    {
+      "id": "h10",
+      "name": "Orro Stormanchor",
+      "region": "Port Windlass",
+      "role": "GUARD / Controller",
+      "hp": 4,
+      "move": 3,
+      "attack": 2,
+      "range": 2,
+      "defense": 7,
+      "cost": 6,
+      "text": "Water: Push up to two adjacent enemies 1 space each."
+    }
+  ],
+  "files": [
+    "00-rules-and-legend.pdf",
+    "01-tableau-cards.pdf",
+    "02-portrait-cards.pdf",
+    "03-tactics.pdf",
+    "07-objectives.pdf",
+    "08-recruit-reference.pdf",
+    "09-equipment.pdf",
+    "04-tokens.pdf",
+    "05-ownership-holders.pdf",
+    "06-action-queue.pdf",
+    "02-folding-standees.pdf",
+    "10-map.pdf"
+  ],
+  "objective_deck": "nine distinct objectives; all reward 1 VP + 1 tactic; no refill",
+  "queue_ap_rap": [
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      3
+    ]
+  ],
+  "range_notation": "Attack dice (range)",
+  "heart_stroke_pt": 3,
+  "standee_folded_inches": [
+    1.25,
+    2.5
+  ],
+  "balance": "TEST stats and prices; four Cinder/Windlass choices confirmed; new heroes selected; Windlands recommended defaults retained"
+}

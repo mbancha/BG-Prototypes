@@ -1,0 +1,62 @@
+{
+  "id": "battlescrap",
+  "title": "Battlescrap — Three Fires",
+  "scope": "turn-rules-v8: alternating shuffled queue, individual recruit actions, corrected objective/pickup/death rewards",
+  "maturity": "human playable",
+  "target": "playtest release",
+  "sourceStatus": "supplied",
+  "sourceAudit": "SOURCE_AUDIT.md",
+  "counts": [
+    {
+      "family": "heroes",
+      "expected": 10,
+      "supplied": 10,
+      "implemented": 10
+    },
+    {
+      "family": "linked cards",
+      "expected": 20,
+      "supplied": 20,
+      "implemented": 20
+    },
+    {
+      "family": "tactic suit variants (six effects)",
+      "expected": 10,
+      "supplied": 10,
+      "implemented": 10
+    },
+    {
+      "family": "objectives",
+      "expected": 10,
+      "supplied": 10,
+      "implemented": 10
+    },
+    {
+      "family": "equipment",
+      "expected": 4,
+      "supplied": 4,
+      "implemented": 4
+    },
+    {
+      "family": "maps",
+      "expected": 1,
+      "supplied": 1,
+      "implemented": 1
+    }
+  ],
+  "gaps": [
+    "Clipped edge-hex boundary interpretation requires designer acceptance"
+  ],
+  "releaseGaps": [
+    "New regional hero portraits (temporary initials displayed)",
+    "Independent unfamiliar-player playthrough",
+    "Map boundary acceptance",
+    "Broader bot-policy tuning"
+  ],
+  "evidence": {
+    "journey": "artifacts/browser-report.json",
+    "rules": "tests/engine.test.ts",
+    "assets": "assets/manifest.json",
+    "inspection": "VERIFICATION.md"
+  }
+}

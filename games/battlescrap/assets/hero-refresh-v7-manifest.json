@@ -1,0 +1,242 @@
+[
+  {
+    "heroId": "h01",
+    "portraitId": "h01-v7",
+    "filename": "art/h01-kalawi-bloodmane.png",
+    "cards": [
+      "h01a",
+      "h01b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Kalawi Bloodmane, Windlands lion-shifter striker. Athletic dark-skinned male hunter with partly leonine face, crimson mane opening from a brown green and red grass-woven mantle, clawed hands, stalking forward through two tufts of tall grass. Proud agile silhouette. Fictional Bantu-inspired woven dress.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h02",
+    "portraitId": "h02-v7",
+    "filename": "art/h02-brynja-stonehide.png",
+    "cards": [
+      "h02a",
+      "h02b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Brynja Stonehide, Highholm frost-giant female shieldbearer, broad imposing sturdy silhouette, blue-grey stone-hard skin, heavy cream furs and brown leather, enormous simple stone shield, braided pale hair, kind resolute expression, two frozen mountain shapes behind. Fictional Norse-inspired mountain clothing.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h03",
+    "portraitId": "h03-v7",
+    "filename": "art/h03-voru-cinderveil.png",
+    "cards": [
+      "h03a",
+      "h03b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Voru Cinderveil, Cinder's Rim masked male volcanic fire-priest, slim upright silhouette, tall carved wooden geometric mask, charcoal robes with ember-orange trim, one hand tracing a small glowing magma fissure, simple staff. Fictional carved island-inspired forms, abstract mask not a real religious artifact.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h04",
+    "portraitId": "h04-v7",
+    "filename": "art/h04-tavi-sailwhistle.png",
+    "cards": [
+      "h04a",
+      "h04b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Tavi Sailwhistle, Port Windlass fast male river-raiding outrider, lean brown-skinned smiling sailor, short swept dark hair, cream sailcloth shoulder cape and teal sash, rope belt, small wooden whistle held near mouth calling a spiral of wind, short boarding blade lowered. Age-of-sail and fictional Polynesian-inspired maritime clothes.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h05",
+    "portraitId": "h05-v7",
+    "filename": "art/h05-marda-oakweaver.png",
+    "cards": [
+      "h05a",
+      "h05b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Marda Oakweaver, Timberwood broad-shouldered muscular female woodland elf healer and axe-worker, pointed ears, green tied-back hair, green and honey-brown hardwood lamellar work armor in medieval Japanese-inspired shapes, small axe at belt, hands joining a fresh green sapwood sprig, warm capable expression. Tiny leafy branch backdrop.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h06",
+    "portraitId": "h06-v7",
+    "filename": "art/h06-niala-grassveil.png",
+    "cards": [
+      "h06a",
+      "h06b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Niala Grassveil, Windlands female tall-grass ritualist, dark skin, tall slender upright silhouette, brown green red woven grass cloak, hair tied high, curved ritual staff, calm mischievous smile, small translucent green lion-roar wisp beside her hand and two grass tufts. Fictional Bantu-inspired woven clothing. No weapon fighter pose.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h07",
+    "portraitId": "h07-v7",
+    "filename": "art/h07-eirik-hearthkeeper.png",
+    "cards": [
+      "h07a",
+      "h07b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Eirik Hearthkeeper, Highholm male frost-giant hearth keeper, large barrel-chested friendly figure, blue-grey skin, thick auburn beard, fur mantle and sturdy brown leather longhouse apron, carrying a small glowing iron hearth brazier on a staff, other hand open in welcome, warm orange glow against tiny ice mountain motif. Fictional Norse-inspired clothing.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h08",
+    "portraitId": "h08-v7",
+    "filename": "art/h08-ketu-ashheart.png",
+    "cards": [
+      "h08a",
+      "h08b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Ketu Ashheart, Cinder's Rim male fire devotee, wiry dynamic silhouette, dark volcanic skin, glowing ember heart visible as magical orange light across chest, minimal charcoal cloth and red sash, small carved half-mask, burning hands casting a thin orange lance. Distinct from robed fire priest: lightly armored, exposed arms, reckless grin. Tiny black lava shapes.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h09",
+    "portraitId": "h09-v7",
+    "filename": "art/h09-ren-timberwright.png",
+    "cards": [
+      "h09a",
+      "h09b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Ren Timberwright, Timberwood male muscular beardless woodland elf axe captain and master joiner, short dark hair pointed ears square clean-shaven jaw, strong green and dark-brown hardwood lamellar armor inspired by medieval Japanese forms, one short throwing axe and carpentry mallet at belt, holding large timber beam upright, confident practical expression, tiny wood shavings.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  },
+  {
+    "heroId": "h10",
+    "portraitId": "h10-v7",
+    "filename": "art/h10-orro-stormanchor.png",
+    "cards": [
+      "h10a",
+      "h10b"
+    ],
+    "status": "provisional",
+    "version": "hero-refresh-v7",
+    "provenance": "Original generated illustration; built-in image_gen; 2026-10-20",
+    "prompt": "Orro Stormanchor, Port Windlass broad heavyset brown-skinned male storm-battered river captain, dark curly hair and short beard, weathered cream sailcloth coat with teal lining and rope harness, enormous iron anchor grounded beside him, wind curling around anchor, solid planted stance and stubborn smile. Fictional Polynesian maritime and age-of-sail influences.",
+    "sharedPrompt": "Use case: stylized-concept. Make one simple charming fantasy board-game character illustration, full body head to boots, centered, bold readable silhouette, chunky ink outlines, flat muted colors, just two levels of shading, lightly comic expressive face, minimal warm ivory background with a tiny regional motif. Portrait composition with generous margins, no text, no border, no letters, no UI, no faction badge, no suit symbol. Designed for reuse on character and ability cards and small tokens. Fictional regional clothing, no modern objects. ",
+    "background": "opaque warm ivory",
+    "crop": "Full master for cards; inspect head crop for 48–64px tokens before implementation",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "focalPointNormalized": [
+      0.5,
+      0.17
+    ]
+  }
+]
