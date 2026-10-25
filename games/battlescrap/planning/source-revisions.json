@@ -1,17 +1,23 @@
 {
-  "verified_at": "2026-10-22",
+  "verified_at": "2026-10-25",
   "design": {
     "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
-    "revisionId": "AHj4eMRXIIsfaaS-1854ugPQckquI7QeSbRc3aWa3MsoiIzbN-MjUkT_EzN2Atew4se-YyCDDDgoyzFGz8X4kuP04w1vfKjCW5mki_WV",
+    "revisionId": "AHj4eMTn6QGQLDPof7YldjekmTV8nqqXLLYY1LWIOHJmoKThbpdgAw_Xk7qWIfrW0YNTdLkp3_J9fF9Lnt9gecx30HCnQwG5TAgo4FhI",
     "title": "Battlescrap — Design Draft",
     "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
   },
   "build": {
     "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
-    "revisionId": "AHj4eMRjcUYUDB-leJETeH4Kz89zDz3xlqO6A6Q61mv31LP_BTn1DcVev_OFilCCYygdD4VIlDrQY8aLwGmlETd0hSpItOZkS4kA3n65",
+    "revisionId": "AHj4eMS9p6oGURgw8_L8sVMBRYcUX4WeYavTwrsehMvsekd6K72E0klDqzQ-RNRJsTCmNr2S5ekNZJScw6jTJbyqKAdHVzoPqZUcg4Az",
     "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
     "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
   },
-  "rules_version": "starter-test-v11",
-  "digital_version": "turn-rules-v8"
+  "rules_version": "digital-update-v12",
+  "digital_version": "turn-rules-v8",
+  "heroes": {
+    "spreadsheetId": "1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg",
+    "url": "https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit",
+    "authority": "Live hero data and wording. Re-read by stable IDs and header names before implementation and before delivery; designer is editing this file."
+  },
+  "scope": "Documentation and implementation plan only. PnP and digital code unchanged. See Build Specification section 15 for phases, acceptance and unresolved rulings."
 }

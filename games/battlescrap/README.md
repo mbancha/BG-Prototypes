@@ -1,4 +1,4 @@
-> Portability audit, 22 October 2026: this file describes the older turn-rules-v8 digital implementation. Current design authority is starter-test-v11 in the live Drive documents. Read [START-HERE.md](START-HERE.md) before development. No digital rules update is authorized in this handoff.
+> Design update, 25 October 2026: this README describes the older turn-rules-v8 application. Current general rules and Sol’s v12 implementation plan are in the live core documents linked in [START-HERE.md](START-HERE.md). [Battlescrap](https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit) is the source of truth for hero data and wording. Read it before coding and recheck before delivery. This commit updates documentation only; PnP remains frozen.
 
 # Battlescrap — Three Fires
 

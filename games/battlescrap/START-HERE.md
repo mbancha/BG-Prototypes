@@ -1,16 +1,17 @@
 # Battlescrap — resume on another computer
 
-Verified 22 October 2026. This folder contains the standalone digital prototype, current design readbacks, approved art, and current print kit. No chat history or files from the original computer are required. Current design is **starter-test-v11**; application code remains **turn-rules-v8**. Continue design changes before updating the digital game.
+Verified 22 October 2026. This folder contains the standalone digital prototype, current design readbacks, approved art, and current print kit. No chat history or files from the original computer are required. Current design is **digital-update-v12** (25 October 2026); application code remains **turn-rules-v8**. The live Build Specification, section 15, contains Sol’s next digital update plan and acceptance criteria. PnP is frozen at the existing revision.
 
 ## Sources of truth
 
-- [Design Draft](https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM): all current rules, selected abilities, world/region direction, TEST balance, and open design decisions.
+- [Battlescrap hero spreadsheet](https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit): source of truth for hero identities, stats, costs, abilities, availability, regional abilities and hero-specific wording. Read all tabs immediately before coding and recheck before delivery. Use stable hero IDs and header names; the designer may rearrange columns and edit wording. Do not overwrite it from old manifests or code.
+- [Design Draft](https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM): current general rules, refined world/region theme, TEST balance and open decisions. Hero data belongs to the spreadsheet.
 - [Digital Prototype Build Specification](https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU): digital implementation instructions and required regressions. Read the entire live document before the next update.
 - [Game Drive folder](https://drive.google.com/drive/folders/1bG1iWyarj6E-Z0bPOh4x-9TX1_PcYJUF): keep all Google files here and visual uploads in its assets folder. The document simply titled Battlescrap contains original designer material; the consolidated Design Draft and Build Specification govern current implementation.
-- planning/design-draft-current.txt and planning/build-spec-current.txt are connector readbacks saved on 22 October, for offline reference. They can become stale; refresh from live documents after further design changes.
+- planning/design-draft-current.txt and planning/build-spec-current.txt are connector readbacks refreshed on 25 October, for offline reference. They can become stale; refresh from live documents after further design changes.
 - sources/, ARCHITECTURE.md, DECISIONS.md, SOURCE_AUDIT.md and VERIFICATION.md describe the older implemented game. They preserve its behavior and evidence, and do not override live design.
 
-Keep design notes in the one Design Draft, digital instructions in the one Build Specification, and any future authoritative data reference in one game Google Sheet. No new authoritative data Sheet was created for this backup. Local data and manifests are implementation/build records.
+Keep general design in the Design Draft, digital planning in the Build Specification and hero data in the linked Battlescrap spreadsheet. Local data/manifests are implementation snapshots. The source-revisions file identifies the latest document readbacks; live sources take precedence.
 
 ## Laptop setup
 
@@ -31,9 +32,11 @@ Existing match saves live in browser storage and are not in Git. Export any matc
 
 ## Current direction and next digital update
 
-Read both live documents afresh after the remaining design changes. At this snapshot: 15 PP, exactly three heroes plus three free recruits per side; six hero queue portraits with separate persistent tableau cards; AP and recruit-only RAP; selected single unique starter abilities; four statuses; generic elemental tactics; no element-assignment holders or linked ability cards. Seven regions exist; Highholm and Timberwood are later recruits. TEST values and campaign progression still require design/playtesting. The full documents define timing and exceptions.
+Read both live documents and the hero spreadsheet. Section 15 of the Build Specification plans the complete v8 → v12 migration, not just the latest delta. It covers six hero queue slots with AP/RAP 1/1, 2/1, 3/1, 3/2, 4/3, 5/2; 15-PP preparation; updated recruits; Focus; per-winning-six rewards; owner-turn Poison and heal-plus-cleanse; 15-VP asymmetric fire scoring; six new objectives; seven tactic effects; keywords; and the revised digital presentation/reference.
 
-The authoring work covers documents, art, and the current PnP; Sol retains digital implementation. Uploading the older prototype does not implement or validate the current design. Before coding, compare the installed v8 engine with the live Build Specification, update source audit/decisions, preserve stable IDs, and run its required regressions. Do not use the historical v9 options/handoff as a current selection list.
+The designer supplies final hero ability wording in the spreadsheet. Read its current costs, effects and Notes together; ask about internal conflicts instead of restoring older values. General-rules TEST interpretations and OPEN decisions are labeled in the live docs. Resolve affected open decisions before implementing them.
+
+This documentation pass does not implement or validate the new rules. Sol owns the code update and required tests, browser checks, deterministic replay and simulation evidence. Preserve stable IDs and private information. PnP sources, print assets, generated output, print manifests and print scripts are unchanged and out of scope. No public deployment is requested.
 
 ## Assets and print sources
 
@@ -46,4 +49,4 @@ The authoring work covers documents, art, and the current PnP; Sol retains digit
 - print-and-play/current/Battlescrap-print-and-play.pdf: current 19-page print kit. COMPONENTS.md and manifest.json describe assembly and contents. Print Actual size, US Letter, single-sided.
 - print-and-play/build_current.py and verify_current.py: regenerate/check the current kit. See its README and requirements.txt. Windows Arial is a documented font dependency; opening/printing existing PDFs does not require Python.
 
-PORTABILITY-MANIFEST.json records file sizes and SHA-256 hashes for packaged assets, current design snapshots and print files. Keep artwork cohesive, icons distinct in shape/color, and player components concise. Keep future visual masters under the game-root assets folder; avoid creating competing design/handoff documents.
+PORTABILITY-MANIFEST.json is the original 22 October package snapshot; its design-readback hashes predate the 25 October documentation update. Do not regenerate PnP to make that historical snapshot match. It records file sizes and SHA-256 hashes for packaged assets, current design snapshots and print files. Keep artwork cohesive, icons distinct in shape/color, and player components concise. Keep future visual masters under the game-root assets folder; avoid creating competing design/handoff documents.
