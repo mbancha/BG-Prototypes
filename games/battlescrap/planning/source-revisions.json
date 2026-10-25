@@ -2,13 +2,13 @@
   "verified_at": "2026-10-25",
   "design": {
     "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
-    "revisionId": "AHj4eMTn6QGQLDPof7YldjekmTV8nqqXLLYY1LWIOHJmoKThbpdgAw_Xk7qWIfrW0YNTdLkp3_J9fF9Lnt9gecx30HCnQwG5TAgo4FhI",
+    "revisionId": "AHj4eMQtYtWcf6HQnHVMIyriDdLboT-GeP-XzX1HiUY_2pxCKvrS8yg4MmSMshTXZi5V3ZnGDBJT1vozO4ow5W7tHG-sp-mnyIjxYLJW",
     "title": "Battlescrap — Design Draft",
     "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
   },
   "build": {
     "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
-    "revisionId": "AHj4eMS9p6oGURgw8_L8sVMBRYcUX4WeYavTwrsehMvsekd6K72E0klDqzQ-RNRJsTCmNr2S5ekNZJScw6jTJbyqKAdHVzoPqZUcg4Az",
+    "revisionId": "AHj4eMTtAgdEOxNaZIuLEVVgIAcpqN26UCcIVLdEQ2QDAe1gN--lhAmqCeSMgvG4GNJfC7YeJjTh1Hcy4MJtqCw05OGsf0GJqYIxkPWq",
     "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
     "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
   },
@@ -19,5 +19,14 @@
     "url": "https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit",
     "authority": "Live hero data and wording. Re-read by stable IDs and header names before implementation and before delivery; designer is editing this file."
   },
-  "scope": "Documentation and implementation plan only. PnP and digital code unchanged. See Build Specification section 15 for phases, acceptance and unresolved rulings."
+  "scope": "Documentation and implementation plan only. PnP and digital code unchanged. See Build Specification section 15 for phases, acceptance and unresolved rulings.",
+  "confirmed_followup": {
+    "date": "2026-10-25",
+    "tactics_per_side": 21,
+    "tactics_total": 42,
+    "copies_per_effect_per_element": 1,
+    "cancel_scope": "Printed tactic effects and hero ability payments",
+    "last_hp_enraged": "Each damage transition from above 1 HP to exactly 1 HP, including after healing",
+    "heavy_attack": "Printed Heavy Attack(x) replaces old optional mode"
+  }
 }
