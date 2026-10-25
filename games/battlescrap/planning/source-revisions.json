@@ -2,13 +2,13 @@
   "verified_at": "2026-10-25",
   "design": {
     "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
-    "revisionId": "AHj4eMQtYtWcf6HQnHVMIyriDdLboT-GeP-XzX1HiUY_2pxCKvrS8yg4MmSMshTXZi5V3ZnGDBJT1vozO4ow5W7tHG-sp-mnyIjxYLJW",
+    "revisionId": "AHj4eMQXK7nf5Ss3jSJlsRl-91CQM6UC4gmDAPHWY1HasqAvqOPkyQo4mJJN7H_Bj3e15-dSy2QW-lr1uwm5ghA__Lk2KVXrxmgL09qu",
     "title": "Battlescrap — Design Draft",
     "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
   },
   "build": {
     "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
-    "revisionId": "AHj4eMTtAgdEOxNaZIuLEVVgIAcpqN26UCcIVLdEQ2QDAe1gN--lhAmqCeSMgvG4GNJfC7YeJjTh1Hcy4MJtqCw05OGsf0GJqYIxkPWq",
+    "revisionId": "AHj4eMTfORApxNwgbIwjlOHMl4NnFa7_Wr66krGhy6AMIt4FfN49PwGX92bi2qaO-ukvlEWhxB7LqtZOZDUnYUk-nQUwll4kQJ7E3dx6",
     "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
     "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
   },
@@ -22,11 +22,15 @@
   "scope": "Documentation and implementation plan only. PnP and digital code unchanged. See Build Specification section 15 for phases, acceptance and unresolved rulings.",
   "confirmed_followup": {
     "date": "2026-10-25",
-    "tactics_per_side": 21,
-    "tactics_total": 42,
-    "copies_per_effect_per_element": 1,
+    "tactics_total": 27,
+    "copies_per_effect_per_element": {
+      "+2 Attack dice": 2,
+      "+2 hit damage": 2,
+      "each other effect": 1
+    },
     "cancel_scope": "Printed tactic effects and hero ability payments",
     "last_hp_enraged": "Each damage transition from above 1 HP to exactly 1 HP, including after healing",
-    "heavy_attack": "Printed Heavy Attack(x) replaces old optional mode"
+    "heavy_attack": "Printed Heavy Attack(x) replaces old optional mode",
+    "tactic_piles": "One shared draw pile and one shared discard pile; private hands"
   }
 }
