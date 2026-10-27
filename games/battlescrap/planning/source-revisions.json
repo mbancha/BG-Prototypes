@@ -1,0 +1,55 @@
+{
+  "verified_at": "2026-10-27",
+  "design": {
+    "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
+    "revisionId": "AHj4eMRqPxP0_4kejODMuA0T5PrajHEP8pMya2Dl2ka9pR7egQ3UgzfnxJZIliYwhhzNor93dkcZH7bV2xh9bfGMpQLpvf3rRCRGSIj-",
+    "title": "Battlescrap — Design Draft",
+    "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
+  },
+  "build": {
+    "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
+    "revisionId": "AHj4eMQ9BO9xfnqfdcdH9ZhNoKT8FzopWjx1Nwmv3Y5G9gr21GtR9bCdmhCOjIb0NqIlaRfrg_ARkiUEcYCyGzx0jv7ew4Q-0CEa6VWg",
+    "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
+    "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
+  },
+  "rules_version": "digital-update-v12",
+  "digital_version": "turn-rules-v8",
+  "heroes": {
+    "spreadsheetId": "1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg",
+    "url": "https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit",
+    "authority": "Live hero data and wording. Re-read by stable IDs and header names before implementation and before delivery; designer is editing this file."
+  },
+  "scope": "Documentation and implementation plan only. PnP and digital code unchanged. See Build Specification section 15 for phases, acceptance and unresolved rulings.",
+  "confirmed_followup": {
+    "date": "2026-10-25",
+    "tactics_total": 27,
+    "copies_per_effect_per_element": {
+      "+2 Attack dice": 2,
+      "+2 hit damage": 2,
+      "each other effect": 1
+    },
+    "cancel_scope": "Printed tactic effects and hero ability payments",
+    "last_hp_enraged": "Each damage transition from above 1 HP to exactly 1 HP, including after healing",
+    "heavy_attack": "Printed Heavy Attack(x) replaces old optional mode",
+    "tactic_piles": "One shared draw pile and one shared discard pile; private hands"
+  },
+  "spatial_notation": {
+    "token": "{hex:x}",
+    "style": "Black outline, cream background, black number",
+    "scope": "All spatial quantities throughout prototype outputs; sheet converted 2026-10-27"
+  },
+  "ongoing_abilities": {
+    "activation": "Matching tactic creates ability token after Cancel window",
+    "expiry": "Start of that character’s next activation",
+    "presentation": "Matching icon immediately left of ongoing ability text"
+  },
+  "hero_presentation": {
+    "move_tiers": {
+      "slow": 2,
+      "normal": 3,
+      "fast": 4
+    },
+    "ability_voice": "First person",
+    "bisti": "h01 Windlands Concord starter; cheetah/human blowgun art brief in live sheet"
+  }
+}

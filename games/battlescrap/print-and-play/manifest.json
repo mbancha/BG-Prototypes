@@ -1,0 +1,2141 @@
+{
+  "version": "turn-rules-v8",
+  "cards": [
+    {
+      "id": "h01",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h02",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h03",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h04",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h05",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h06",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h07",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h08",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h09",
+      "type": "hero",
+      "page": 1,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h10",
+      "type": "hero",
+      "page": 2,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "recruits-Concord",
+      "type": "recruit",
+      "page": 2,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "recruits-Wildmoon",
+      "type": "recruit",
+      "page": 2,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t01-1",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t01-2",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t02-1",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t02-2",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t03-1",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t03-2",
+      "type": "battle",
+      "page": 2,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t04-1",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t04-2",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t05-1",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t05-2",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t06-1",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t06-2",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t07-1",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t07-2",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t08-1",
+      "type": "battle",
+      "page": 3,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t08-2",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t09-1",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-t10-1",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t01-1",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t01-2",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t02-1",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t02-2",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t03-1",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t03-2",
+      "type": "battle",
+      "page": 4,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t04-1",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t04-2",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t05-1",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t05-2",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t06-1",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t06-2",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t07-1",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t07-2",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t08-1",
+      "type": "battle",
+      "page": 5,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t08-2",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t09-1",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "B-t10-1",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h01a",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h01b",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h02a",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h02b",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h03a",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h03b",
+      "type": "battle",
+      "page": 6,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h04a",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h04b",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h05a",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h05b",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h06a",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h06b",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h07a",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h07b",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h08a",
+      "type": "battle",
+      "page": 7,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h08b",
+      "type": "battle",
+      "page": 8,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h09a",
+      "type": "battle",
+      "page": 8,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h09b",
+      "type": "battle",
+      "page": 8,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h10a",
+      "type": "battle",
+      "page": 8,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "h10b",
+      "type": "battle",
+      "page": 8,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to01",
+      "type": "objective",
+      "page": 8,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to02",
+      "type": "objective",
+      "page": 8,
+      "rect_pt": [
+        36,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to03",
+      "type": "objective",
+      "page": 8,
+      "rect_pt": [
+        216,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to04",
+      "type": "objective",
+      "page": 8,
+      "rect_pt": [
+        396,
+        18,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to05",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to06",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to07",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to08",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        36,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to09",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        216,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "to10",
+      "type": "objective",
+      "page": 9,
+      "rect_pt": [
+        396,
+        270,
+        180,
+        252
+      ]
+    },
+    {
+      "id": "A-equipment-0",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        36,
+        648,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "A-equipment-1",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        216,
+        648,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "A-equipment-2",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        396,
+        648,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "A-equipment-3",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        36,
+        522,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "B-equipment-0",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        216,
+        522,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "B-equipment-1",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        396,
+        522,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "B-equipment-2",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        36,
+        396,
+        180,
+        126
+      ]
+    },
+    {
+      "id": "B-equipment-3",
+      "type": "equipment",
+      "page": 10,
+      "rect_pt": [
+        216,
+        396,
+        180,
+        126
+      ]
+    }
+  ],
+  "geometry": {
+    "card_inches": [
+      2.5,
+      3.5
+    ],
+    "standee_folded_inches": [
+      1,
+      2
+    ],
+    "standee_insert_inches": 0.25,
+    "element_cm": [
+      1,
+      1
+    ],
+    "queue_side_rail_cm": 0.75
+  },
+  "text_checks": [
+    {
+      "text": "Kalawi Bloodmane",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Ambush (Passive): Start my activation with no adjacent enemy: +3 Attack this activation.",
+      "size_pt": 8.7,
+      "height_pt": 31.32,
+      "available_pt": 44
+    },
+    {
+      "text": "Brynja Stonehide",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Living Rampart (Passive): Other allies within 2 gain +1 Defense.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Voru Cinderveil",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Magma Surge (1 AP, once): Push an enemy within 4 up to 3; give it 1 Dazed.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Tavi Sailwhistle",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Follow the Wind (Passive): Recruits starting a Move within 3 gain +1 Move.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Marda Oakweaver",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Living Graft (1 AP, once): heal another adjacent ally 1 wound.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Niala Grassveil",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "False Trail (1 AP, once): give an enemy within 3 one Dazed.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Eirik Hearthkeeper",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Hearth Oath (1 AP, once): give another ally within 2 one Boosted.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Ketu Ashheart",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Feed the Fire (Passive): My Dazed adds Attack dice instead of subtracting them.",
+      "size_pt": 8.7,
+      "height_pt": 20.88,
+      "available_pt": 44
+    },
+    {
+      "text": "Ren Timberwright",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Felling Line (Passive): Friendly recruits gain +2 Attack against enemies adjacent to me.",
+      "size_pt": 8.7,
+      "height_pt": 31.32,
+      "available_pt": 44
+    },
+    {
+      "text": "Orro Stormanchor",
+      "size_pt": 12,
+      "height_pt": 14.4,
+      "available_pt": 20
+    },
+    {
+      "text": "Anchor Stance (Passive): I cannot be Pushed. +1 Defense against melee attacks.",
+      "size_pt": 8.7,
+      "height_pt": 31.32,
+      "available_pt": 44
+    },
+    {
+      "text": "2 HP eachMove: 1 AP per recruit.Attack: 1 AP per recruit.Each action once per model per activation.",
+      "size_pt": 9.5,
+      "height_pt": 57.0,
+      "available_pt": 58
+    },
+    {
+      "text": "2 HP eachMove: 1 AP per recruit.Attack: 1 AP per recruit.Each action once per model per activation.",
+      "size_pt": 9.5,
+      "height_pt": 57.0,
+      "available_pt": 58
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Twist the Blade",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before attacking: a hit deals +1 wound.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Twist the Blade",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before attacking: a hit deals +1 wound.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Riposte",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before defending: if you block, counterattack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Riposte",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before defending: if you block, counterattack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Shake It Off",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Remove all negative statuses from an ally.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Wrong Foot",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Give an enemy lower in the queue 2 Dazed.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Press the Attack",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if attacking.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Stand Firm",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Combat: +1 die; +2 if defending.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Twist the Blade",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before attacking: a hit deals +1 wound.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Twist the Blade",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before attacking: a hit deals +1 wound.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Riposte",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before defending: if you block, counterattack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Riposte",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Before defending: if you block, counterattack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Shake It Off",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Remove all negative statuses from an ally.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Wrong Foot",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Give an enemy lower in the queue 2 Dazed.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Surprise Strike",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Attack at +1, then you may move 3.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Pride\u2019s Feint",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Swap places with a friendly recruit, then you may move 1.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Stone-Skin",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Gain +3 Defense until my next activation.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Shield the Hearth",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move up to 2.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Wall of Flame",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Place a flame edge within 4 until my next activation. Crossing: 1 wound.",
+      "size_pt": 11,
+      "height_pt": 39.6,
+      "available_pt": 78
+    },
+    {
+      "text": "Magma Eruption",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Attack at +2. Then gain 1 Dazed.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Boarding Party",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move up to two friendly recruits within 3 up to 2 each.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Fair Wind",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Haste another friendly hero within 3.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Graftwood Brace",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Heal another ally within 3 by 1; give it 1 Boosted.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Rootwalk",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move up to 3.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Lion\u2019s False Roar",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Give up to two enemies within 2 one Dazed each.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Vanish in the Grass",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move up to 3, then you may Push an adjacent enemy 2 and give it 1 Dazed.",
+      "size_pt": 11,
+      "height_pt": 39.6,
+      "available_pt": 78
+    },
+    {
+      "text": "Winter Feast",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Heal another ally within 2 by 1; give it 2 Boosted.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Hearthward",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move another ally within 3 up to 3.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Stoke the Furnace",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Gain 2 Dazed.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 78
+    },
+    {
+      "text": "Ashen Lance",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Attack at +2. Then gain 1 Dazed.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Raise the Timber",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Build an adjacent timber wall until my next activation.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Work Crew",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Move up to two friendly recruits within 3 up to 2 each.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Anchor Exchange",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Swap places with another ally within 3.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Breakwater",
+      "size_pt": 14,
+      "height_pt": 16.8,
+      "available_pt": 36
+    },
+    {
+      "text": "Push an adjacent enemy 3; give it 1 Dazed.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 78
+    },
+    {
+      "text": "Draw Blood",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Hit an enemy with an attack.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 68
+    },
+    {
+      "text": "Stand Fast",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Block an enemy attack.",
+      "size_pt": 11,
+      "height_pt": 13.2,
+      "available_pt": 68
+    },
+    {
+      "text": "Hero Hunter",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Defeat an enemy hero with an attack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Break the Rank",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Defeat two different enemy recruits with attacks.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Cut Down",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Defeat an enemy recruit with an attack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Press the Advantage",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Hit twice with the same hero in one activation.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Against the Odds",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Block an attack whose final pool exceeds your Defense pool.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Crushing Blow",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Deal at least 2 wounds with one attack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Hold Together",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "Block attacks with two different friendly units.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Trade Blows",
+      "size_pt": 15,
+      "height_pt": 18.0,
+      "available_pt": 38
+    },
+    {
+      "text": "The same surviving hero both hits and blocks an attack.",
+      "size_pt": 11,
+      "height_pt": 26.4,
+      "available_pt": 68
+    },
+    {
+      "text": "Trail Boots",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 Move (item maximum 7).",
+      "size_pt": 10,
+      "height_pt": 12.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Bellmetal Shield",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 Defense against melee. Cannot equip Orro.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Balanced Weapon",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 basic Attack. Does not improve ability-card attacks.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Sighting Lens",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 printed range on ranged basic attacks.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Trail Boots",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 Move (item maximum 7).",
+      "size_pt": 10,
+      "height_pt": 12.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Bellmetal Shield",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 Defense against melee. Cannot equip Orro.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Balanced Weapon",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 basic Attack. Does not improve ability-card attacks.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "Sighting Lens",
+      "size_pt": 13,
+      "height_pt": 15.6,
+      "available_pt": 30
+    },
+    {
+      "text": "+1 printed range on ranged basic attacks.",
+      "size_pt": 10,
+      "height_pt": 24.0,
+      "available_pt": 57
+    },
+    {
+      "text": "US Letter throughout. Do not use Fit or Shrink. Cards are 2\u00bd \u00d7 3\u00bd in and touch at the cut lines. The single-sided kit has 19 pages. For opaque sleeves, use the front-only cards. Optional duplex cards contain matching backs: print portrait, flip on the long edge. Test the first pair of pages before printing the full deck.",
+      "size_pt": 10,
+      "height_pt": 36.0,
+      "available_pt": 100
+    },
+    {
+      "text": "Standees: cut each 1 \u00d7 4 in rectangle; fold at the dashed center, art outward, and glue. Each face is 2 in high, with a blank \u00bc in insertion area. Names read correctly on both sides; rear artwork is mirrored. Six recruit standees use a simple soldier symbol.",
+      "size_pt": 10,
+      "height_pt": 36.0,
+      "available_pt": 100
+    },
+    {
+      "text": "Map: print both sheets, trim to the artwork, and butt-join left to right. The complete map is about 14.33 \u00d7 10.75 in with no map content cropped. Queue: trim each segment to its outer boundary and join pages 1 \u2192 2 \u2192 3 left to right. It is 20 in wide with eight exact-size card spaces and a 0.75 cm header. AP and any Battle draw icon appear together above each card.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 100
+    },
+    {
+      "text": "86 cards: 10 heroes, 2 recruit groups, 36 tactics (18 per player), 20 linked abilities, 10 shared objectives and 8 equipment cards (one set per player). 16 folding standees. Five each of Boosted, Dazed and Stunned; four 1 cm labels per element. The token sheet is packed near the top with no headings or additional markers.",
+      "size_pt": 10,
+      "height_pt": 36.0,
+      "available_pt": 100
+    },
+    {
+      "text": "Each player takes 18 tactics: 2 Press the Attack and 2 Stand Firm in each suit; 2 Fire Twist the Blade; 2 Water Riposte; 1 Lightning Shake It Off; 1 Lightning Wrong Foot. Add the two linked ability cards for each of your three selected heroes: 24 cards total. Keep unused heroes\u2019 abilities out. Shuffle the 10 objectives into one shared deck. Equipment cards measure 2\u00bd \u00d7 1\u00be in, landscape. Equipment and activation cards never enter the Battle decks.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 100
+    },
+    {
+      "text": "Move arrows \u2022 sword = Attack (melee) \u2022 bow/sword = ranged Attack / printed range \u2022 shield = Defense \u2022 heart = wound \u2022 overlapping cards = draw one Battle card. All heroes have 3 HP; recruits have 2. The stat row uses whole-number PP costs. Elements are assigned to holders, not permanently to heroes.",
+      "size_pt": 10,
+      "height_pt": 36.0,
+      "available_pt": 100
+    },
+    {
+      "text": "Each side has 20 PP (21 after a loss), fields three distinct heroes plus three free recruits, and assigns Fire, Lightning and Water to its heroes. Hero HP 3; recruit Move 2, Attack 1, Defense 1, HP 2. Prepare purchases before drawing. Start with two Battle cards and one hidden objective; hand limits are 8 Battle cards and 2 objectives. Alternate side ownership along the queue, then shuffle each side\u2019s four activation cards only into its assigned positions.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 102
+    },
+    {
+      "text": "Score the scenario at turn start. Select a friendly card above 0 AP; record its AP and draw entitlement, move it to the bottom, and shift intervening cards. Hero Move 1 AP; basic Attack 2 AP. Recruit Move or Attack 1 AP per model; each individual action at most once per model per activation. Push 1 AP; Remove all Dazed 2 AP; respawn 2 AP. Paid core abilities: once per activation. A matching-suit tactic or linked ability may instead be discarded for +1 AP, outside combat; recruits cannot do this.",
+      "size_pt": 10,
+      "height_pt": 60.0,
+      "available_pt": 102
+    },
+    {
+      "text": "Roll opposed Attack and Defense D6 pools. Compare the highest face; when both highest faces are 6, compare counts of 6. Attacker wins remaining ties. Hit: 1 wound; two more attacking sixes: 2 wounds total. Two more defending sixes: gain 1 Boosted. Before rolling, defender and attacker alternate card/pass until two consecutive passes. Heavy attack: halve final Attack (round up); hit +1 wound, miss gain 1 Dazed. Attacker may reroll own dice for 1 banked bid PP each.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 102
+    },
+    {
+      "text": "Boosted adds one die per token; Dazed removes one die per token, minimum final pool 1. After combat, consume one old token of each type from each participant; newly gained tokens remain. Stunned allows only movement and movement-only effects during the next activation, then expires; passive defense and defensive reactions remain legal. Haste/Slow immediately shift the queue one place and do not alter captured AP.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 102
+    },
+    {
+      "text": "Resolve physical pickups and draws; then at most one eligible objective; then the captured queue draw; clear expiring Stunned and unused AP. Only heroes collect Brightstone: secure it and draw BOTH an objective and a Battle card. Objectives become eligible at your next activation\u2019s start, then award 3 RP + one Battle card on claim. Hero death draws one Battle card for its owner and moves its queue card to bottom; all deaths drop a physical Brightstone.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 102
+    },
+    {
+      "text": "At turn start, north gains 1 VP unless south occupies at least two bonfires. South gains 1 VP if it occupies at least two. Enemy defeats give the killer\u2019s side 1 VP. First to 8 VP wins immediately. Blue/north and stone/south are deployment zones; X marks initial Brightstones. Printed terrain has no movement penalty. The full current Design Draft contains setup bidding, targeting, terrain, campaign and card timing details.",
+      "size_pt": 10,
+      "height_pt": 48.0,
+      "available_pt": 102
+    }
+  ],
+  "standees": {
+    "heroes": 10,
+    "recruits": 6,
+    "unfolded_inches": [
+      1,
+      4
+    ],
+    "fold": "head-to-head; rear art horizontally mirrored; text readable"
+  },
+  "tokens": {
+    "Boosted": 5,
+    "Dazed": 5,
+    "Stunned": 5,
+    "Fire_1cm": 4,
+    "Lightning_1cm": 4,
+    "Water_1cm": 4
+  },
+  "map": {
+    "pages": 2,
+    "source_pixels": [
+      2459,
+      1845
+    ],
+    "assembled_inches": [
+      14.3275,
+      10.75
+    ],
+    "margin_top_bottom_inches": 0.125,
+    "no_crop": true,
+    "join": "left then right; trim to image boundary and butt-join"
+  },
+  "queue": {
+    "pages": 3,
+    "card_slots": 8,
+    "slot_points": [
+      180,
+      252
+    ],
+    "header_points": 21.259842519685037,
+    "left_to_right": [
+      "0",
+      "1",
+      "2",
+      "2 + draw",
+      "3",
+      "3 + draw",
+      "4",
+      "4 + draw"
+    ],
+    "assembled_inches": [
+      20,
+      3.795275590551181
+    ]
+  },
+  "pdf_pages": {
+    "00-print-and-play-guide.pdf": 2,
+    "01-cards.pdf": 10,
+    "02-folding-standees.pdf": 1,
+    "03-tokens-and-elements.pdf": 1,
+    "04-map-two-sheets.pdf": 2,
+    "05-action-queue.pdf": 3,
+    "Battlescrap-print-and-play.pdf": 19,
+    "optional-card-backs.pdf": 10,
+    "optional-cards-duplex.pdf": 20
+  },
+  "sources": {
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\src\\content.ts": "10d24e2018da391541d2487f29b41ba7be9b4e61256df8e67664a8bce07f670a",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\sources\\design-draft-current.txt": "392069f586d64d089f5daff66105ca1a95520d06b00e03844e8e43b807e5afcc",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\scenario-1.png": "ff6f13be946db314976adb13c7a300be3eb5c891d257fab19c5617a814402a47",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h01-kalawi-bloodmane.png": "c1f38efe1ae0f9de8377d775dc54c793cb95d2eda7baa46ab9038145901f8453",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h02-brynja-stonehide.png": "869afae7addd364db126ab60dec5fc4c0ee2f358bc02d6e1a5b6c12b94a74d83",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h03-voru-cinderveil.png": "998e9e8a81e9fe139aec126d298dcedd78c891d5d43d3a81b37cc45daa182adc",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h04-tavi-sailwhistle.png": "cfa325b6b6b0d4adbedda6b32c83e3b84c772dae5464de1e46d7ec16fc88263d",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h05-marda-oakweaver.png": "7323cc5f3ca44d76495e70d1d1d11f8039ac3aec1fb458ae900ba8f0ff7383d1",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h06-niala-grassveil.png": "c5d43a90ef2555510e9702d7ec0bd62b4347d8f8eb00ae3aa172a523eff7890d",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h07-eirik-hearthkeeper.png": "2195a48a846a82226cb1750adb8f7d0c0c64119ea0be94ffacb1272d2a0f23f8",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h08-ketu-ashheart.png": "bb4c64426a805849e2b930ca5370a22db285bb265b0cff99a13e60a6a89ef7d8",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h09-ren-timberwright.png": "8450362e7f376dd534b8e8056b869b4242a9ca10c91f91babef17ff5b158a40e",
+    "C:\\Users\\mbahn\\Documents\\ChatGPT\\Digital Prototyper\\BG-Prototypes\\games\\battlescrap\\public\\heroes-v7\\h10-orro-stormanchor.png": "db825d23e9f52ba113d0eabbcb9c4e4e3d50cad8e40a4fd0b930403aa2fdf4b5"
+  }
+}
