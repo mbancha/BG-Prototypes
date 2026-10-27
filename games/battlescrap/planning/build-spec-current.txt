@@ -30,7 +30,7 @@ Carry-forward TEST economy pending campaign redesign: base 10 RP per battle and 
 
 Hero PP costs, stats, availability and wording are authoritative only in the live Battlescrap spreadsheet. Read it immediately before implementation; the migration initially contained 10 starters and 4 later recruits, with later unfinished values marked TBD. Preserve stable hero IDs and do not treat TBD as zero.
 
-Carry-forward TEST purchases: extra recruit 3 PP; group Boots 2 (+1 Move), Shields 3 (+1 Defense), Weapons 3 (+1 Attack), each once. One equipment item per hero and one copy per army, kept on respawn; deselection refunds it. Trail Boots 1 PP (+1 Move, item maximum 7), Bellmetal Shield 2 (+1 Defense versus melee), Balanced Weapon 2 (+1 basic Attack die), Sighting Lens 2 (+1 ordinary printed ranged range, not EXACTLY-range effects). Reject purchases with no effect. Orro’s retired passive no longer prevents buying Bellmetal Shield.
+Carry-forward TEST purchases: extra recruit 3 PP; group Boots 2 (+{hex:1} Move), Shields 3 (+1 Defense), Weapons 3 (+1 Attack), each once. One equipment item per hero and one copy per army, kept on respawn; deselection refunds it. Trail Boots 1 PP (+{hex:1} Move, item maximum 7), Bellmetal Shield 2 (+1 Defense versus melee), Balanced Weapon 2 (+1 basic Attack die), Sighting Lens 2 (+{hex:1} ordinary printed ranged range, not EXACTLY-range effects). Reject purchases with no effect. Orro’s retired passive no longer prevents buying Bellmetal Shield.
 
 Extra starting tactic 1 PP up to hand limit; reroll 1 PP per own die, attacker only, from banked compensation. Three free recruits. No battlefield equipment pickup/trading; equipment is displayed under the owner hero’s tableau card. Purchase prices need retesting with the reduced starter costs.
 
@@ -106,7 +106,7 @@ Poison (x) adds x Poison tokens on a successful hit. At the start of each owning
 
 Healing restores its normal amount of HP AND removes all Poison tokens from the target. Poison cleansing no longer replaces healing. A poisoned but unwounded unit is a legal heal target; never exceed printed HP and never revive a defeated unit through an ordinary heal.
 
-Hero HP and other hero data are maintained in the live Battlescrap spreadsheet. Recruits have 2 HP, Move 3, Attack 2 and Defense 2 before upgrades. Damage reduces remaining HP; reaching 0 defeats the unit. Healing restores HP and also clears Poison. No generic Remove Daze or Cleanse action exists.
+Hero HP and other hero data are maintained in the live Battlescrap spreadsheet. Recruits have 2 HP, Move {hex:3}, Attack 2 and Defense 2 before upgrades. Damage reduces remaining HP; reaching 0 defeats the unit. Healing restores HP and also clears Poison. No generic Remove Daze or Cleanse action exists.
 
 Each HERO defeat drops one physical Brightstone at its last hex, draws one tactic for its owner and moves its queue card to slot 0. Recruit defeats drop no stone and draw no consolation card. Secured stones never drop again. Resolve private overflow for the drawing owner even off-turn. Defeat, queue movement, rewards and immediate victory must each resolve once; queue movement has no poison side effect.
 
@@ -126,7 +126,7 @@ TEST structure representation: impassable occupied hexes, with adjacency measure
 
 Melee flanking is +1 Attack die PER other friendly unit adjacent to the target that has no adjacent enemy OTHER than that target. Recruits can assist; the attacker cannot count itself. This is the only generic flanking bonus; ranged attacks never gain it.
 
-Ordinary ranged attacks use printed range and may reach twice that range at −2 Attack dice, following the live spreadsheet’s updated Range rule. Any ranged attack made while at least one enemy is adjacent to the attacker suffers −2 Attack dice, once regardless of adjacent-enemy count. The two penalties stack. EXACTLY 2 permits only distance 2, without extended range or Sighting Lens extension. Units never block sight. Non-attack abilities gain no combat modifiers unless printed.
+Ordinary ranged attacks use printed range and may reach twice that range at −2 Attack dice, following the live spreadsheet’s updated Range rule. Any ranged attack made while at least one enemy is adjacent to the attacker suffers −2 Attack dice, once regardless of adjacent-enemy count. The two penalties stack. EXACTLY {hex:2} permits only distance {hex:2}, without extended range or Sighting Lens extension. Units never block sight. Non-attack abilities gain no combat modifiers unless printed.
 
 Elevation remains an optional TEST: Low 0 / High 1; ranged high-to-low attacks gain +1 Attack die. No new climbing/falling/sight rules. Off unless the supplied map enables it. Poison-defeat credit for VP is OPEN; recommended: remember the enemy that applied poison and award defeat VP once to that side, without counting the poison damage as an attack for objectives.
 
@@ -138,17 +138,17 @@ Concord: h01,h11,h03,h04,h13. Wildmoon: h06,h12,h08,h14,h10. Choose exactly thre
 
 Resolve hero-specific targeting, cost, stacking and movement from the current sheet’s Ability effect, numeric fields and Notes together. Flag conflicts within the sheet for the designer; do not substitute old Hester, Kalawi or other hero text from print manifests.
 
-Equipment remains on tableau and across respawn. Orro can buy Bellmetal Shield. Sighting Lens never extends EXACTLY-2 attacks. Preserve preparation-only purchase timing and reject ineffective purchases.
+Equipment remains on tableau and across respawn. Orro can buy Bellmetal Shield. Sighting Lens never extends EXACTLY {hex:2} attacks. Preserve preparation-only purchase timing and reject ineffective purchases.
 
 9. Decks, Brightstone and Tactical Objectives
 
 Both sides draw from one shared tactic draw pile and discard into one shared tactic discard pile; hands remain private. Fire, Lightning and Water remain equally represented. All old linked hero cards and the former Attack/Defense-only tactic definitions are retired. A card is discarded for either its printed effect OR one matching-element ability payment, never both.
 
-CONFIRMED tactic effects: Cancel an opponent’s tactic immediately after it is played for its printed effect or discarded to activate a hero ability; cancellation prevents the targeted effect/ability; before an attack add 2 Attack dice; before an attack add 2 Defense dice; before an attack add 2 damage if it hits; before an attack arrange for the defender to attack immediately if the original attack misses; during your turn move one of your units up to 4 spaces OR heal it 1; during your turn attack with each friendly Recruit. Remove all generic +1 Attack, +1 Defense and +1 damage alternatives and all card-for-AP uses. Matching-element ability payments remain legal.
+CONFIRMED tactic effects: Cancel an opponent’s tactic immediately after it is played for its printed effect or discarded to activate a hero ability; cancellation prevents the targeted effect/ability; before an attack add 2 Attack dice; before an attack add 2 Defense dice; before an attack add 2 damage if it hits; before an attack arrange for the defender to attack immediately if the original attack misses; during your turn move one of your units up to {hex:4} OR heal it 1; during your turn attack with each friendly Recruit. Remove all generic +1 Attack, +1 Defense and +1 damage alternatives and all card-for-AP uses. Matching-element ability payments remain legal.
 
 Ability elements are fixed in the text. A base ability normally costs one matching tactic; some powerful abilities also cost AP. An amplification discard is additional to the activation discard and any AP. Card-only abilities never acquire an AP repeat surcharge. These choices make tactic income, hand size and repeated card-only effects important balance variables.
 
-CONFIRMED digital tactic components: one shared 27-card deck for both sides, with 9 Fire + 9 Lightning + 9 Water. Each element has two +2 Attack dice cards, two +2 hit damage cards, and one each of Cancel, +2 Defense dice, counterattack-on-miss, Move 4 OR heal 1, and attack-with-each-Recruit. Totals across the shared deck: 6 +2 Attack dice, 6 +2 hit damage, and 3 of each other effect. This replaces the earlier personal-deck counts. Starting hand 4 per side and hand limit 8 remain TEST. Existing PnP files remain frozen; their old 48-card inventory is historical.
+CONFIRMED digital tactic components: one shared 27-card deck for both sides, with 9 Fire + 9 Lightning + 9 Water. Each element has two +2 Attack dice cards, two +2 hit damage cards, and one each of Cancel, +2 Defense dice, counterattack-on-miss, Move {hex:4} OR heal 1, and attack-with-each-Recruit. Totals across the shared deck: 6 +2 Attack dice, 6 +2 hit damage, and 3 of each other effect. This replaces the earlier personal-deck counts. Starting hand 4 per side and hand limit 8 remain TEST. Existing PnP files remain frozen; their old 48-card inventory is historical.
 
 Complete each draw and enforce limit privately. When the shared tactic draw pile is empty, shuffle the shared tactic discard pile into it; if both shared piles are empty, draw nothing. Draw sources are starting hand, purchased starting draws, each Brightstone pickup, each completed objective and hero defeat. No automatic empty-tactic-hand refill is added: the empty-hand draw rule applies to OBJECTIVES.
 
@@ -182,7 +182,7 @@ Taunt and Taunt tokens are removed. Future Highholm unique design and all later 
 
 The three-nearest-enemies abilities select all available enemies up to three within the printed radius, with the acting player choosing distance ties. They cannot skip a nearer enemy to reach a farther priority target. Resolve the chosen list from the initial positions; later movement does not retarget.
 
-EXACTLY 2 is a hard targeting condition measured when an attack/effect begins. If a chained Push fails to leave the target at distance 2, a subsequent exact-range attack cannot occur; the paid ability is not refunded. Timed effects do not stack with another copy of themselves unless stated; status tokens do stack.
+EXACTLY {hex:2} is a hard targeting condition measured when an attack/effect begins. If a chained Push fails to leave the target at distance {hex:2}, a subsequent exact-range attack cannot occur; the paid ability is not refunded. Timed effects do not stack with another copy of themselves unless stated; status tokens do stack.
 
 Regional abilities do not belong to starters. Later recruited heroes have their region’s ability as well as their unique.
 
@@ -202,7 +202,9 @@ Regional abilities and their current wording are maintained in the Regions tab o
 
 Each hero uses a half-poker portrait-orientation art/name card in the action queue, inside a faction ownership holder, plus a persistent poker-size tableau card with stats and full unique text. HP hearts sit along the portrait’s right edge. Equipment tucks under the tableau; damage cubes and statuses sit on it.
 
-Digital notation: Attack dice (range), e.g. 4 (3); EXACTLY-2 restrictions stay explicit. Attack/sword red (#c83135), ranged/bow green (#2b863f), Defense/shield blue (#2878c2). Move the heart’s white outline wholly outside the red heart silhouette, maintaining at least a five-pixel visible outline at display size. Show an Enraged symbol next to the last HP heart and explain its trigger. Preserve approved character art.
+CONFIRMED presentation standard: every number measuring board spaces uses {hex:x} in source text, including spreadsheet Move and Attack range values, movement allowances, targeting distances, exact ranges, Push/Pull and distance modifiers. Render it everywhere as a flat-top hex with black outline, cream background and centered black number. Keep action words and qualifiers (Move {hex:3}; within {hex:2}; exactly {hex:2}); omit redundant “spaces” after the icon. Dice, damage, HP, AP/RAP, prices, unit counts and queue positions are ordinary numbers. Use one shared token parser and vector icon across cards, tableaus, tooltips, prompts, logs, player references and future print exports. Parse numeric values from tokens at the content boundary; engine distances remain numbers. Provide accessible text such as “3 spaces”; never expose raw markup in player-facing output. Preserve this notation in exports, translating only at the renderer boundary. Future print work follows this standard when authorized; existing PnP outputs remain frozen.
+
+Combat notation: Attack dice (range), e.g. 4 ({hex:3}); exact-range restrictions stay explicit. Attack/sword red (#c83135), ranged/bow green (#2b863f), Defense/shield blue (#2878c2). Move the heart’s white outline wholly outside the red heart silhouette, maintaining at least a five-pixel visible outline at display size. Show an Enraged symbol next to the last HP heart and explain its trigger. Preserve approved character art.
 
 Concord: maroon angular sun. Wildmoon: sky-blue antler crescent. Raster faction masters live in assets/factions; approved original portraits in assets/heroes/approved-v9; four new full-body portraits with colored backgrounds in assets/heroes/new-starters. All visual masters remain in the game-root assets folder. Do not regenerate approved original characters.
 
@@ -220,7 +222,7 @@ Balance risks: each winning attacker six now adds damage, so large pools, Focus,
 
 Digital UI: queue portraits and persistent tableau are separate. Show AP/RAP and next cost per action/model; recruit actions occur within a hero turn. Show both tactic uses, legal response windows, exact-two target rings, damage and all five statuses. Frames indicate ownership/pair identity, never ability element. Include the in-app player reference.
 
-Apply parenthesized range notation and shared red Attack / green ranged / blue Defense icons. Queue header tray shows all six confirmed AP/RAP entitlements, including 5 AP / 2 RAP at the top; no draw icons. Implement starter-faction reminders and matching color+shape hero pairs.
+CONFIRMED presentation standard: every number measuring board spaces uses {hex:x} in source text, including spreadsheet Move and Attack range values, movement allowances, targeting distances, exact ranges, Push/Pull and distance modifiers. Render it everywhere as a flat-top hex with black outline, cream background and centered black number. Keep action words and qualifiers (Move {hex:3}; within {hex:2}; exactly {hex:2}); omit redundant “spaces” after the icon. Dice, damage, HP, AP/RAP, prices, unit counts and queue positions are ordinary numbers. Use one shared token parser and vector icon across cards, tableaus, tooltips, prompts, logs, player references and future print exports. Parse numeric values from tokens at the content boundary; engine distances remain numbers. Provide accessible text such as “3 spaces”; never expose raw markup in player-facing output. Preserve this notation in exports, translating only at the renderer boundary. Future print work follows this standard when authorized; existing PnP outputs remain frozen.
 
 12. Basic Bots and Simulations
 
@@ -270,7 +272,7 @@ Scope and source gate
 
 Target digital-update-v12. The shipped branch snapshot is turn-rules-v8; implement all unchanged v11 baseline rules plus the v12 changes in this document. Work in games/battlescrap on codex/battlescrap-laptop-handoff or a suitable continuation branch. This authoring pass changes documentation only. PnP sources, generated PDFs, print assets, manifests and print scripts are out of scope. No public deployment is requested.
 
-Before coding, read both live core documents and the entire live Battlescrap spreadsheet: Heroes, Regions and Rules & notes. Use stable hero IDs and header names rather than fixed row/column positions. The designer is actively editing it. Capture a dated, revision-identified local content snapshot and review changes again before final verification. Never overwrite the Sheet from older code/docs. If ability text, numeric cost/range fields and Notes conflict, stop that hero’s import and ask. Do not infer unspecified new abilities, especially the unfinished Cinder’s Rim instruction. Local content is a reproducible implementation snapshot, not a second authority.
+Before coding, read both live core documents and the entire live Battlescrap spreadsheet: Heroes, Regions and Rules & notes. Use stable hero IDs and header names rather than fixed row/column positions. The designer is actively editing it. Capture a dated, revision-identified local content snapshot and review changes again before final verification. Never overwrite the Sheet from older code/docs. If ability text, numeric cost/range fields and Notes conflict, stop that hero’s import and ask. Do not infer unspecified new abilities, especially the unfinished Cinder’s Rim instruction. Local content is a reproducible implementation snapshot, not a second authority. The source uses {hex:x} for all spatial values; the Move and Attack range cells are tokens, not bare numeric cells. Import their numeric payload without changing gameplay.
 
 Phase 1 — configuration, data and v8 migration
 
@@ -306,7 +308,7 @@ Update digital queue/tableau/standee views: current stats and abilities, separat
 
 Phase 6 — verification and delivery
 
-Focused regressions: all six queue entitlements and top-slot RAP decrease; hero Move–Attack–Move 1/1/2 versus recruit paid 1/2/3; no counter reset on respawn; ability movement counter independence; recruit 2 HP/3 Move/2 Attack/2 Defense; no starter regional abilities unless explicitly changed in the Sheet; removal of all obsolete suit, linked-card and basic-cleanse/Push behavior.
+Focused regressions: all six queue entitlements and top-slot RAP decrease; hero Move–Attack–Move {hex:1}/1/2 versus recruit paid 1/2/3; no counter reset on respawn; ability movement counter independence; recruit 2 HP/3 Move/2 Attack/2 Defense; no starter regional abilities unless explicitly changed in the Sheet; removal of all obsolete suit, linked-card and basic-cleanse/Push behavior.
 
 Combat fixtures: tied fives hit; [6] versus [6,6] blocks and earns 2 Focus; [6,6,1] versus [6,6,5] hits for base 1 + 2 six damage; losing sixes yield no reward; zero pool counts only its kept die. Verify Focus is spent on misses, new defensive Focus survives, Enraged/Heavy/+2 damage stack only on hits, Light cap is final, both ranged penalties can stack to −4, and exact-range attacks never extend.
 
