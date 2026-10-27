@@ -2,13 +2,13 @@
   "verified_at": "2026-10-27",
   "design": {
     "documentId": "1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM",
-    "revisionId": "AHj4eMRGca3YLEuoUtAj4C3bIkraTYPUzvke7j-zmVu9fvPgjMWNxFXRvR6KGKmFT7An2rnszeS9ciHTmbdB_9Nkeje3yZz_Y6BhdgIf",
+    "revisionId": "AHj4eMRqPxP0_4kejODMuA0T5PrajHEP8pMya2Dl2ka9pR7egQ3UgzfnxJZIliYwhhzNor93dkcZH7bV2xh9bfGMpQLpvf3rRCRGSIj-",
     "title": "Battlescrap — Design Draft",
     "document_url": "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM"
   },
   "build": {
     "documentId": "16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU",
-    "revisionId": "AHj4eMTnm_eimXXBFdQ9V1_jOqmGEj6-TYoh8NDhQbNW60LgdVYEykeUh-eOIGRAFdwx6Dj2qLPiHdPVExLl51-rmE8WgxtWRWlPNLY9",
+    "revisionId": "AHj4eMQ9BO9xfnqfdcdH9ZhNoKT8FzopWjx1Nwmv3Y5G9gr21GtR9bCdmhCOjIb0NqIlaRfrg_ARkiUEcYCyGzx0jv7ew4Q-0CEa6VWg",
     "title": "Battlescrap — Digital Prototype Build Specification (Sol 6.1)",
     "document_url": "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU"
   },
@@ -37,5 +37,19 @@
     "token": "{hex:x}",
     "style": "Black outline, cream background, black number",
     "scope": "All spatial quantities throughout prototype outputs; sheet converted 2026-10-27"
+  },
+  "ongoing_abilities": {
+    "activation": "Matching tactic creates ability token after Cancel window",
+    "expiry": "Start of that character’s next activation",
+    "presentation": "Matching icon immediately left of ongoing ability text"
+  },
+  "hero_presentation": {
+    "move_tiers": {
+      "slow": 2,
+      "normal": 3,
+      "fast": 4
+    },
+    "ability_voice": "First person",
+    "bisti": "h01 Windlands Concord starter; cheetah/human blowgun art brief in live sheet"
   }
 }

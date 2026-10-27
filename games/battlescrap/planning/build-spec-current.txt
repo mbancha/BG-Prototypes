@@ -1,10 +1,10 @@
 Battlescrap — Digital Prototype Build Specification
 
-Current design revision · 25 October 2026 · digital-update-v12 · confirmed changes, TEST rulings and OPEN decisions
+Current design · digital-update-v12 · TEST indicates provisional rules; OPEN indicates unresolved decisions
 
 Companion: https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM
 
-Hero source of truth: Battlescrap — https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit. Maintain hero identities, stats, costs, abilities, availability, regional abilities and hero-specific wording there. Sol must read the latest Heroes, Regions and Rules & notes tabs before coding and recheck before delivery. This document owns general rules; the sheet owns hero data. Do not restore stale hero text from documents or old exports.
+Hero source of truth: https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit. Read Heroes, Regions and Rules & notes before coding and before delivery. This document owns general rules; the sheet owns hero data.
 
 1. Outcome and Current Scope
 
@@ -12,25 +12,19 @@ Plan the local browser prototype update to digital-update-v12. Sol owns implemen
 
 The Design Draft owns general rules and lore; the live Battlescrap spreadsheet owns hero data and wording; this Build Specification owns the implementation plan and acceptance criteria. Latest direct designer instructions override older snapshots. TEST is provisional; OPEN is unresolved.
 
-Tactical starfall-fantasy skirmish. Bid for position, field three starter heroes plus three recruits, activate heroes through a shared action queue, fight with opposed D6 pools, collect Brightstone and complete tactical objectives.
-
-Current revision: digital-update-v12, 25 October 2026. This consolidates starter-test-v11 with the designer’s 25 October updates. CONFIRMED identifies explicit instructions; TEST identifies provisional interpretation or balance; OPEN requires a designer ruling. The installed digital game is still turn-rules-v8 until Sol implements and verifies this plan.
-
-Work split: this revision updates core documents and plans the next digital update. Sol will code and verify it. PnP files, print assets and print-generation scripts remain frozen at their existing revision. Digital visual changes below do not authorize regenerating print outputs.
-
 2. Authority and Rules Configuration
 
-Use digital-update-v12 dated 25 October 2026. Configure starter 15 PP, exactly three heroes, live-sheet hero costs, new queue AP/RAP, confirmed 21-tactic-per-side counts and TEST hand counts, 15-VP scenario goal and six objectives. Hero values are not hardcoded in this document.
+Use digital-update-v12 . Configure starter 15 PP, exactly three heroes, live-sheet hero costs, queue AP/RAP, one shared 27-card tactic deck and TEST hand counts, 15-VP scenario goal and six objectives. Hero values are not hardcoded in this document.
 
 Keep PP, RP, VP, AP and RAP distinct. PP resets each battle; campaign RP and roster access persist. No PP/RP conversion. Whole player-facing prices; preserve half-point design estimates and existing half-unit currency storage where used.
 
-Confirmed change: objectives give no RP; each secured Brightstone pays 2 RP once at game end (tentative campaign balance). The old 3-RP objective reward and 1-RP stone reward are removed.
+Objectives give no RP; each secured Brightstone pays 2 RP once at game end (TEST campaign balance).
 
-Carry-forward TEST economy pending campaign redesign: base 10 RP per battle and +1 RP for victory, plus 2 RP per secured stone. These inherited base/victory rewards are not newly approved campaign balance. Catch-up RP will likely depend on the opponent’s campaign-win LEAD; formula, timing and interaction with the victory bonus remain OPEN. Do not implement a guessed catch-up amount.
+TEST economy pending campaign redesign: base 10 RP per battle and +1 RP for victory, plus 2 RP per secured stone. These inherited base/victory rewards are not newly approved campaign balance. Catch-up RP will likely depend on the opponent’s campaign-win LEAD; formula, timing and interaction with the victory bonus remain OPEN. Do not implement a guessed catch-up amount.
 
-Hero PP costs, stats, availability and wording are authoritative only in the live Battlescrap spreadsheet. Read it immediately before implementation; the migration initially contained 10 starters and 4 later recruits, with later unfinished values marked TBD. Preserve stable hero IDs and do not treat TBD as zero.
+Hero PP costs, stats, availability and wording belong in the live spreadsheet. Preserve stable IDs; TBD is undecided, never zero.
 
-Carry-forward TEST purchases: extra recruit 3 PP; group Boots 2 (+{hex:1} Move), Shields 3 (+1 Defense), Weapons 3 (+1 Attack), each once. One equipment item per hero and one copy per army, kept on respawn; deselection refunds it. Trail Boots 1 PP (+{hex:1} Move, item maximum 7), Bellmetal Shield 2 (+1 Defense versus melee), Balanced Weapon 2 (+1 basic Attack die), Sighting Lens 2 (+{hex:1} ordinary printed ranged range, not EXACTLY-range effects). Reject purchases with no effect. Orro’s retired passive no longer prevents buying Bellmetal Shield.
+TEST purchases: extra recruit 3 PP; group Boots 2 (+{hex:1} Move), Shields 3 (+1 Defense), Weapons 3 (+1 Attack), each once. One equipment item per hero and one copy per army, kept on respawn; deselection refunds it. Trail Boots 1 PP (+{hex:1} Move, item maximum 7), Bellmetal Shield 2 (+1 Defense versus melee), Balanced Weapon 2 (+1 basic Attack die), Sighting Lens 2 (+{hex:1} ordinary printed ranged range, not EXACTLY-range effects). Reject purchases with no effect. 
 
 Extra starting tactic 1 PP up to hand limit; reroll 1 PP per own die, attacker only, from banked compensation. Three free recruits. No battlefield equipment pickup/trading; equipment is displayed under the owner hero’s tableau card. Purchase prices need retesting with the reduced starter costs.
 
@@ -42,9 +36,9 @@ Track each side’s total campaign wins. First to 10 wins OR first to lead by 4 
 
 Standalone Vite/React/TypeScript; no cross-game runtime imports. Read repository instructions before implementation. Plain serializable state, seeded RNG and authoritative legal actions shared by UI, tests and bots. Validate before mutation; rejected actions consume no resource.
 
-Bump save/content version and reject or explicitly migrate incompatible old saves. Pending movements, hazards, tactic-response stacks, sequential attacks, pickups, overflow and objective claims serialize. Remove Taunt and old poison-queue state. Stable event IDs prevent duplicate damage, defeat, rewards and victory.
+Bump save/content version and reject or explicitly migrate incompatible old saves. Pending movements, hazards, tactic-response stacks, sequential attacks, pickups, overflow and objective claims serialize. Stable event IDs prevent duplicate damage, defeat, rewards and victory.
 
-Preserve currency storage conventions; displayed whole PP/RP may use existing doubled storage. AP/RAP/HP/VP/dice are native integers. Refresh local document exports before implementation; old v8/v9 test results are not evidence for this revision.
+Preserve currency storage conventions; displayed whole PP/RP may use existing doubled storage. AP/RAP/HP/VP/dice are native integers. Refresh local document exports before implementation.
 
 Use assets/maps/three-fires-original.png unchanged. The boxed reference is only for coordinate identification. Calibrate full/partial cells, all nine Xs and three fire centers separately from the artwork.
 
@@ -56,17 +50,17 @@ Player state: roster/RP, PP and bid compensation bank, equipment/recruit upgrade
 
 Starter definitions use h01,h11,h03,h04,h13 and h06,h12,h08,h14,h10. All have regionalAbility=null. h02,h07,h05,h09 are later-recruit identities, retained with approved art and future unique+regional configuration.
 
-Unit instances hold owner, position/defeated state, damage, five status counts, equipment, keywords and action counters. Tactics hold element, typed effect and exactly one card zone. Determine last-HP Enraged from each damage event’s before/after HP, not a once-per-life flag; preserve event IDs so replay/resume cannot duplicate the gain. Traps/Brightstone use the revealed shuffled nine-token setup; retain printed X coordinates independently.
+Unit instances hold owner, position/defeated state, damage, five status counts, equipment, keywords and action counters. Tactics hold element, typed effect and exactly one card zone. Determine last-HP Enraged from each damage event’s before/after HP, not a once-per-life flag; preserve event IDs so replay/resume cannot duplicate the gain. Traps/Brightstone use the revealed shuffled nine-token setup; retain printed X coordinates independently. Store ability-token presence per ability, separately from statuses; serialize it in saves, undo and deterministic replay.
 
 No opponent hands/objectives, unrevealed bids, RNG state or deck order in public/bot projections. Private overflow belongs to its owner even off-turn. Undo stops at reveals. Log AP/RAP splits, modifiers, final kept dice, six rewards, status consumption, hazards and outcomes.
 
 5. Setup, Queue and Recruit Actions
 
-Carry forward the existing deployment bidding rules: secret zone choice and nonnegative whole-PP bid; different zones ignore bids and randomly choose first side; same zone gives the higher bidder its chosen zone and first deployment/activation, with the winning bid added to the opponent’s budget. Tied bids receive secret positive increments until unequal. No bid cap.
+Deployment bidding: secret zone choice and nonnegative whole-PP bid; different zones ignore bids and randomly choose first side; same zone gives the higher bidder its chosen zone and first deployment/activation, with the winning bid added to the opponent’s budget. Tied bids receive secret positive increments until unequal. No bid cap.
 
 Field exactly three distinct available heroes and three free recruits. Buy equipment, extra recruits, group upgrades and extra starting draws before seeing cards. Only unused bid compensation survives as an attacker-reroll bank; ordinary leftovers expire. Roster access does not waive fielding cost.
 
-Starting PP is 15. Field exactly three heroes; starter prices span 3–7 PP. No inherited 20/21-PP starting budget. Later campaign stages have higher-cost heroes and higher preparation budgets; progression is OPEN.
+Starting PP is 15. Field exactly three heroes; starter prices span 3–7 PP. Later campaign stages have higher-cost heroes and higher preparation budgets; progression is OPEN.
 
 Fire, Lightning and Water are printed elements on tactics and ability costs, never assigned hero/holder elements. A printed tactic effect needs no element match; ability payment matches its printed cost. Ownership frames and color+shape pairing identify units independently of elements.
 
@@ -74,15 +68,15 @@ Deploy heroes and recruits individually in the chosen zone (north blue or south 
 
 Only heroes have queue cards: six cards for a three-hero-per-side battle. Recruits have no queue entry. The lower bidder owns highest position 5, then ownership alternates down: lower bidder 5/3/1; higher bidder 4/2/0. Shuffle each side’s three portraits and randomly deal into its assigned positions. When equal bids are ignored because zones differ, use the second player for positions 5/3/1 as the test tie fallback; first-player selection otherwise follows existing bidding rules.
 
-At the start of a side’s turn, resolve its scenario scoring and check victory immediately. Then each living poisoned unit owned by that side takes 1 damage and discards 1 Poison, regardless of stack size; resolve defeat and victory before selecting a hero. TEST ordering: scenario scoring precedes poison. Select any friendly hero including slot 0, capture its AP/RAP entitlement, move its card to slot 0 and shift intervening cards. Queue movement no longer triggers poison or any poison swap.
+At the start of a side’s turn, resolve its scenario scoring and check victory immediately. Then each living poisoned unit owned by that side takes 1 damage and discards 1 Poison, regardless of stack size; resolve defeat and victory before selecting a hero. TEST ordering: scenario scoring precedes poison. Select any friendly hero including slot 0, capture its AP/RAP entitlement, move its card to slot 0 and shift intervening cards.
 
 AP can be spent on the selected hero or any friendly recruit. RAP (recruit action points) can be spent only on friendly recruits. AP and RAP may combine to pay one recruit action; spend RAP first by default, with the expenditure shown. No other friendly hero gets ordinary actions.
 
 Hero basic actions: Move, Attack, Grab, Respawn. Each distinct action has its own use count during that activation: first use costs 1 AP, second 2 AP, third 3 AP, and so on. Move–Attack–Move costs 1 + 1 + 2 AP. Paid unique abilities have their own repeat counter; base 1 AP becomes 1/2/3, base 2 AP becomes 2/3/4. Card-only abilities remain card-only on repeat use. Printed “once” means once per own activation unless another timing is stated.
 
-Each recruit has one shared action counter for the entire friendly turn, across all its actions and regardless of AP versus RAP. Move–Attack–Move by one recruit costs 1 + 2 + 3. Another recruit begins at 1. Counters reset at the next friendly turn, not on respawn; the former once-per-action restriction is removed.
+Each recruit has one shared action counter for the entire friendly turn, across all its actions and regardless of AP versus RAP. Move–Attack–Move by one recruit costs 1 + 2 + 3. Another recruit begins at 1. Counters reset at the next friendly turn, not on respawn.
 
-CONFIRMED six-position queue, bottom to top: 0 = 1 AP / 1 RAP; 1 = 2 AP / 1 RAP; 2 = 3 AP / 1 RAP; 3 = 3 AP / 2 RAP; 4 = 4 AP / 3 RAP; 5 = 5 AP / 2 RAP. The top step intentionally trades 1 RAP for 1 AP; neither monotonic RAP nor increasing total AP+RAP is required. All positions are selectable; no queue position draws a tactic. Slot 0 selection leaves queue order unchanged.
+six-position queue, bottom to top: 0 = 1 AP / 1 RAP; 1 = 2 AP / 1 RAP; 2 = 3 AP / 1 RAP; 3 = 3 AP / 2 RAP; 4 = 4 AP / 3 RAP; 5 = 5 AP / 2 RAP. All positions are selectable; no queue position draws a tactic. Slot 0 selection leaves queue order unchanged.
 
 End activation: collect automatic Brightstone pickups and tactic rewards and enforce hand limits; evaluate/claim at most one eligible objective and resolve 1 VP + 1 tactic, checking victory immediately; if the objective hand is empty, draw one if available; resolve the activated hero’s current spreadsheet end-activation ability, if any; discard unused AP/RAP and pass. No further checkpoint occurs after victory. Regional effects follow current sheet wording and do not automatically apply to idle heroes.
 
@@ -92,19 +86,19 @@ Move spends its current action cost to move up to printed Move. Occupancy, board
 
 Push and Pull are effects of named abilities, not basic actions. For Push N, move the target up to N adjacent hex steps, each increasing hex distance from the source’s fixed position by exactly 1. For Pull N, each step reduces that distance by exactly 1. The effect’s controller chooses legal steps. Never enter occupied/impassable/out-of-bounds hexes; stop when blocked or defeated. No sideways step at equal distance, no moving through the source, no automatic damage, Dazed or opposed roll. An ability specifies any additional effects. A blocked displacement does not cancel separately printed effects.
 
-Attack and Defense are D6 pools. Roll simultaneously and compare highest face; if both are 6, compare counts of 6. Attacker wins every remaining tie. A successful attack deals base 1 damage PLUS 1 damage for EACH attacker six kept in its final result. A successful defense grants 1 Focus for EACH defender six kept in its final result. Losing-side sixes grant no damage or Focus. These replace the two-more-sixes threshold and Fortified/Boosted defense reward. Apply damage bonuses only on a hit.
+Attack and Defense are D6 pools. Roll simultaneously and compare highest face; if both are 6, compare counts of 6. Attacker wins every remaining tie. A successful attack deals base 1 damage PLUS 1 damage for EACH attacker six kept in its final result. A successful defense grants 1 Focus for EACH defender six kept in its final result. Losing-side sixes grant no damage or Focus. Apply damage bonuses only on a hit.
 
-Defender and attacker alternate pre-roll tactic/pass; a play resets consecutive passes and two passes close that window. Use only the new printed tactic effects or matching-element ability payments. Effects modify the relevant participating unit, including recruits; no element match is required for a printed tactic effect. Minimum final pool is 0: roll two dice and retain only the lower as the entire result; only that one kept die can count as a six. Declare damage bonuses before rolling. A Cancel response window must finish before the targeted printed tactic effect or tactic-paid hero ability resolves.
+Defender and attacker alternate pre-roll tactic/pass; a play resets consecutive passes and two passes close that window. Use only the printed tactic effects or matching-element ability payments. Effects modify the relevant participating unit, including recruits; no element match is required for a printed tactic effect. Minimum final pool is 0: roll two dice and retain only the lower as the entire result; only that one kept die can count as a six. Declare damage bonuses before rolling. A Cancel response window must finish before the targeted printed tactic effect or tactic-paid hero ability resolves.
 
-CONFIRMED Heavy Attack (x): a hit adds x damage. This replaces the old optional heavy-attack mode entirely: no dice halving, no generic +1 heavy damage and no miss-Dazed penalty. Attacker-only rerolls remain 1 PP per own die from banked bid compensation; explicitly finish rerolls before resolution. The new counterattack tactic uses ordinary legal targeting/combat. TEST: retain the existing no-counterattack-chain rule.
+Heavy Attack (x): a hit adds x damage. Attacker-only rerolls remain 1 PP per own die from banked bid compensation; explicitly finish rerolls before resolution. The counterattack tactic uses ordinary legal targeting/combat. TEST: retain the existing no-counterattack-chain rule.
 
 Five status types exist: Focus, Enraged, Fortified, Dazed and Poison. Focus adds +1 Attack die per token to the unit’s next attack roll; spend the entire participating stack after that roll, hit or miss. Enraged adds +1 damage per token to the next attack only on a hit and is spent after that attack even on a miss. Fortified adds +1 Defense die per token; Dazed subtracts 1 Defense die per token; spend both complete participating stacks after the next defense even if they cancel numerically. Dazed does not reduce Attack.
 
 Snapshot applicable status stacks at the roll boundary. Spend those participating stacks after resolution; newly gained after-effect tokens survive. Focus and Enraged are attack-only; Fortified and Dazed are defense-only. A successful defender’s new Focus can be used by a subsequent legal counterattack. A living hero gains 1 Enraged EACH time damage reduces it from above 1 HP to exactly 1 HP, including after healing within the same life. Remaining at 1 HP, healing to 1 HP or taking lethal damage does not trigger it. Statuses belong to units, never queue positions.
 
-Poison (x) adds x Poison tokens on a successful hit. At the start of each owning player’s turn, each living on-board poisoned unit takes exactly 1 damage and discards exactly 1 Poison token, regardless of stack size. This applies equally to heroes and recruits. Remove poison-driven queue swaps, far-end/start-hero-activation damage, per-token burst damage, persistent stacks after a tick and instant recruit defeat. Ordinary defeat cleanup still applies.
+Poison (x) adds x Poison tokens on a successful hit. At the start of each owning player’s turn, each living on-board poisoned unit takes exactly 1 damage and discards exactly 1 Poison token, regardless of stack size. This applies equally to heroes and recruits. Ordinary defeat cleanup still applies.
 
-Healing restores its normal amount of HP AND removes all Poison tokens from the target. Poison cleansing no longer replaces healing. A poisoned but unwounded unit is a legal heal target; never exceed printed HP and never revive a defeated unit through an ordinary heal.
+Healing restores its normal amount of HP AND removes all Poison tokens from the target. A poisoned but unwounded unit is a legal heal target; never exceed printed HP and never revive a defeated unit through an ordinary heal.
 
 Hero HP and other hero data are maintained in the live Battlescrap spreadsheet. Recruits have 2 HP, Move {hex:3}, Attack 2 and Defense 2 before upgrades. Damage reduces remaining HP; reaching 0 defeats the unit. Healing restores HP and also clears Poison. No generic Remove Daze or Cleanse action exists.
 
@@ -114,7 +108,7 @@ Each HERO defeat drops one physical Brightstone at its last hex, draws one tacti
 
 Each scenario uses a map plus its own deployment/spawning edges, special rules, VP sources and victory threshold or explicit VP payout. A map can support multiple scenarios and multiple group spawning edges; scenario rules specify which are active. No map-specific victory condition is inferred from artwork.
 
-CONFIRMED Three Fires: water/north scores 1 VP at the start of each of its own turns, regardless of bonfire control. Stone/south scores 1 VP PER bonfire it controls at the start of each of its own turns. Control means more adjacent friendly units than enemy units; ties are uncontrolled. First to 15 VP wins; check immediately after every award. Carry forward 1 VP per enemy defeat and no friendly-fire VP.
+Three Fires: water/north scores 1 VP at the start of each of its own turns, regardless of bonfire control. Stone/south scores 1 VP PER bonfire it controls at the start of each of its own turns. Control means more adjacent friendly units than enemy units; ties are uncontrolled. First to 15 VP wins; check immediately after every award. 1 VP per enemy defeat and no friendly-fire VP.
 
 Structures arrive on later maps, particularly Timberwood. They block movement but never line of sight and are destructible only by abilities that say so. Nothing blocks line of sight; do not add starter-map structures.
 
@@ -122,7 +116,7 @@ Random setup: every map has nine X locations. For this map shuffle four traps an
 
 Any movement into a trap deals 1 damage, then removes it. Any movement into fire deals 1 damage; ending a character’s turn there also deals 1 damage. Resolve each entry separately, including voluntary and forced movement, stopping if defeated. Fire hexes are enterable. TEST recruit timing: fire end-turn damage applies to recruits that acted during that friendly turn. Moving an idle hero by an ability is not itself ending its activation.
 
-TEST structure representation: impassable occupied hexes, with adjacency measured normally. Structures have no ordinary HP/attack target status and grant no automatic cover unless a scenario or ability specifies it. Do not inherit old temporary-wall expiry or cover rules onto new structures. Preserve any explicitly authored edge-wall rules separately.
+TEST structure representation: impassable occupied hexes, with adjacency measured normally. Structures have no ordinary HP/attack target status and grant no automatic cover unless a scenario or ability specifies it. Preserve any explicitly authored edge-wall rules separately.
 
 Melee flanking is +1 Attack die PER other friendly unit adjacent to the target that has no adjacent enemy OTHER than that target. Recruits can assist; the attacker cannot count itself. This is the only generic flanking bonus; ranged attacks never gain it.
 
@@ -132,27 +126,27 @@ Elevation remains an optional TEST: Low 0 / High 1; ranged high-to-low attacks g
 
 8. Authored Heroes and Equipment
 
-Read the live Battlescrap spreadsheet for all hero records, stable IDs, stats, costs, abilities and wording: https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit. The Design Draft’s old roster and print-and-play/current/manifest.json are historical snapshots, not hero authority. The designer is editing the sheet for this update.
+Read all hero records, stable IDs, stats, costs and wording from the live Battlescrap spreadsheet.
 
 Concord: h01,h11,h03,h04,h13. Wildmoon: h06,h12,h08,h14,h10. Choose exactly three within 15 PP plus bid compensation. Each five contains one from each starter region. Highholm and Timberwood do not appear in starter offers.
 
-Resolve hero-specific targeting, cost, stacking and movement from the current sheet’s Ability effect, numeric fields and Notes together. Flag conflicts within the sheet for the designer; do not substitute old Hester, Kalawi or other hero text from print manifests.
+Resolve hero-specific targeting, cost, stacking and movement from the current sheet’s Ability effect, numeric fields and Notes together. Ask the designer about contradictions.
 
 Equipment remains on tableau and across respawn. Orro can buy Bellmetal Shield. Sighting Lens never extends EXACTLY {hex:2} attacks. Preserve preparation-only purchase timing and reject ineffective purchases.
 
 9. Decks, Brightstone and Tactical Objectives
 
-Both sides draw from one shared tactic draw pile and discard into one shared tactic discard pile; hands remain private. Fire, Lightning and Water remain equally represented. All old linked hero cards and the former Attack/Defense-only tactic definitions are retired. A card is discarded for either its printed effect OR one matching-element ability payment, never both.
+Both sides draw from one shared tactic draw pile and discard into one shared tactic discard pile; hands remain private. Fire, Lightning and Water remain equally represented. A card is discarded for either its printed effect OR one matching-element ability payment, never both.
 
-CONFIRMED tactic effects: Cancel an opponent’s tactic immediately after it is played for its printed effect or discarded to activate a hero ability; cancellation prevents the targeted effect/ability; before an attack add 2 Attack dice; before an attack add 2 Defense dice; before an attack add 2 damage if it hits; before an attack arrange for the defender to attack immediately if the original attack misses; during your turn move one of your units up to {hex:4} OR heal it 1; during your turn attack with each friendly Recruit. Remove all generic +1 Attack, +1 Defense and +1 damage alternatives and all card-for-AP uses. Matching-element ability payments remain legal.
+tactic effects: Cancel an opponent’s tactic immediately after it is played for its printed effect or discarded to activate a hero ability; cancellation prevents the targeted effect/ability; before an attack add 2 Attack dice; before an attack add 2 Defense dice; before an attack add 2 damage if it hits; before an attack arrange for the defender to attack immediately if the original attack misses; during your turn move one of your units up to {hex:4} OR heal it 1; during your turn attack with each friendly Recruit. Matching-element ability payments remain legal.
 
 Ability elements are fixed in the text. A base ability normally costs one matching tactic; some powerful abilities also cost AP. An amplification discard is additional to the activation discard and any AP. Card-only abilities never acquire an AP repeat surcharge. These choices make tactic income, hand size and repeated card-only effects important balance variables.
 
-CONFIRMED digital tactic components: one shared 27-card deck for both sides, with 9 Fire + 9 Lightning + 9 Water. Each element has two +2 Attack dice cards, two +2 hit damage cards, and one each of Cancel, +2 Defense dice, counterattack-on-miss, Move {hex:4} OR heal 1, and attack-with-each-Recruit. Totals across the shared deck: 6 +2 Attack dice, 6 +2 hit damage, and 3 of each other effect. This replaces the earlier personal-deck counts. Starting hand 4 per side and hand limit 8 remain TEST. Existing PnP files remain frozen; their old 48-card inventory is historical.
+digital tactic components: one shared 27-card deck for both sides, with 9 Fire + 9 Lightning + 9 Water. Each element has two +2 Attack dice cards, two +2 hit damage cards, and one each of Cancel, +2 Defense dice, counterattack-on-miss, Move {hex:4} OR heal 1, and attack-with-each-Recruit. Totals across the shared deck: 6 +2 Attack dice, 6 +2 hit damage, and 3 of each other effect. Starting hand 4 per side and hand limit 8 remain TEST.
 
 Complete each draw and enforce limit privately. When the shared tactic draw pile is empty, shuffle the shared tactic discard pile into it; if both shared piles are empty, draw nothing. Draw sources are starting hand, purchased starting draws, each Brightstone pickup, each completed objective and hero defeat. No automatic empty-tactic-hand refill is added: the empty-hand draw rule applies to OBJECTIVES.
 
-CONFIRMED objective deck: six distinct objectives only, one copy each, replacing to01–to10. Keep one hidden starting objective per side, maximum hand 2, next-own-turn eligibility, at most one claim at friendly turn end, 1 VP + 1 tactic per claim, and draw one when the objective hand is empty and deck nonempty. Never refill or reshuffle. Use new versioned IDs so old objective progress cannot map onto new meanings.
+objective deck: six distinct objectives only, one copy each. Keep one hidden starting objective per side, maximum hand 2, next-own-turn eligibility, at most one claim at friendly turn end, 1 VP + 1 tactic per claim, and draw one when the objective hand is empty and deck nonempty. Never refill or reshuffle.
 
 Every completed objective gives its printed 1 VP AND one tactic card. It gives no RP, no physical stone and no additional objective draw except the empty-hand rule. Check scenario victory immediately when VP is awarded; do not run a later normal cleanup if victory ends play.
 
@@ -172,9 +166,13 @@ All options use Fire, Lightning or Water as fixed printed elements. “Water” 
 
 Default timing is the active hero’s own activation outside combat. Options do not create free defensive reactions. An attack granted inside an ability enters normal combat; it is not a basic Attack for equipment or basic-Attack counters. This separate-counter interpretation is TEST and can let players alternate basic and ability attacks cheaply; evaluate combined Attack counting as a possible alternative.
 
+Ongoing abilities: discard the corresponding tactic card and pay any printed AP cost to activate an ongoing ability. After its Cancel response window resolves successfully, place an ability token on that ability; its ongoing effect applies only while it has an ability token. At the start of that character’s next activation, discard all ability tokens from that character before resolving its start-of-activation abilities or taking actions. Actions during the current activation and other characters’ activations do not remove these tokens. Ability tokens mark activation, not additional stacks of the buff. Instant abilities and unconditional passives do not require ability tokens unless specified. These markers are separate from the five status types.
+
+Ongoing ability presentation: place the ability-token icon in a consistent position immediately to the left of each ongoing ability’s text on the card. The icon must match the physical ability token and digital active marker. Show whether the token is present, and explain “Active until my next activation starts.” Include this rule in the player reference.
+
 Movement granted by an ability does not interact with other movement/action costs or counters, following the live spreadsheet’s current rule. Do not increment a recruit’s shared paid-action counter for ability movement. Forced Push/Pull and swaps likewise do not increment counters. Multi-target abilities select distinct units and resolve one at a time; optional movement may be skipped explicitly.
 
-Hero-specific targeting, stacking and movement exceptions belong in the spreadsheet’s current ability text and Notes. Read those fields together; if they disagree, ask the designer instead of restoring an older document ruling. Recent live edits already change Kalawi’s AP/effect and Hester’s effect.
+Hero-specific targeting, stacking and movement exceptions belong in the spreadsheet’s ability text and Notes. Read them together and ask the designer about contradictions.
 
 “Within N” includes distance 0 for allies unless “another” is stated. Enemies are living on-board units. Healing can target wounded or poisoned units, restores normal HP and clears the full Poison stack. A combined heal/buff can target an unwounded unpoisoned ally only if its buff applies. Never exceed printed HP.
 
@@ -192,37 +190,25 @@ Evaluate durability from HP and survival under opposed dice; offense from hit pr
 
 Hero costing remains TEST: compare full durability, offense, mobility/control and support packages, preserving half-point intermediate estimates and rounding once. The live sheet owns final printed stats and prices. Do not infer a fitted formula or proven balance.
 
-Validate current three-hero team affordability against the live sheet and the 15-PP preparation budget. Recompute examples when hero prices change; historical triples are not fixed legality fixtures.
+Validate current three-hero team affordability against the live sheet and the 15-PP preparation budget. Recompute examples when hero prices change.
 
-Later recruits pay for both unique and regional effects and synergy; campaign PP and RP pricing are not yet finalized. No legacy linked-card charge.
+Later recruits pay for both unique and regional effects and synergy; campaign PP and RP pricing are not yet finalized.
 
 Regional abilities and their current wording are maintained in the Regions tab of the live Battlescrap spreadsheet: https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit. Do not duplicate a stale regional ability catalog here.
 
 11. Art and Interface
 
-Each hero uses a half-poker portrait-orientation art/name card in the action queue, inside a faction ownership holder, plus a persistent poker-size tableau card with stats and full unique text. HP hearts sit along the portrait’s right edge. Equipment tucks under the tableau; damage cubes and statuses sit on it.
+Each hero uses a half-poker portrait-orientation art/name card in the action queue, inside a faction ownership holder, plus a persistent poker-size tableau card with stats and full unique text. HP hearts sit along the portrait’s right edge. Equipment tucks under the tableau; damage cubes and statuses sit on it. Standee faces measure 1.25 × 2.5 inches; unfolded standees measure 1.25 × 5 inches. Hero Move uses three speed tiers: slow {hex:2}, normal {hex:3}, fast {hex:4}. All unique and regional ability text uses the hero’s first-person voice: I, me and my. Bisti Grasshade (h01) is the Windlands Concord starter. Her art brief is a cheetah/human woman with a blowgun stalking through shadowy tall grass. Kalawi Bloodmane (h15) is a regional recruit. Read hero details from the live spreadsheet.
 
-CONFIRMED presentation standard: every number measuring board spaces uses {hex:x} in source text, including spreadsheet Move and Attack range values, movement allowances, targeting distances, exact ranges, Push/Pull and distance modifiers. Render it everywhere as a flat-top hex with black outline, cream background and centered black number. Keep action words and qualifiers (Move {hex:3}; within {hex:2}; exactly {hex:2}); omit redundant “spaces” after the icon. Dice, damage, HP, AP/RAP, prices, unit counts and queue positions are ordinary numbers. Use one shared token parser and vector icon across cards, tableaus, tooltips, prompts, logs, player references and future print exports. Parse numeric values from tokens at the content boundary; engine distances remain numbers. Provide accessible text such as “3 spaces”; never expose raw markup in player-facing output. Preserve this notation in exports, translating only at the renderer boundary. Future print work follows this standard when authorized; existing PnP outputs remain frozen.
+presentation standard: every number measuring board spaces uses {hex:x} in source text, including spreadsheet Move and Attack range values, movement allowances, targeting distances, exact ranges, Push/Pull and distance modifiers. Render it everywhere as a flat-top hex with black outline, cream background and centered black number. Keep action words and qualifiers (Move {hex:3}; within {hex:2}; exactly {hex:2}); omit redundant “spaces” after the icon. Dice, damage, HP, AP/RAP, prices, unit counts and queue positions are ordinary numbers. Use one shared token parser and vector icon across cards, tableaus, tooltips, prompts, logs, player references and future print exports. Parse numeric values from tokens at the content boundary; engine distances remain numbers. Provide accessible text such as “3 spaces”; never expose raw markup in player-facing output. Preserve this notation in exports, translating only at the renderer boundary. Future print work follows this standard when authorized; existing PnP outputs remain frozen.
 
 Combat notation: Attack dice (range), e.g. 4 ({hex:3}); exact-range restrictions stay explicit. Attack/sword red (#c83135), ranged/bow green (#2b863f), Defense/shield blue (#2878c2). Move the heart’s white outline wholly outside the red heart silhouette, maintaining at least a five-pixel visible outline at display size. Show an Enraged symbol next to the last HP heart and explain its trigger. Preserve approved character art.
 
 Concord: maroon angular sun. Wildmoon: sky-blue antler crescent. Raster faction masters live in assets/factions; approved original portraits in assets/heroes/approved-v9; four new full-body portraits with colored backgrounds in assets/heroes/new-starters. All visual masters remain in the game-root assets folder. Do not regenerate approved original characters.
 
-FROZEN PnP SNAPSHOT (prior revision; do not regenerate): one concise rules-and-legend sheet, no assembly cover; 10 tableau cards, 10 portrait cards, 6 faction holders, 10 enlarged hero-only standees, 2 recruit reference cards, 48 tactics, 9 distinct objectives, and 14 items (8 equipment plus 6 recruit upgrade references) on ONE sheet. No card backs and no recruit standees, including reserve recruits. Supply recruit miniatures/proxies separately. Standee faces are 1.25 × 2.5 inches, exactly 125% of the former dimensions; 10 unfolded rectangles of 1.25 × 5 inches touch edge to edge in two rows of five. The original unboxed map remains two sheets.
-
-FROZEN PRINT TOKEN INVENTORY (not digital rules): 10 TOTAL each Enraged, Fortified, Dazed, Poison; four traps and five setup Brightstone with nine identical square backs; reserve Brightstone for hero defeat and VP markers. Red cubes represent 1 damage. No Taunt, Stunned, element assignment markers or linked ability cards. Printed token counts are not gameplay stack caps.
-
-FROZEN PRINT LAYOUT / OLD PRINTED STATS: All token squares, including the nine matching trap/Brightstone token backs, touch edge to edge in one compact grid. Removing card backs does not remove these shared random-setup token backs. Recruit references show only faction symbol/name and the same HP, Move, Attack and Defense icons as heroes (2 HP, Move 2, Attack 1, Defense 1); no meeple or rules text. Print the queue as two joined three-position header strips above the portrait holders, with downward pointers only and no card-sized spaces beneath them.
-
-Frozen PnP source: print-and-play/build_current.py; output: print-and-play/current. Keep existing source and output files unchanged in this update. They use the prior print rules and are not v12 digital acceptance evidence.
-
-CONFIRMED 25 October: Cancel can interrupt both a tactic’s printed effect and a tactic discarded to activate a hero ability; a canceled ability does not resolve. Each damage event that reduces a living hero from above 1 HP to exactly 1 HP grants 1 Enraged, including after healing and again in the same life. No trigger for remaining at 1 HP or taking lethal damage. Heavy Attack (x) replaces the old optional heavy mode: remove dice halving, its automatic +1 damage and miss-Dazed penalty. Both sides use one shared 27-card tactic deck: 9 cards per element, with two +2 Attack dice and two +2 hit damage cards per element, plus one of each of the other five effects per element. Remaining TEST interpretations include response-stack/cancellation costs, counterattack chaining/stacking and timing boundaries. Later hero details and campaign progression/catch-up remain future work. Read hero balance from the live sheet.
-
 Balance risks: each winning attacker six now adds damage, so large pools, Focus, Enraged and +2 damage tactics can cause much more burst. Every winning defender six creates Focus and may feed the new counterattack. Card-only repeat abilities, mass recruit attacks, last-HP triggers and heal effects need loop checks. Six finite objectives may exhaust sooner and end-position conditions may be much harder than attack conditions despite equal rewards. Report observed results separately from design targets.
 
 Digital UI: queue portraits and persistent tableau are separate. Show AP/RAP and next cost per action/model; recruit actions occur within a hero turn. Show both tactic uses, legal response windows, exact-two target rings, damage and all five statuses. Frames indicate ownership/pair identity, never ability element. Include the in-app player reference.
-
-CONFIRMED presentation standard: every number measuring board spaces uses {hex:x} in source text, including spreadsheet Move and Attack range values, movement allowances, targeting distances, exact ranges, Push/Pull and distance modifiers. Render it everywhere as a flat-top hex with black outline, cream background and centered black number. Keep action words and qualifiers (Move {hex:3}; within {hex:2}; exactly {hex:2}); omit redundant “spaces” after the icon. Dice, damage, HP, AP/RAP, prices, unit counts and queue positions are ordinary numbers. Use one shared token parser and vector icon across cards, tableaus, tooltips, prompts, logs, player references and future print exports. Parse numeric values from tokens at the content boundary; engine distances remain numbers. Provide accessible text such as “3 spaces”; never expose raw markup in player-facing output. Preserve this notation in exports, translating only at the renderer boundary. Future print work follows this standard when authorized; existing PnP outputs remain frozen.
 
 12. Basic Bots and Simulations
 
@@ -244,45 +230,27 @@ Rewards acceptance: hero-only Brightstone drop and consolation draw; both unit t
 
 Content/UI acceptance: current live-sheet heroes and selected ability wording/costs, appropriate starter/later availability, exactly three/15-PP preparation, recruits 2 HP/3 Move/2 Attack/2 Defense; five statuses; no element-assignment frames or linked cards; outside heart outline, last-HP cue, starter-faction reminders and color+shape pairing.
 
-PnP is explicitly frozen and excluded from this update’s implementation and acceptance. Existing print verification belongs to the prior revision. Read back both live documents after synchronization. Digital tests, human UI checks and balance playtests remain Sol’s implementation deliverables.
+PnP is explicitly frozen and excluded from this update’s implementation and acceptance. Read back both live documents after synchronization. Digital tests, human UI checks and balance playtests remain Sol’s implementation deliverables.
 
-14. Current World and Regional Themes
+14. World and Regional Themes
 
-The designer’s refined Surlune theme below is current canon; the Design Draft’s World and Regions section remains the lore authority. Preserve its regional cultures. Seven regions: Windlands, Cinder’s Rim, Port Windlass, Wellington and Phalexia in starter offers; Highholm and Timberwood later. Region is not allegiance.
-
-Concord’s maroon sun and Wildmoon’s sky-blue antler crescent indicate current ownership; small starter-faction reminders indicate initial assignment. Pair color+shape connects a queue hero to its board piece. Background palettes express identity/region. Preserve approved art under the game-root assets folder.
-
-One day, Surlune’s stars began to fall.
-
-Not all at once, not all together. But they stormed through the land, some sprinkling as hot, white glowing pebbles that streamed down to the earth, others as massive streaking boulders crashing through the atmosphere and carving new mountain valleys or splintering across farms and towns.
-
-But the stones, Brightstones as they came to be called, didn’t just destroy, they brought a will with them. People who witnessed that first crash saw terrible miracles. Where the stones had landed in a forest, some trees rose to the heavens while others started to move with purpose, smashing nearby lumberyards. Rivers flooded and swelled with life, deserts saw their sand turned to tiny gemstones, blinding in the light and home to crystal-scaled lizards the size of a horse. And the horses? And all the other creatures that found and got too close to, or simply lived near these Brightstones long enough? Like nothing you recognize as sane now.
-
-People were warped too. Strange tales come from the furthest reaches of civilization still, but over time people learned to work with Brightstone. A farmer might find them bringing a more bountiful harvest, a carpenter’s poor cut might mend. Towns quickly became cities, and cities look to become kingdoms.
-
-When a group of high-minded soldiers formed what they called a Concord (and they insist it had nothing to do with the wine-producing valley they came from) with neighboring cities to band together against the rampant theivery and other dangers on the road, it didn’t take long for that protection to be extended to neighboring areas that had not asked for it. Brightstone was power, and power was needed to fight back.
-
-As the Concord grew, the many moon-worshiping Lunites saw a future in the nacent empire that they didn’t want for their homes or families. As word passed through the moonlit gatherings of the many villages dotting the land, talk of resisting the Concord grew. It’s not clear who started calling this resistance the “Wildmoon”, but the name stuck and only served to bind people to it’s purpose: an end to the Concord, a future where Brightstone is for everyone.
-
-The players are Stonebinders, they have a special gift for drawing great power from Brightstone, healing grievous wounds and seeing their surroundings from the astral plane where they can suggest, or even command, those around them. Stonebinders make natural commanders, and this game is the story of some of them fighting for a better future on Surlune.
-
-15. Next Digital Update — Sol Implementation Plan
+15. Implementation Plan
 
 Scope and source gate
 
-Target digital-update-v12. The shipped branch snapshot is turn-rules-v8; implement all unchanged v11 baseline rules plus the v12 changes in this document. Work in games/battlescrap on codex/battlescrap-laptop-handoff or a suitable continuation branch. This authoring pass changes documentation only. PnP sources, generated PDFs, print assets, manifests and print scripts are out of scope. No public deployment is requested.
+Implement digital-update-v12 as specified here, in games/battlescrap on codex/battlescrap-laptop-handoff or a continuation branch. PnP sources and outputs are outside this digital implementation.
 
-Before coding, read both live core documents and the entire live Battlescrap spreadsheet: Heroes, Regions and Rules & notes. Use stable hero IDs and header names rather than fixed row/column positions. The designer is actively editing it. Capture a dated, revision-identified local content snapshot and review changes again before final verification. Never overwrite the Sheet from older code/docs. If ability text, numeric cost/range fields and Notes conflict, stop that hero’s import and ask. Do not infer unspecified new abilities, especially the unfinished Cinder’s Rim instruction. Local content is a reproducible implementation snapshot, not a second authority. The source uses {hex:x} for all spatial values; the Move and Attack range cells are tokens, not bare numeric cells. Import their numeric payload without changing gameplay.
+Read both live core documents and all spreadsheet tabs before coding. Import by stable hero IDs and header names. Capture a dated content snapshot and recheck before delivery. Ask about conflicting or unfinished entries. Parse {hex:x} spatial values into numeric engine data. Hero Move uses three speed tiers: slow {hex:2}, normal {hex:3}, fast {hex:4}. All unique and regional ability text uses the hero’s first-person voice: I, me and my. Bisti Grasshade (h01) is the Windlands Concord starter. Her art brief is a cheetah/human woman with a blowgun stalking through shadowy tall grass. Kalawi Bloodmane (h15) is a regional recruit. Read hero details from the live spreadsheet.
 
-Phase 1 — configuration, data and v8 migration
+Phase 1 — configuration and data
 
-Audit src/content.ts, src/engine.ts, App.tsx, icons.tsx, styles.css, simulation.ts and current tests against the live sources. Record implemented versus planned behavior in SOURCE_AUDIT.md. Add versioned, typed content/config for six queue positions; separate AP/RAP; 15 PP and exactly three heroes; updated recruit stats; five statuses; seven tactic effect kinds; six new objective IDs; scenario target/scoring and printed-X/spawn geometry. Replace v8 suit assignments, linked cards, recruit queue tiles and obsolete statuses/actions. Preserve bidding, private information and campaign economy where unchanged.
+Audit src/content.ts, src/engine.ts, App.tsx, icons.tsx, styles.css, simulation.ts and current tests against the live sources. Record implemented versus planned behavior in SOURCE_AUDIT.md. Add versioned, typed content/config for six queue positions; separate AP/RAP; 15 PP and exactly three heroes; updated recruit stats; five statuses; seven tactic effect kinds; six new objective IDs; scenario target/scoring and printed-X/spawn geometry. Preserve bidding, private information and campaign economy where unchanged.
 
-Bump save/content version. Reject incompatible v8/v11 saves with a clear explanation, or implement and test an explicit migration. Do not reinterpret old objective IDs, poison, deck cards or queue state silently. Snapshot rules configuration and hero content in saves/replays; replay must not change if the live Sheet changes later. Keep seeded RNG and plain serializable state. Store pending responses, target choices, multi-attacks and event processing IDs.
+Bump save/content version. Reject incompatible saves with a clear explanation, or implement and test an explicit migration. Do not silently reinterpret incompatible content or state. Snapshot rules configuration and hero content in saves/replays; replay must not change if the live Sheet changes later. Keep seeded RNG and plain serializable state. Store pending responses, target choices, multi-attacks and event processing IDs.
 
 Phase 2 — turn flow, statuses and damage
 
-Implement six hero-only queue entries, slot 0 selection, AP/RAP capture and hero/recruit escalating paid-action counters. Use confirmed slots (1,1),(2,1),(3,1),(3,2),(4,3),(5,2). Remove queue draws and poison queue hooks. Resolve scenario scoring and immediate victory, then owner-turn poison once per living poisoned unit before hero choice. Poison ticks for 1 and removes 1; heals restore normal HP and clear all Poison. Implement last-HP Enraged through the common damage handler with the confirmed repeat policy. Reject retroactive rewards from already-defeated units.
+Implement six hero-only queue entries, slot 0 selection, AP/RAP capture and hero/recruit escalating paid-action counters. Use slots (1,1),(2,1),(3,1),(3,2),(4,3),(5,2). Remove queue draws and poison queue hooks. Resolve scenario scoring and immediate victory, then owner-turn poison once per living poisoned unit before hero choice. Poison ticks for 1 and removes 1; heals restore normal HP and clear all Poison. Implement last-HP Enraged through the common damage handler on every qualifying damage transition. Reject retroactive rewards from already-defeated units.
 
 Keep highest-face, six-count and attacker-tie winner rules; count every winning attacker six as +1 damage and every winning defender six as +1 Focus. Apply zero-pool keep-lower correctly. Snapshot/consume Focus, Enraged, Fortified and Dazed by role so new tokens survive. Route every attack source through the same combat pipeline. Show an inspectable damage breakdown; Light Attack cap is applied to final damage after all additions (TEST). Resolve defeat once before optional on-hit displacement/status effects against a surviving target (TEST).
 
@@ -290,25 +258,25 @@ Phase 3 — keywords and tactics
 
 Implement data-driven Heavy Attack(x), Light Attack(x), Fly, Pusher(x), Puller(x), Poison(x). Fly ignores intervening units and terrain effects but must end on a legal empty full hex, applying destination terrain; it does not extend Move or leave the board. TEST: Fly applies to voluntary Move, not forced Push/Pull. Pusher/Puller are optional after-hit displacement controlled by the attacker; each step follows existing distance rules. Do not add a generic basic Push action.
 
-Create the seven tactic effects with matching-element ability payment as the only alternate use. Remove flexible +1 bonuses. Resolve Cancel before the targeted effect, never by rolling back already exposed dice or completed movement. TEST response model: an explicit last-in-first-out pending stack, Cancel may cancel an opponent’s Cancel, and both cards stay discarded; two passes close the current response window. CONFIRMED: open this response window for matching-element ability payments as well as printed tactic effects; successful cancellation prevents the paid ability from resolving. TEST cost handling: committed tactic cards and AP remain spent when canceled, with the attempted paid ability counting toward its repeat cost; ask before changing this interpretation. Preserve private hand/overflow handling and legal-action enumeration.
+Create the seven tactic effects with matching-element ability payment as the only alternate use. Resolve Cancel before the targeted effect, never by rolling back already exposed dice or completed movement. TEST response model: an explicit last-in-first-out pending stack, Cancel may cancel an opponent’s Cancel, and both cards stay discarded; two passes close the current response window. open this response window for matching-element ability payments as well as printed tactic effects; successful cancellation prevents the paid ability from resolving. TEST cost handling: committed tactic cards and AP remain spent when canceled, with the attempted paid ability counting toward its repeat cost; ask before changing this interpretation. Preserve private hand/overflow handling and legal-action enumeration.
 
 Counterattack tactic is declared before the original roll; on a miss, a living defender may make one legal ordinary attack against the original attacker without AP. Recheck range and status at trigger time. TEST: multiple copies do not create multiple retaliations and counterattacks cannot chain. Counterattacks receive a normal response window. Move/heal tactic targets any living friendly unit during the owner’s turn; move costs no AP/counter use, or heal 1 and clear Poison. Recruit-assault tactic queues one attack for each living friendly recruit, in owner-chosen order, with fresh legal target selection and normal response windows for each. TEST: no AP/RAP charge or paid-action-counter increment; skip recruits with no legal target; stop immediately on victory.
 
-Build one CONFIRMED shared 27-card tactic deck and shared discard pile for both sides. For each element, include two +2 Attack dice, two +2 hit damage, and one of each other effect: 9 cards per element, 6 Attack-dice cards, 6 hit-damage cards and 3 of each other effect overall. Keep starting hand/limit configurable. Validate all 27 card instances across the shared draw/discard piles, both private hands and pending plays; exactly one zone per card, shared reshuffle and cancellation conservation. Digital component lists must use these counts; do not regenerate frozen PnP files.
+Build one shared 27-card tactic deck and shared discard pile for both sides. For each element, include two +2 Attack dice, two +2 hit damage, and one of each other effect: 9 cards per element, 6 Attack-dice cards, 6 hit-damage cards and 3 of each other effect overall. Keep starting hand/limit configurable. Validate all 27 card instances across the shared draw/discard piles, both private hands and pending plays; exactly one zone per card, shared reshuffle and cancellation conservation. Digital component lists must use these counts; do not regenerate frozen PnP files.
 
 Phase 4 — scenario and objective engine
 
-Replace binary fire scoring with 1 water VP per own turn and stone VP equal to controlled fire count; target 15 and retain enemy-defeat VP. Bind the six new objective definitions to versioned event/board predicates. Keep attack attempt versus hit distinct, snapshot adjacency at the roll boundary and reset same-turn progress correctly. End-turn objectives use persistent printed-X coordinates and the scenario’s enemy spawn region, not remaining tokens or artwork guesses. Resolve pickup/overflow before claims; allow at most one claim, pay 1 VP + 1 tactic once and refill only an empty objective hand from the finite deck.
+Implement 1 water VP per own turn and stone VP equal to controlled fire count; target 15 and retain enemy-defeat VP. Bind the six new objective definitions to versioned event/board predicates. Keep attack attempt versus hit distinct, snapshot adjacency at the roll boundary and reset same-turn progress correctly. End-turn objectives use persistent printed-X coordinates and the scenario’s enemy spawn region, not remaining tokens or artwork guesses. Resolve pickup/overflow before claims; allow at most one claim, pay 1 VP + 1 tactic once and refill only an empty objective hand from the finite deck.
 
 Phase 5 — spreadsheet hero content and digital presentation
 
-Read the latest hero spreadsheet again after designer edits. Implement every selected starter ability through typed effect handlers, sharing movement/attack/status primitives. Compare UI wording, element costs, AP costs, stats and exceptions against that exact snapshot. Show unresolved or incomplete abilities as an explicit implementation blocker; do not ship a silent old fallback. Preserve the four later recruits as future content until complete.
+Read the latest hero spreadsheet again after designer edits. Implement every selected starter ability through typed effect handlers, sharing movement/attack/status primitives. Compare UI wording, element costs, AP costs, stats and exceptions against that exact snapshot. Show unresolved or incomplete abilities as an explicit implementation blocker; do not ship a silent fallback. Keep incomplete regional recruits unavailable until their entries are complete. Implement token-gated ongoing abilities, including Demea’s current aura. Re-evaluate its affected allies from current adjacency while active. Canceled activation creates no token. Clear all of the selected hero’s ability tokens at activation start, even if the player then takes no action. Verify activation, cancellation, persistence through later actions/opponent turns, expiry, save/resume, and matching left-side icon in card layouts. Defeat/respawn must not preserve an active aura.
 
 Update digital queue/tableau/standee views: current stats and abilities, separate AP/RAP and next action costs, Focus and Poison explanations, outside-only heart stroke, last-HP Enraged cue, small bottom-right starter-faction reminder and matching color+shape pairs (three warm versus three cool). Ownership, starter faction and pair identity must remain distinguishable without color. Add an in-app player reference covering actions, escalating costs, the two card uses, all five statuses, keywords, flanking and both −2 ranged penalties. Update prompts, tooltips, bots and simulation panels; never expose private hands in public DOM or bot projections.
 
 Phase 6 — verification and delivery
 
-Focused regressions: all six queue entitlements and top-slot RAP decrease; hero Move–Attack–Move {hex:1}/1/2 versus recruit paid 1/2/3; no counter reset on respawn; ability movement counter independence; recruit 2 HP/3 Move/2 Attack/2 Defense; no starter regional abilities unless explicitly changed in the Sheet; removal of all obsolete suit, linked-card and basic-cleanse/Push behavior.
+Focused regressions: all six queue entitlements and top-slot RAP decrease; hero Move–Attack–Move costs 1/1/2 AP versus recruit paid 1/2/3; no counter reset on respawn; ability movement counter independence; recruit 2 HP/3 Move/2 Attack/2 Defense; no starter regional abilities unless explicitly changed in the Sheet; removal of all obsolete suit, linked-card and basic-cleanse/Push behavior.
 
 Combat fixtures: tied fives hit; [6] versus [6,6] blocks and earns 2 Focus; [6,6,1] versus [6,6,5] hits for base 1 + 2 six damage; losing sixes yield no reward; zero pool counts only its kept die. Verify Focus is spent on misses, new defensive Focus survives, Enraged/Heavy/+2 damage stack only on hits, Light cap is final, both ranged penalties can stack to −4, and exact-range attacks never extend.
 
@@ -318,12 +286,4 @@ Tactic/objective fixtures: cancellation before resolution, Cancel-on-Cancel and 
 
 Scenario/save/privacy fixtures: water own-turn only and unconditional; stone 0/1/2/3 fires, tied control and immediate 15 VP victory; poison/scenario ordering; every pending response/attack/claim survives save/resume and deterministic replay; undo stops at reveals; no duplicate defeat/settlement payment or private information leaks. Bots use the same legal actions and handle all response/multi-step decisions without dead ends.
 
-Run the game’s tests and build, updated fuzz/invariant and deterministic replay suites, asset checks, browser smoke and paired-seed simulations with current legal teams. Inspect desktop/tablet screenshots and complete a human-vs-bot journey through setup, movement, attack, response, objective, end turn, undo and ending. Report seeds, configuration/hero snapshot, unfinished games, burst damage, Focus production, tactic use, objective frequency, side win rate and stall rate. Tests validate behavior, not balance. Update ARCHITECTURE.md, DECISIONS.md and VERIFICATION.md only when code is actually implemented and checked; preserve their older evidence as historical.
-
-Decision register and major conflicts
-
-CONFIRMED: AP/RAP is 1/1, 2/1, 3/1, 3/2, 4/3, 5/2; water scores only on its own turns; designer edits in the live spreadsheet supply final hero abilities. The live sheet currently also changes extended-range penalty to −2 and makes ability movement independent of other costs/counters; these supersede the v11 document defaults.
-
-CONFIRMED 25 October: Cancel can interrupt both a tactic’s printed effect and a tactic discarded to activate a hero ability; a canceled ability does not resolve. Each damage event that reduces a living hero from above 1 HP to exactly 1 HP grants 1 Enraged, including after healing and again in the same life. No trigger for remaining at 1 HP or taking lethal damage. Heavy Attack (x) replaces the old optional heavy mode: remove dice halving, its automatic +1 damage and miss-Dazed penalty. Both sides use one shared 27-card tactic deck: 9 cards per element, with two +2 Attack dice and two +2 hit damage cards per element, plus one of each of the other five effects per element. Remaining TEST proposals: scoring before poison; no counterattack chains/stacking; response-stack handling; free tactic-granted actions; Light cap after all additions; Fly movement boundary; objective snapshot/spawn/X interpretations. Preserve their labels and record accepted rulings in DECISIONS.md.
-
-Major conflicts resolved by replacement: v8 eight-tile queue and v11 monotonic AP/RAP; old two-more-sixes damage/defense rewards; four-status model; poison queue/burst/instant-recruit-death/heal-replacement rules; binary fire scoring/8 VP; nine/ten old objectives; Attack/Defense-only tactics and flexible +1 alternatives; element-assignment holders; old gentle-starfall lore. PnP intentionally remains on its prior rules and must not be presented as v12-compatible.
+Run the game’s tests and build, updated fuzz/invariant and deterministic replay suites, asset checks, browser smoke and paired-seed simulations with current legal teams. Inspect desktop/tablet screenshots and complete a human-vs-bot journey through setup, movement, attack, response, objective, end turn, undo and ending. Report seeds, configuration/hero snapshot, unfinished games, burst damage, Focus production, tactic use, objective frequency, side win rate and stall rate. Tests validate behavior, not balance. Update ARCHITECTURE.md, DECISIONS.md and VERIFICATION.md only when code is actually implemented and checked.
