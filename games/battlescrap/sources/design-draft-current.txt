@@ -71,7 +71,7 @@ Windlands — Tall-grass plains, proud clan leaders and prized lion-shifters. Br
 Highholm — Frozen peaks, frost giants, heavy furs and leather. Longhouses ring with feasts of mead and meat. Norse-inspired warriors turn stone-hard to endure.
 Cinder’s Rim — A mysterious volcanic settlement of masked fire-priests and many fire gods. Carved tiki-inspired forms, ember rituals, magma and dangerous bursts of power.
 Timberwood — Powerfully built, beardless woodland elves: axe-workers, growers and master joiners. Living public avenues meet towering timber halls. Hardwood arms and armor draw on medieval Japanese forms; every harvest is replanted.
-Port Windlass — Starfall whipped the island seas into a frenzy. A few sailors travel behind tamed whales or sharks; many now raid the rivers. Age-of-sail and Polynesian maritime influences meet wind-calling warriors.
+Port Cutlass — Starfall whipped the island seas into a frenzy. A few sailors travel behind tamed whales or sharks; many now raid the rivers. Age-of-sail and Polynesian maritime influences meet wind-calling warriors.
 These are fictional microcultures with the supplied broad visual influences; neither a region nor a real-world cultural influence determines allegiance. The Concord promises safety through shared institutions; Wildmoon promises freedom and self-rule. Both recruit from all five regions.
 
 Each player leads a stonebinder’s traveling company serving one of these movements. Both pursue the same deposits, routes and communities. Lesser star showers keep creating opportunities. A regional victory can secure access and earn local trust without ending the wider struggle.
@@ -80,7 +80,7 @@ Every deployed unit carries an awakened Brightstone. Defeat releases one recover
 Side ownership is indicated by the existing standee holders and normal player ownership in the digital game. Do not add sticker banners, badges, faction costume variants or an origin-versus-allegiance customization system. Holder suits remain independently assigned Fire, Lightning and Water.
 
 Shared Regional Roster
-Default starter rosters: Concord A = h01 Kalawi (Windlands), h02 Brynja (Highholm), h03 Voru (Cinder’s Rim), h04 Tavi (Port Windlass), h05 Marda (Timberwood). Wildmoon B = h06 Niala (Windlands), h07 Eirik (Highholm), h08 Ketu (Cinder’s Rim), h09 Ren (Timberwood), h10 Orro (Port Windlass). Each begins with one hero per region and all five main jobs. Paired regional heroes have different main roles; Niala is neither Striker nor Scout. Choose three under the preparation budget. Retain the swap-rosters test option and shared campaign recruitment: starter assignment is not a permanent faction lock.
+Default starter rosters: Concord A = h01 Kalawi (Windlands), h02 Brynja (Highholm), h03 Voru (Cinder’s Rim), h04 Tavi (Port Cutlass), h05 Marda (Timberwood). Wildmoon B = h06 Niala (Windlands), h07 Eirik (Highholm), h08 Ketu (Cinder’s Rim), h09 Ren (Timberwood), h10 Orro (Port Cutlass). Each begins with one hero per region and all five main jobs. Paired regional heroes have different main roles; Niala is neither Striker nor Scout. Choose three under the preparation budget. Retain the swap-rosters test option and shared campaign recruitment: starter assignment is not a permanent faction lock.
 
 At 20 PP all 10 triples from each fixture are affordable: Concord13–17; Wildmoon14–20. Kalawi5, Brynja7, Voru5, Tavi4, Marda4, Niala3, Eirik5, Ketu8, Ren6, Orro6. Pricing is TEST, not validated faction balance.
 All heroes HP 3. Printed Move 3–6, Attack 2–6, Defense 1–5; modifiers can exceed bands. Main/secondary jobs are descriptive, grant no automatic abilities. Each hero has one core and two suitless linked cards.
@@ -107,7 +107,7 @@ h03a — Wall of Flame (1 AP): Place a flame edge within 4 until my next activat
 h03b — Magma Eruption (2 AP): Attack at +2. Then gain 1 Dazed.
 
 h04 — Tavi Sailwhistle
-SCOUT / Support · Port Windlass
+SCOUT / Support · Port Cutlass
 Cost 4 PP / RP; Move6; Attack 2 melee; Defense 1.
 Follow the Wind — Recruits starting a Move within 3 gain +1 Move.
 h04a — Boarding Party (1 AP): Move up to two friendly recruits within 3 up to 2 each.
@@ -149,7 +149,7 @@ h09a — Raise the Timber (0 AP): Build an adjacent timber wall until my next ac
 h09b — Work Crew (1 AP): Move up to two friendly recruits within 3 up to 2 each.
 
 h10 — Orro Stormanchor
-GUARD / Controller · Port Windlass
+GUARD / Controller · Port Cutlass
 Cost 6 PP / RP; Move 3; Attack 2 melee; Defense5.
 Anchor Stance — I cannot be Pushed. +1 Defense against melee attacks.
 h10a — Anchor Exchange (1 AP): Swap places with another ally within 3.
@@ -168,7 +168,7 @@ Ordinary card movement follows occupancy, walls, actual paths and flame crossing
 
 Vanish allows zero to three movement spaces, then optional enemy selection from the new position. If Niala dies during movement, stop. If no adjacent legal enemy remains, finish the card. A chosen Push target can receive Dazed even if displacement is blocked; Orro remains immune to displacement, not status. Pushes use the fixed source and existing legal step checks; stop on defeat. Magma Surge and Breakwater use the same rules.
 
-For Wall of Flame, both endpoint hexes must be within 4 of Voru. Keep one legal edge, no overlapping walls/temporary terrain, both sides affected, and at most one flame wound per unit per activation across all flame edges. Flame deaths retain the current v6 defeat scoring; they do not become attacks for objective purposes. Timber still blocks movement, melee and Push and grants directional ranged cover. Terrain expires at its source's next activation or defeat. 
+For Wall of Flame, both endpoint hexes must be within 4 of Voru. Keep one legal edge, no overlapping walls/temporary terrain, both sides affected, and at most one flame wound per unit per activation across all flame edges. Flame deaths retain the current v6 defeat scoring; they do not become attacks for objective purposes. Timber still blocks movement, melee and Push and grants directional ranged cover. Terrain expires at its source's next activation or defeat.
 
 
 Do not add new keywords, status types, reaction windows, resource pools or per-round trackers.
@@ -223,7 +223,7 @@ Orro Stormanchor: 2 + -0.5 + 0 + 2.5 + 0 + 1 + 0.5 + 0 = 5.5; printed 6.
 Move modifiers:3→−0.5,4→0,5→0.5,6→1. Attack:2→0,3→0.5,4→1.5,5→2.5,6→4. Defense:1→−0.5,2→0,3→0.5,4→1.5,5→2.5. Ranged replacement:range2→0.5,3→1,4→1.5.
 
 Presentation, Prototype and Open Decisions
-Ten original 1024×1536 PNG illustrations are installed at public/heroes-v7, mapped by stable h01–h10 IDs in assets/hero-refresh-v7-manifest.json. Simple bold illustrated silhouettes, regional themes, warm ivory opaque backgrounds, no baked text/suits/ownership. Reuse one master on character card and both linked ability cards; portrait crops appear on tokens, queue and roster. Preserve original masters, keep crop/layout metadata separate. Art is provisional, not approved final print production. 
+Ten original 1024×1536 PNG illustrations are installed at public/heroes-v7, mapped by stable h01–h10 IDs in assets/hero-refresh-v7-manifest.json. Simple bold illustrated silhouettes, regional themes, warm ivory opaque backgrounds, no baked text/suits/ownership. Reuse one master on character card and both linked ability cards; portrait crops appear on tokens, queue and roster. Preserve original masters, keep crop/layout metadata separate. Art is provisional, not approved final print production.
 Character cards show name, region, cost, portrait, main job bold / secondary smaller, Move, Attack/range, Defense and core. Standard HP 3 need not be printed. Queue cards omit linked deck abilities. Ability cards show linked hero, live effect text and AP. Holder shows ownership and assigned suit independently. Teach AP alternates in rules; omit repeated footer boilerplate. Future standees may reuse masters; no print-ready dimensions are claimed.
 Current evidence:90 tests pass; production build and installed-asset check pass. Desktop1440×1000/tablet820×1180 browser journeys pass without console errors: bidding, muster, six-model deployment per side, queue activation, movement, undo, card dialog/cancel, private handoff, pending combat/pickup saves and automatic bots. Fifty seeded games complete, averaging18.5 activations; these are implementation checks, not balance validation. Evidence: game VERIFICATION.md and artifacts/browser-report.json, simulation.json and screenshots.
 Required regression coverage: alternating ownership with per-side shuffle; three recruits; one AP per model Move and per-action limits; hero-only death draw and off-turn overflow; BOTH pickup draws; objective3 RP/card without stone/double settlement; 20/21 budgets and half-unit display; exact ten heroes/twenty linked cards; both deck presets/suits; Ambush snapshot; core/card targeting and modifiers; Ketu statuses; terrain crossings/expiry; counterattack/no chains; current asymmetric bonfire/defeat scoring; privacy, undo, save/replay, bot completion.

@@ -1,19 +1,34 @@
-# Tactical update verification — 19 October 2026
-60 tests passed; production build and asset checks passed. Browser journeys passed on desktop and tablet, including setup, random queue deal, deployment, movement, undo, cards, privacy, saved combat and pickup, and automatic bot completion. No browser errors. Screenshots: artifacts/desktop-battle.png, tablet-battle.png and desktop-combat.png. Desktop combat inspected during this pass. 50 seeded full games completed, average 15.1 activations. Additional paired roster comparison is recorded in artifacts/balance-report.json when complete. Simulation uses a basic projected-view bot; results are not human balance findings.
-Player costs are whole PP, rounded up from provisional estimates. Baseline remains 40/42 PP. Version tactical-update-v4 intentionally rejects older saves.
-# Regional redesign — 20 October 2026
-Version regional-redesign-v5: 76 game tests, production build, asset checks and full repository verification passed using bundled Python and installed Chrome. Desktop/tablet journeys and targeted flame, timber and counterattack interface checks passed without browser errors. Inspected desktop-battle.png, tablet-battle.png, desktop-flame.png and desktop-counter.png in artifacts; current region labels, rules, initials, terrain and decisions are visible. Improved main-job contrast and placeholder sizing. Queue scrolling stays inside its container.
-50 seeded games completed, averaging 15.1 activations, varying deck, equipment and roster swaps; first three replayed deterministically. These results do not establish balance. Both native Docs matched planned edits exactly, with 14 top-level headings each and no Heading 2 entries; local exports match. Starter affordability: A 10/10 versus B 5/10 at 40 PP. New portraits remain pending; initials are displayed. No deployment performed.
+# Verification — holder-elements-v13
+Checked 30 October 2026. Content/save schema 2. Source authority and provisional rulings are recorded in SOURCE_AUDIT.md and DECISIONS.md.
 
+## Automated rules and build
+- **65 current tests passed**, including all six/eight queue entitlements/endpoints, separate/shared action costs, RAP spending, no respawn reset, opposed dice/ties/zero pools, status snapshots, last-HP/Heat, healing/Poison, hero-only death rewards, Cancel-on-Cancel, all ten starter abilities, objective positive/near-miss cases, every modifier, upgrades, card conservation, rejected-action atomicity, privacy and deterministic replay.
+- Current invariant walks test random legal choices interleaved with the projected-view bot, checking occupancy, resources and card uniqueness after each command, then exact replay.
+- **Production build passed**: TypeScript plus Vite, 40 modules.
+- **Asset check passed**: current map, nine approved current starter portraits, explicit Bisti initials placeholder and eleven new vector icons. Approved faction masters are copied for the browser.
+- **Diff whitespace check passed** after normalizing changed text files.
 
+Commands: `npm.cmd test`, `npm.cmd run build`, `npm.cmd run assets`.
 
-20 October scenario v6 verification: 82 tests passed; production TypeScript/Vite build passed; asset presence check passed. Fifty seeded bot games completed with no illegal commands or occupancy/budget invariant failures, averaging 16.2 activations; first three replay checks passed. New fixtures cover 0/1/2/3 southern bonfires, either zone assignment and active side, immediate winning attack/counterattack, enemy/friendly flame kills, deck variation across seeds and identical-seed reproduction, and varied bot bids/zones. Browser smoke could not navigate localhost (ERR_NETWORK_ACCESS_DENIED); no new screenshots visually verified. Repository-wide verification stopped in the unrelated visual-assets test because the default Python lacks Pillow (PIL).
+## Seeded full matches
+`npm.cmd run sim`: **50 completed matches**, 25 paired seeds with starter rosters and deployment preference swapped; **0 unfinished/stalled**, including **10 four-hero games**. Scenario 2 runs cover **Heat, Snow, Storm, Wind, Plague and Moonfall**. Mean **21.62 activations**; largest observed hit **9 damage**. Resource/occupancy/faction-card invariants run throughout; initial paired cases replay exactly.
 
+Seeds 1–25, two seat/zone variants per pair, rotating omitted element pair, same equipment/team setting within each pair. Full rows/config are generated in `artifacts/simulation.json`. These are heuristic-bot implementation checks, not measured human balance. No balance claim follows from completion or observed burst damage.
 
-## Hero refresh v7 — 20 October 2026
-87 tests pass, including five new refresh behavior tests. Production build and current asset check pass. Fifty seeded full games completed, averaging 15.1 activations; first three replayed deterministically. Desktop1440x1000 and tablet820x1180 smoke journeys pass, with no console errors: setup/bids/muster/deployment/activation/movement/undo/card dialog/privacy, pending-save combat/pickup and automatic bots. Inspected artifacts/desktop-battle.png and artifacts/tablet-battle.png: new art, rules and cards visible; queue scrolls horizontally within its container. Local app returned HTTP200 at port4188. Art and balance remain provisional. No deployment or live Google Docs edits. Repository-wide verification was not run because unrelated working changes were present.
+## Browser acceptance
+`npm.cmd run smoke` passed using installed Chrome against the production build:
+- **Desktop 1440×1000 and tablet 820×1180**: secret bidding/privacy, roster selection, equipment preparation availability, full-hex deployment/overflow, six-card queue, six persistent tableaus, activation, piece selection/movement, undo, tactic inspection, red ranged icon, end turn and concealed private faces.
+- Saved **combat** and **Cancel** decisions import/resume; roll and resolution complete without errors.
+- Saved **objective claim**, **RP tactic upgrade**, settlement and next-scenario modifier pass.
+- Automatic **4v4 bot** game completes with eight queue cards.
+- **No browser page/console errors; no horizontal page overflow** at either size.
 
+Report: `artifacts/browser-report-current.json`; inspected screenshots: `desktop-battle-current.png`, `tablet-battle-current.png`, plus combat/setup captures. Manual Edge checks also covered setup, hotseat, deployment, activation, movement/undo, sheet wording and the native Docs quick sheet/modifier table. The Edge extension’s file-upload capability was unavailable; the ordinary application import was independently exercised by the automated Chrome suite without changing browser permissions.
 
+## Map and documents
+Compared full-hex sample centers to the supplied 21 October raster: exactly **five full blue hexes** and **eight full stone hexes**, including the isolated southeast stone hex. Partial hexes are excluded; extra north deployments use legal overflow. X and fire coordinates remain separate from shuffled trap/stone contents.
 
-## Turn rules v8 verification — 20 October
-90 tests pass and production build passes. Fifty seeded games complete, average18.5 activations. Desktop/tablet browser journeys pass with no console errors, including six-model deployment, private hands, movement, undo, pending combat/pickup saves and automatic bots. Inspected artifacts/tablet-battle.png: queue shows core abilities only, recruit text states individual 1AP moves and once-per-action limits, tactical objective reward shows3 RP plus Battle card. Queue alternation and within-side shuffle have seeded regression tests; hero-only death draws, individual recruit movement and both pickup draws are covered. Current local play server remains port4188. Old saves require a new game.
+Live Docs readback confirms native bullets/bold labels, current element/deck wording, the endpoint-preserving eight-slot curve and a native six-result modifier table. The table was visually checked for wrapping/width. Live sheet readback agrees with the current starter snapshot; local spreadsheet export refreshed. Current text sources use Port Cutlass.
+
+## Limits
+Bisti’s final portrait is not supplied. Incomplete regional recruits and campaign travel/offers remain unavailable. 1v2/2v2 uses shared faction control and hand, not networked individual seats. Historical print PDFs retain earlier rules; the current quick sheet is the Design Draft’s second tab and the in-app reference. New balance choices remain labeled TEST. No independent unfamiliar-player session or proof of perfect balance/absence of every defect is claimed.

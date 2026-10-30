@@ -1,0 +1,498 @@
+{
+  "date": "2026-10-29",
+  "source": "https://docs.google.com/spreadsheets/d/1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg/edit",
+  "sheets": [
+    {
+      "name": "Heroes",
+      "id": 537122239,
+      "rows": [
+        [
+          "ID",
+          "Name",
+          "Region",
+          "Availability",
+          "Starter side",
+          "Primary class",
+          "Secondary class",
+          "PP cost",
+          "HP",
+          "Move",
+          "Attack dice",
+          "Attack range",
+          "Range rule",
+          "Defense dice",
+          "Unique ability",
+          "Tactic cost",
+          "Base AP cost",
+          "Ability effect",
+          "Regional ability",
+          "Notes",
+          "Design status"
+        ],
+        [
+          "h01",
+          "Bisti Grasshade",
+          "Windlands",
+          "Starter",
+          "Concord",
+          "STRIKER",
+          "Scout",
+          5,
+          3,
+          "{hex:4}",
+          5,
+          "{hex:1}",
+          "Melee",
+          2,
+          "Vital Dart",
+          "1 × my assigned element",
+          0,
+          "I make a [Ranged Attack] 3({hex:3}) with Heavy Attack(2). I must target an enemy which has none of my allies adjacent to it.",
+          "None",
+          "Art needed: Bisti Grasshade, Windlands Concord starter; cheetah/human woman with a blowgun, stalking through shadowy tall grass. Ability attack has its own fixed dice and range; ordinary ranged penalties apply. No fixed ability element. Bisti portrait pending; use labeled initials.",
+          "TEST stats and price"
+        ],
+        [
+          "h11",
+          "Hester Wellward",
+          "Wellington",
+          "Starter",
+          "Concord",
+          "GUARD",
+          "Support",
+          6,
+          5,
+          "{hex:2}",
+          3,
+          "{hex:1}",
+          "Melee",
+          6,
+          "Wellward",
+          "1 × my assigned element",
+          0,
+          "I move up to {hex:3} in a straight line, then each adjacent ally gains 2 Fortified.",
+          "None",
+          "I may move zero. Adjacent allies excludes me; evaluate after movement. Resolve terrain after every step.",
+          "TEST stats and price"
+        ],
+        [
+          "h03",
+          "Voru Cinderveil",
+          "Cinder’s Rim",
+          "Starter",
+          "Concord",
+          "CONTROLLER",
+          "Striker",
+          4,
+          2,
+          "{hex:3}",
+          4,
+          "{hex:3}",
+          "Ranged",
+          2,
+          "Gathering Ash",
+          "1 × my assigned element",
+          0,
+          "I Pull an enemy within {hex:4} up to {hex:3}. For each hex pulled, I give my nearest ally 1 Enraged.",
+          "None",
+          "TEST: nearest living other ally is measured from me after each actual Pull step; I choose distance ties. Blocked or skipped steps grant no token. An enemy defeated by a hazard ends Pull.",
+          "TEST stats and price"
+        ],
+        [
+          "h04",
+          "Tavi Sailwhistle",
+          "Port Cutlass",
+          "Starter",
+          "Concord",
+          "SCOUT",
+          "Support",
+          3,
+          2,
+          "{hex:4}",
+          2,
+          "{hex:2}",
+          "Ranged",
+          2,
+          "Cut and Drift",
+          "1 × my assigned element",
+          0,
+          "Each time a Recruit ends their movement adjacent to an enemy this turn, I draw a Tactic card.",
+          "None",
+          "TEST: paid activation lasts through this friendly turn only. Friendly Recruits only; once per completed voluntary movement, not per traversed hex. No trigger on forced movement, swap, deployment or respawn. Repeated activation does not multiply the trigger.",
+          "TEST stats and price"
+        ],
+        [
+          "h13",
+          "Demea Lastbanner",
+          "Phalexia",
+          "Starter",
+          "Concord",
+          "SUPPORT",
+          "Guard",
+          4,
+          4,
+          "{hex:2}",
+          2,
+          "{hex:1}",
+          "Melee",
+          2,
+          "Rallying Pull",
+          "1 × my assigned element",
+          0,
+          "My adjacent allies have Heavy Attack(2).",
+          "None",
+          "Ongoing: pay one tactic matching my holder, then place my ability token after Cancel resolves. Re-evaluate adjacency live; expires at the start of my next activation or on defeat. Does not stack with itself.",
+          "TEST stats and price"
+        ],
+        [
+          "h06",
+          "Niala Grassveil",
+          "Windlands",
+          "Starter",
+          "Wildmoon",
+          "CONTROLLER",
+          "Support",
+          3,
+          3,
+          "{hex:4}",
+          2,
+          "{hex:2}",
+          "Ranged",
+          2,
+          "Open the Circle",
+          "1 × my assigned element",
+          0,
+          "I move another ally within {hex:3} up to {hex:2}, then give one enemy adjacent to that ally 1 Dazed.",
+          "None",
+          "",
+          "TEST stats and price"
+        ],
+        [
+          "h12",
+          "Perrin Lastdrop",
+          "Wellington",
+          "Starter",
+          "Wildmoon",
+          "SUPPORT",
+          "Guard",
+          4,
+          4,
+          "{hex:2}",
+          2,
+          "{hex:1}",
+          "Melee",
+          3,
+          "Liquid Courage",
+          "1 × my assigned element",
+          0,
+          "I gain 2 Enraged. While I have Enraged, other adjacent allies gain +1 Attack die.",
+          "None",
+          "Conditional passive checks my current Enraged stack and adjacency at the roll boundary; buff is +1, irrespective of stack size. No ability token required for this passive.",
+          "TEST stats and price"
+        ],
+        [
+          "h08",
+          "Ketu Ashheart",
+          "Cinder’s Rim",
+          "Starter",
+          "Wildmoon",
+          "STRIKER",
+          "Controller",
+          7,
+          3,
+          "{hex:3}",
+          6,
+          "{hex:2}",
+          "Ranged",
+          1,
+          "Redline",
+          "1 × my assigned element",
+          0,
+          "I gain 2 Enraged and 1 Dazed.",
+          "None",
+          "",
+          "TEST stats and price"
+        ],
+        [
+          "h14",
+          "Ilex Marchstep",
+          "Phalexia",
+          "Starter",
+          "Wildmoon",
+          "SCOUT",
+          "Guard",
+          4,
+          3,
+          "{hex:4}",
+          3,
+          "{hex:1}",
+          "Melee",
+          2,
+          "Relief Column",
+          "1 × my assigned element",
+          0,
+          "I move another adjacent ally up to {hex:3}, then I move up to {hex:3}.",
+          "None",
+          "Both movements optional and independent of paid-action counters; if the ally is defeated by movement hazards, I may still move if alive.",
+          "TEST stats and price"
+        ],
+        [
+          "h10",
+          "Orro Stormanchor",
+          "Port Cutlass",
+          "Starter",
+          "Wildmoon",
+          "GUARD",
+          "Controller",
+          6,
+          4,
+          "{hex:2}",
+          2,
+          "{hex:2}",
+          "Ranged",
+          7,
+          "Break the Boarding",
+          "1 × my assigned element",
+          0,
+          "Push up to two adjacent enemies up to {hex:2} each, then give them each 1 Dazed.",
+          "None",
+          "",
+          "TEST stats and price"
+        ],
+        [
+          "h02",
+          "Brynja Stonehide",
+          "Highholm",
+          "Region",
+          "Either",
+          "Guard",
+          "Support",
+          "TBD",
+          "TBD",
+          "{hex:2}",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "Revise around Pull and bad statuses on enemies leaving adjacency. Exact trigger and quantities TBD.",
+          "Yes",
+          "Approved portrait retained. Unique + regional ability. Retired starter stats and abilities are not current values.",
+          "Future design"
+        ],
+        [
+          "h07",
+          "Eirik Hearthkeeper",
+          "Highholm",
+          "Region",
+          "Either",
+          "Support",
+          "Guard",
+          "TBD",
+          "TBD",
+          "{hex:3}",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "Revise around Pull and bad statuses on enemies leaving adjacency. Exact trigger and quantities TBD.",
+          "Yes",
+          "Approved portrait retained. Unique + regional ability. Retired starter stats and abilities are not current values.",
+          "Future design"
+        ],
+        [
+          "h05",
+          "Marda Oakweaver",
+          "Timberwood",
+          "Region",
+          "Either",
+          "Support",
+          "Guard",
+          "TBD",
+          "TBD",
+          "{hex:3}",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "Structure-based unique; selection TBD.",
+          "Yes",
+          "Approved portrait retained. Unique + regional ability. Retired starter stats and abilities are not current values.",
+          "Future design"
+        ],
+        [
+          "h09",
+          "Ren Timberwright",
+          "Timberwood",
+          "Region",
+          "Either",
+          "Scout",
+          "Guard",
+          "TBD",
+          "TBD",
+          "{hex:4}",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "TBD",
+          "Structure-based unique; selection TBD.",
+          "Yes",
+          "Approved portrait retained. Unique + regional ability. Retired starter stats and abilities are not current values.",
+          "Future design"
+        ],
+        [
+          "h15",
+          "Kalawi Bloodmane",
+          "Windlands",
+          "Region",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "{hex:4}",
+          "",
+          "",
+          "",
+          "",
+          "Pride's Pounce"
+        ]
+      ]
+    },
+    {
+      "name": "Regions",
+      "id": 1283739127,
+      "rows": [
+        [
+          "Region",
+          "Region Ability Name",
+          "Regional ability"
+        ],
+        [
+          "Windlands",
+          "From the Grass",
+          "If I began my turn with no adjacent enemies, my first melee attack gains +2 Attack dice."
+        ],
+        [
+          "Cinder’s Rim",
+          "Inflame",
+          "If I successfully attack a target, I do not discard Enraged tokens."
+        ],
+        [
+          "Timberwood",
+          "Joiner",
+          "While I am adjacent to a structure, I gain +1 [attack] / [ranged attack] and +1 [defense]."
+        ],
+        [
+          "Heles",
+          "Phalanx",
+          "If I have an ally adjacent to me on two exactly opposite sides, I have +2 Defense."
+        ],
+        [
+          "Port Cutlass",
+          "Booty",
+          "The first time you gain a Brightstone during each of my turns, draw an additional Tactics card. "
+        ],
+        [
+          "Wellington",
+          "Cheers",
+          "At the start of my activation, I may swap my Fortified tokens for the same number of Enraged tokens."
+        ],
+        [
+          "Highholm",
+          "Challenge",
+          "After an enemy attacks an ally within {hex:3}, I may move up to {hex:3} toward the attacker."
+        ]
+      ]
+    },
+    {
+      "name": "Rules & notes",
+      "id": 866234048,
+      "rows": [
+        [
+          "Topic",
+          "Rule / guidance"
+        ],
+        [
+          "Authority",
+          "This workbook is the source of truth for Battlescrap hero identities, stats, costs, abilities, availability and hero-specific clarifications going forward. Update it first; synchronize cards, documents and implementation from it."
+        ],
+        [
+          "Design values",
+          "TEST values are playtest defaults; TBD means undecided, never zero. Hero Move: slow {hex:2}, normal {hex:3}, fast {hex:4}. All unique and regional abilities use the hero’s first person: I, me, my."
+        ],
+        [
+          "Source",
+          "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM/edit"
+        ],
+        [
+          "Implementation reference",
+          "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU/edit"
+        ],
+        [
+          "Ability timing",
+          "Default: active hero’s own activation outside combat. Card-only abilities repeat for another matching card without AP. Paid abilities have their own escalating counter: base 1 AP costs 1/2/3 on successive uses."
+        ],
+        [
+          "Ability attacks",
+          "Enter normal combat. They are not basic Attack for equipment or basic-Attack counters."
+        ],
+        [
+          "Ability movement",
+          "Does not interact with other movements / costs."
+        ],
+        [
+          "Push / Pull",
+          "Each legal step strictly increases / reduces distance from the source by {hex:1}. Unit resolving ability chooses steps unless otherwise noted. Stop at occupied, impassable or out-of-bounds hexes or defeat. "
+        ],
+        [
+          "Range",
+          "Ordinary ranged: extended range up to twice printed range at −2 Attack die. Exactly {hex:2}: only distance {hex:2}, no extended range or Sighting Lens extension. Melee range is {hex:1}."
+        ],
+        [
+          "Presentation",
+          "Attack dice and range, e.g. 4 ({hex:3}). Every number measuring board spaces uses {hex:x}, including Move and Attack range columns, ability movement, targeting, Push/Pull and exact range. Render each token as a flat-top hex with black outline, cream fill and centered black number. Keep verbs and qualifiers: Move {hex:3}; within {hex:2}; exactly {hex:2}. Omit redundant “spaces” after a token. Dice, damage, HP, costs, unit counts and queue slots remain ordinary numbers. Attack red #c83135; ranged red #c83135; Defense blue #2878c2; distance hexes always use black/cream. This standard applies throughout all future prototype outputs."
+        ],
+        [
+          "Assets",
+          "Approved portraits retained. Original masters: assets/heroes/approved-v9; new starters: assets/heroes/new-starters."
+        ],
+        [
+          "Ongoing abilities",
+          "Ongoing abilities: discard the corresponding tactic card and pay any printed AP cost to activate an ongoing ability. After its Cancel response window resolves successfully, place an ability token on that ability; its ongoing effect applies only while it has an ability token. At the start of that character’s next activation, discard all ability tokens from that character before resolving its start-of-activation abilities or taking actions. Actions during the current activation and other characters’ activations do not remove these tokens. Ability tokens mark activation, not additional stacks of the buff. Instant abilities and unconditional passives do not require ability tokens unless specified. These markers are separate from the five status types. Ongoing ability presentation: place the ability-token icon in a consistent position immediately to the left of each ongoing ability’s text on the card. The icon must match the physical ability token and digital active marker. Show whether the token is present, and explain “Active until my next activation starts.” Include this rule in the player reference."
+        ],
+        [
+          "Hero elements",
+          "One element per hero per game, assigned through its standee holder; action-card holder and tableau element token must match. Abilities have a generic rainbow ? icon and cost a tactic matching the assigned hero element; AP costs are separate."
+        ],
+        [
+          "Faction elements",
+          "Concord: Fire red, Lightning yellow, Metal silver, Smoke black. Wildmoon: Ice white, Wind sky blue, Water turquoise, Earth brown. TEST opposed pairs Fire/Ice; Lightning/Wind; Metal/Water; Smoke/Earth."
+        ],
+        [
+          "Mirrored tactics",
+          "Separate faction draw/discard piles; identical mechanical distributions. TEST: 9 cards per active element, 27 per faction in 3v3; 36 in 4v4. Three unique elements in 3v3 (choose omitted pair); all four in 4v4. Printed tactic use needs no hero match; ability payment does."
+        ],
+        [
+          "Tactic upgrades",
+          "Recruitment Points may buy opposed-element slash cards between scenarios. TEST: 2 RP to replace one basic card with the same effect at +1 magnitude; one upgraded card per effect/element pair, no upgrade-of-upgrade. Cancel, counterattack and Recruit assault are not upgraded in this test."
+        ],
+        [
+          "Attack icons",
+          "Melee = red sword; ranged = red bow. Elements = black silhouette on colored background in black square frame. Generic element = ? on rainbow background in matching frame."
+        ]
+      ]
+    }
+  ]
+}

@@ -42,7 +42,7 @@
     {
       "id": "h04",
       "name": "Tavi Sailwhistle",
-      "region": "Port Windlass",
+      "region": "Port Cutlass",
       "role": "SCOUT / Support",
       "hp": 2,
       "move": 6,
@@ -120,7 +120,7 @@
     {
       "id": "h10",
       "name": "Orro Stormanchor",
-      "region": "Port Windlass",
+      "region": "Port Cutlass",
       "role": "GUARD / Controller",
       "hp": 4,
       "move": 3,
@@ -178,5 +178,5 @@
     1.25,
     2.5
   ],
-  "balance": "TEST stats and prices; four Cinder/Windlass choices confirmed; new heroes selected; Windlands recommended defaults retained"
+  "balance": "TEST stats and prices; four Cinder/Cutlass choices confirmed; new heroes selected; Windlands recommended defaults retained"
 }

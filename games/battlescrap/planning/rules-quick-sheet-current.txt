@@ -1,0 +1,36 @@
+Battlescrap — Rules Quick Sheet
+holder-elements-v13 · 29 October 2026 · TEST defaults are adjustable. Full rules and lore are in the main Design Draft tab; hero-specific wording is in the live Battlescrap sheet.
+Setup and turn
+Prepare: 15 PP; choose three heroes and three free Recruits. Team 4v4 TEST: 20 PP and four heroes per faction. Bid secretly for deployment; higher bid wins a contested zone/first turn and compensates the opponent. Only unused compensation survives as attacker reroll PP.
+Assign elements: one unique active faction element per hero, matched on standee holder, queue holder and tableau token. Concord Fire/red, Lightning/yellow, Metal/silver, Smoke/black. Wildmoon Ice/white, Wind/sky blue, Water/turquoise, Earth/brown. TEST opposed pairs in that order; omit one pair for 3v3, all four for 4v4.
+Deploy: living models occupy full empty hexes in their zone or nearest legal overflow. Shuffle four traps/five stones onto nine Xs and reveal. Each faction has a separate mirrored 27-card deck (36 in 4v4); draw 4 tactics, limit 8. Draw one hidden objective, limit 2.
+Turn start: scenario VP, immediate victory, then each friendly poisoned unit takes 1 damage/removes 1 Poison. Choose any friendly hero, capture AP/RAP, shift its queue card to bottom; remove its ongoing ability tokens.
+Queue AP/RAP bottom→top: 3v3 — 1/1, 2/1, 3/1, 3/2, 4/3, 5/2. 4v4 TEST — 1/1, 2/1, 2/2, 3/1, 3/2, 4/2, 4/3, 5/2. No queue draws.
+Actions: Move, Attack, Grab, Respawn. AP pays for active hero or friendly Recruits; RAP only Recruits (spend first). Each hero action independently costs 1/2/3…; each Recruit shares one 1/2/3… counter. Respawn fully heals/clears statuses, but never resets costs. Ability/tactic movement costs no extra action.
+Abilities: discard a tactic matching the hero’s assigned element, plus printed AP. Generic rainbow ? means that element. Card-only repeats need another card, no AP. Ongoing effects require an ability token after Cancel resolves; expire at next own activation start or defeat. Tavi’s “this turn” effect expires at turn end.
+Combat and statuses
+Roll: defender/attacker alternate tactics or pass; two passes roll. Compare highest face, then six counts only if both highest are 6; attacker wins remaining ties. Zero pool rolls two D6 and keeps only lower. Attacker rerolls own dice for 1 PP each from bid compensation; finish explicitly.
+Hit: 1 damage + each kept attacker six + Enraged + Heavy Attack(x) + declared damage bonuses, capped last by Light Attack(x). Winning defense gains one Focus per kept six. No reward from losing-side sixes.
+Modifiers: melee +1 Attack die per other adjacent ally with no other adjacent enemy. Ranged −2 if any enemy adjacent, and −2 beyond range to double range; stack both. Storm adds −1. Exact ranges never extend. Nothing blocks sight.
+Focus / Enraged: next attack gets +1 die / +1 hit damage per token; spend complete participating stacks after attack, even on miss. Fortified / Dazed: +1 / −1 Defense die per token, spend both participating stacks after defense. New after-effect tokens survive.
+Poison: on-hit Poison(x) adds x; own-turn tick deals 1/removes 1. Heal restores HP AND clears all Poison, even at full HP. Hero damage from above 1 HP to exactly 1 gives 1 Enraged, each time, including after healing. Heat adds 1 extra only when gaining Enraged from zero.
+Terrain: trap entry 1 damage then remove; fire entry 1 and ending the acting unit’s turn there 1. Recruits that acted take end-fire damage (TEST). Push/Pull moves strictly away/toward fixed source by one each step, obeying occupancy/full hexes and hazards, stopping on defeat. Fly ignores intervening units/terrain, destination still legal/hazardous.
+Tactics, rewards and victory
+Card use: printed tactic effect OR matching-element ability payment. Cancel answers an opponent’s tactic/paid ability before resolution and can cancel Cancel. Two passes resolve; paid cards/AP stay spent when canceled (TEST). Counterattack triggers on a miss, ordinary range/responses, optional, no chains.
+Deck: each element has two +2 Attack, two +2 hit damage, one Cancel, +2 Defense, counterattack-on-miss, Move {hex:4}/heal 1 and Recruit assault. Printed effects require no element match. Reshuffle only your own discard; no automatic empty-hand draw.
+Upgrades — TEST: 2 RP between scenarios replaces one basic card with its opposed-element slash equivalent. +2 Attack/Defense/damage becomes +3; Move {hex:4}/heal 1 becomes Move {hex:5}/heal 2. One per effect/pair, no re-upgrade.
+End: automatically collect friendly stones and resolve overflow; claim at most one eligible objective for 1 VP + 1 tactic; draw an objective only if hand empty/deck nonempty; resolve authored end effect/fire; Plague spreads; pass. Immediately stop if any VP award reaches victory.
+Objectives: Close the Net — attack a target with three adjacent allies; Break the Levy — attack two distinct enemy Recruits this turn; Into the Teeth — attack with a hero adjacent to two enemies; Pin Them Down — end with three Recruits adjacent to one enemy; At Their Gates — end with two units outside/adjacent to enemy spawn; Claim the Starfall — all your heroes on printed Xs. Attack means reaching roll, not hitting. Only held/eligible objectives count; next-own-turn eligibility; finite six-card deck never reshuffles.
+Brightstone: either unit collects and draws one tactic; each secured stone pays 2 RP at settlement. Hero defeat drops one stone, draws one tactic for owner and moves its card to bottom. Recruit defeat does neither. Secured stones never drop again.
+Three Fires: north gains 1 VP at each own-turn start; south gains 1 per fire it controls by adjacent-unit majority (ties uncontrolled). Enemy defeats add 1 VP. First to 15 wins. TEST settlement 10 RP +2 per secured stone +1 for winner. Campaign ends at 10 wins or four-win lead.
+Battlefield Modifiers
+After the first scenario, roll once after setup token reveal. One result lasts the scenario; timing details below are TEST defaults.
+d6 | Modifier | Effect (TEST timing)
+1 | Plague | At each turn end, poisoned units simultaneously give 1 Poison to adjacent units. Both sides affected; no cascade; one gain per recipient.
+2 | Wind | Roll one fixed direction per scenario. Each friendly unit may move one free hex in that direction once per own turn; normal entry hazards.
+3 | Storm | Ranged attacks have −1 Attack die; stacks with normal ranged penalties.
+4 | Snow | Ordinary Move is −1 hex (minimum zero). Fixed ability/tactic movement is unchanged.
+5 | Heat | When a unit gains Enraged from zero, add exactly 1 extra. No recursive bonus.
+6 | Moonfall | At setup add one Brightstone to a random full adjacent hex for each trap. Stones may stack.
+
+

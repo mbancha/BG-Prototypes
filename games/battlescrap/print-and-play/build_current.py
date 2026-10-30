@@ -17,13 +17,13 @@ ROSTER=[
 ('h01','Kalawi Bloodmane','Windlands','STRIKER / Scout',3,5,5,1,2,5,'Lightning + 1 AP: move up to 2, then make a melee attack. If another ally is adjacent to the target, add +2 Attack dice.'),
 ('h11','Hester Wellward','Wellington','GUARD / Support',5,3,3,1,6,6,'Water: gain 2 Fortified.'),
 ('h03','Voru Cinderveil','Cinder’s Rim','CONTROLLER / Striker',2,4,4,3,2,4,'Fire: gain 1 Enraged, then Pull an enemy within 3 up to 1.'),
-('h04','Tavi Sailwhistle','Port Windlass','SCOUT / Support',2,6,2,2,2,3,'Lightning + 1 AP: attack an enemy exactly 2 spaces away, then move up to 2.'),
+('h04','Tavi Sailwhistle','Port Cutlass','SCOUT / Support',2,6,2,2,2,3,'Lightning + 1 AP: attack an enemy exactly 2 spaces away, then move up to 2.'),
 ('h13','Demea Lastbanner','Phalexia','SUPPORT / Guard',4,3,2,1,2,4,'Water: Pull any two other allies up to 2 spaces each toward Demea.'),
 ('h06','Niala Grassveil','Windlands','CONTROLLER / Support',3,5,2,2,2,3,'Lightning: move another ally within 3 up to 2, then give one enemy adjacent to that ally 1 Dazed.'),
 ('h12','Perrin Lastdrop','Wellington','SUPPORT / Guard',4,3,2,1,3,4,'Fire: gain 2 Enraged. While Perrin has Enraged, other adjacent allies gain +1 Attack die.'),
 ('h08','Ketu Ashheart','Cinder’s Rim','STRIKER / Controller',3,4,6,2,1,7,'Fire: gain 2 Enraged and 1 Dazed.'),
 ('h14','Ilex Marchstep','Phalexia','SCOUT / Guard',3,5,3,1,2,4,'Lightning: move an adjacent ally up to 3, then move Ilex up to 3.'),
-('h10','Orro Stormanchor','Port Windlass','GUARD / Controller',4,3,2,2,7,6,'Water: Push up to two adjacent enemies 1 space each.')]
+('h10','Orro Stormanchor','Port Cutlass','GUARD / Controller',4,3,2,2,7,6,'Water: Push up to two adjacent enemies 1 space each.')]
 heroes=[dict(zip(['id','name','region','role','hp','move','attack','range','defense','cost','text'],h)) for h in ROSTER]
 b.heroes=heroes
 b.arts={h['id']:next(ASSETS.glob('heroes/*/'+h['id']+'-*.png')) for h in heroes}
@@ -170,7 +170,7 @@ def main():
         r=PdfReader(OUT/file)
         for page in r.pages:allpdf.add_page(page)
     allpdf.write(OUT/'Battlescrap-print-and-play.pdf')
-    (OUT/'manifest.json').write_text(json.dumps({'heroes':heroes,'files':FILES,'objective_deck':'nine distinct objectives; all reward 1 VP + 1 tactic; no refill','queue_ap_rap':QUEUE,'range_notation':'Attack dice (range)','heart_stroke_pt':3,'standee_folded_inches':[1.25,2.5],'balance':'TEST stats and prices; four Cinder/Windlass choices confirmed; new heroes selected; Windlands recommended defaults retained'},indent=2),encoding='utf8')
+    (OUT/'manifest.json').write_text(json.dumps({'heroes':heroes,'files':FILES,'objective_deck':'nine distinct objectives; all reward 1 VP + 1 tactic; no refill','queue_ap_rap':QUEUE,'range_notation':'Attack dice (range)','heart_stroke_pt':3,'standee_folded_inches':[1.25,2.5],'balance':'TEST stats and prices; four Cinder/Cutlass choices confirmed; new heroes selected; Windlands recommended defaults retained'},indent=2),encoding='utf8')
     doc=pdfium.PdfDocument(str(OUT/'Battlescrap-print-and-play.pdf'))
     for i in range(len(doc)):doc[i].render(scale=1).to_pil().save(OUT/f'preview-{i+1:02}.png')
     print('Built',len(doc),'pages; all text boxes fit.')

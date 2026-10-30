@@ -104,7 +104,7 @@ Role: slow formation anchor. Defense rises 4→5; protection reaches 2 instead o
 
 Role: displacement and hazardous lanes, not direct damage supremacy. Core/terrain reach rises 3→4; eruption bonus rises 1→2. Keep one flame edge and the existing damage cap.
 
-### h04 — Tavi Sailwhistle · Port Windlass · 4 PP
+### h04 — Tavi Sailwhistle · Port Cutlass · 4 PP
 
 **Scout** / Support · Move **6**, Attack **2 melee**, Defense **1**.
 
@@ -170,7 +170,7 @@ Role: premium glass cannon. Attack rises 4→5; stoke gains one token and lance 
 
 Role: forward recruit attack coordinator and cover builder. Core bonus rises 1→2, wall loses its AP charge, and crew movement rises 1→2. Keep the same body and positional requirement; no army-wide unconditional buff.
 
-### h10 — Orro Stormanchor · Port Windlass · 6 PP
+### h10 — Orro Stormanchor · Port Cutlass · 6 PP
 
 **Guard** / Controller · Move **3**, Attack **2 melee**, Defense **5**.
 

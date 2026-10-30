@@ -30,7 +30,7 @@ objectives=array('objectives'); H={h['id']:h for h in heroes}
 arts={h['id']:next((GAME/'public/heroes-v7').glob(h['id']+'-*.png')) for h in heroes}
 INK=HexColor('#283c3b'); IVORY=HexColor('#ffffff'); GOLD=HexColor('#b58138'); LINE=HexColor('#aca99c')
 COLORS={'Fire':'#bd542d','Lightning':'#906b15','Water':'#28768e','boost':'#44784c','daze':'#a46d24','stunned':'#81578f','heart':'#a44a45'}
-REGIONS={'Windlands':'#a15d3b','Highholm':'#537a88','Cinder’s Rim':'#ac5439','Timberwood':'#58734e','Port Windlass':'#327c85'}
+REGIONS={'Windlands':'#a15d3b','Highholm':'#537a88','Cinder’s Rim':'#ac5439','Timberwood':'#58734e','Port Cutlass':'#327c85'}
 CW,CH=180,252; PW,PH=612,792; CM=72/2.54
 manifest={'version':'turn-rules-v8','cards':[],'geometry':{'card_inches':[2.5,3.5],'standee_folded_inches':[1,2],'standee_insert_inches':.25,'element_cm':[1,1],'queue_side_rail_cm':.75},'text_checks':[]}
 

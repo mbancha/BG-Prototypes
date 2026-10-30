@@ -1,11 +1,10 @@
-> Portability audit, 22 October 2026: this file describes the older turn-rules-v8 digital implementation. Current design authority is starter-test-v11 in the live Drive documents. Read [START-HERE.md](START-HERE.md) before development. No digital rules update is authorized in this handoff.
+# Source audit
+Checked 30 October 2026.
 
-# Current source audit
-
-Authority: the two current consolidated native Google Docs, mirrored in sources/design-draft-current.txt and sources/build-spec-current.txt. Content turn-rules-v8. Original designer document is preserved separately and was not edited.
-
-Supplied/implemented:10 heroes,20 linked ability cards,10 tactic suit variants encoding6 effects,10 tactical objectives,4 hero equipment items,1 supplied map,10 regional PNG masters. Decks24/18 cards; baseline hand2, exposure hand5, limit8; objective limit2. Three selected heroes and three free recruits per side; eight shared activation tiles.
-
-20/21 PP, hero prices3–8, 1PP attacker rerolls from bid compensation only. Queue owners alternate at setup; each side’s four cards shuffle within its slots. Recruit actions are individual and once per action per turn. Objective3 RP and Battle card; Brightstone objective and Battle card; consolation draw only on hero death. Three Fires:asymmetric bonfire scoring, enemy defeats1 VP, default target8.
-
-Art and balance remain provisional; raster edge-hex acceptance and full regional campaign/travel remain open. See VERIFICATION.md for evidence. Sources and decisions contain current rules; snapshots and v7 packages are historical working files, not overrides.
+- **General rules:** live Design Draft, document 1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM; its second tab is the Rules Quick Sheet with a native d6 modifier table.
+- **Implementation specification:** live document 16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU.
+- **Hero authority:** live spreadsheet 1hfWFhxm-Su-qtR_hVrzFt6GBW1ure8W4xmp1o8hF-Rg, Heroes, Regions and Rules & notes. Re-read after implementation: current starter values/effects agree with the implementation snapshot. Later hero rows are incomplete and not implemented.
+- **New instructions:** red sword/red bow, Port Cutlass, holder-determined elements, mirrored upgradeable faction decks, six battlefield modifiers, concise bulleted references and the four-hero queue endpoints are implemented. Defaults are labeled TEST in DECISIONS.md and the live Build Specification.
+- **Map/art:** supplied 21 October raster calibrated to full hexes; approved existing and four new starter portraits retained; Bisti explicitly uses initials. Faction raster masters preserved. New element and attack icons are vector assets.
+- **Offline readbacks:** planning/design-draft-current.txt, planning/build-spec-current.txt, planning/rules-quick-sheet-current.txt and planning/source-revisions.json. Refresh these after live edits.
+- **Historical scope:** sources/ and print-and-play/ preserve earlier mechanics. They cannot override the current live sources or certify current rules. The older test suite is archived as text; current regression fixtures replace obsolete behavior expectations.
