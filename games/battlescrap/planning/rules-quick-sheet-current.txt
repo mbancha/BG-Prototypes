@@ -32,5 +32,3 @@ d6 | Modifier | Effect (TEST timing)
 4 | Snow | Ordinary Move is −1 hex (minimum zero). Fixed ability/tactic movement is unchanged.
 5 | Heat | When a unit gains Enraged from zero, add exactly 1 extra. No recursive bonus.
 6 | Moonfall | At setup add one Brightstone to a random full adjacent hex for each trap. Stones may stack.
-
-

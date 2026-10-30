@@ -51,9 +51,3 @@ export default function App(){const [s,setS]=useState<State>(()=>load()||newGame
  </div>;
 }
 function activeDead(s:State){return s.active?s.units.filter(u=>!u.hex&&u.owner===s.side&&(s.active.endsWith('group')?!u.hero:u.id===s.active)):[];}
-
-
-
-
-
-

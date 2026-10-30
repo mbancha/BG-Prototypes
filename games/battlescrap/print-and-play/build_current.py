@@ -175,5 +175,3 @@ def main():
     for i in range(len(doc)):doc[i].render(scale=1).to_pil().save(OUT/f'preview-{i+1:02}.png')
     print('Built',len(doc),'pages; all text boxes fit.')
 if __name__=='__main__':main()
-
-

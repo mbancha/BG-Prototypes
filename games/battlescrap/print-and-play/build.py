@@ -303,4 +303,3 @@ if __name__=='__main__':
         for pg in r.pages:combined.add_page(pg)
     combined.write(OUT/'Battlescrap-print-and-play.pdf')
     validate_and_preview()
-

@@ -218,6 +218,3 @@ All ten triples from each starter roster fit 20 PP. A totals 13–17; B totals 1
 Ten original quick illustrations, one per named identity, reused for character art and the two linked ability cards. Text/stats stay outside the artwork. Regional colors are descriptive and do not encode faction or assigned Fire/Lightning/Water suit. The simple full-body masters also leave Sol a future standee source; current token/queue use should crop faces rather than shrink entire bodies.
 
 Warm ivory backgrounds and flat shading are deliberate quick-art choices, not transparent cutouts. These are provisional art directions, not approved final print assets. No faction variants, card-back redesign, tactics-art expansion or print production is included. See `art-manifest.json`, `ART-PROMPTS.md`, and the review gallery for actual assets and mappings.
-
-
-

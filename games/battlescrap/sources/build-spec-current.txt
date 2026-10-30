@@ -251,6 +251,3 @@ Each player leads a stonebinder’s traveling company serving one of these movem
 Heroes fight for their homes, livelihoods and ambitions. Any regional hero may join either side: the same orchard keeper might seek Concord irrigation works in one campaign and resist its claims to the valley in another. Winning a battle gives first recruitment choice from that region’s shared pool; subsequent choices create different available rosters in different campaigns.
 Every deployed unit carries an awakened Brightstone. Defeat releases one recoverable stone. Heroes secure stones immediately into their side’s reserve; recruits cannot collect them. Each physical pickup draws one tactical objective and one Battle card and contributes to post-battle recruitment income. Completing an objective awards 3 RP and one Battle card, without adding a stone. Magical recall remains optional flavor for respawning.
 Side ownership is indicated by the existing standee holders and normal player ownership in the digital game. Do not add sticker banners, badges, faction costume variants or an origin-versus-allegiance customization system. Holder suits remain independently assigned Fire, Lightning and Water.
-
-
-
