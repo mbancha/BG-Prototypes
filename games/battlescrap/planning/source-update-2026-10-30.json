@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-30",
+  "status": "Source edits complete; digital implementation pending Sol",
+  "heroHP": {
+    "h01": 3,
+    "h11": 5,
+    "h03": 3,
+    "h04": 3,
+    "h13": 4,
+    "h06": 3,
+    "h12": 4,
+    "h08": 3,
+    "h14": 3,
+    "h10": 4,
+    "h02": 6,
+    "h07": 4,
+    "h05": 4,
+    "h09": 3,
+    "h15": 4
+  },
+  "newTabs": [
+    {
+      "name": "Tactics",
+      "definitions": 56
+    },
+    {
+      "name": "Tactic upgrades",
+      "definitions": 32
+    },
+    {
+      "name": "Objectives",
+      "definitions": 6
+    },
+    {
+      "name": "Equipment",
+      "definitions": 4
+    },
+    {
+      "name": "Recruit reference",
+      "definitions": 1
+    },
+    {
+      "name": "Action queue",
+      "definitions": 15
+    },
+    {
+      "name": "Ownership holders",
+      "definitions": 8
+    },
+    {
+      "name": "Battlefield modifiers",
+      "definitions": 6
+    },
+    {
+      "name": "Scenarios",
+      "definitions": 1
+    }
+  ],
+  "verification": [
+    "Live document and spreadsheet readback",
+    "All 15 heroes within 3–6 HP",
+    "All new card rows match write payload",
+    "Native Google Sheets visual review of nine new tabs",
+    "Current map browser/master SHA256 match",
+    "Approved v9 versus browser v7 audit",
+    "Latest Bisti v2 portrait visually inspected"
+  ],
+  "digitalTestsRun": false
+}

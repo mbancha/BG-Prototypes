@@ -84,7 +84,7 @@
           "CONTROLLER",
           "Striker",
           4,
-          2,
+          3,
           "{hex:3}",
           4,
           "{hex:3}",
@@ -107,7 +107,7 @@
           "SCOUT",
           "Support",
           3,
-          2,
+          3,
           "{hex:4}",
           2,
           "{hex:2}",
@@ -268,7 +268,7 @@
           "Guard",
           "Support",
           "TBD",
-          "TBD",
+          6,
           "{hex:2}",
           "TBD",
           "TBD",
@@ -291,7 +291,7 @@
           "Support",
           "Guard",
           "TBD",
-          "TBD",
+          4,
           "{hex:3}",
           "TBD",
           "TBD",
@@ -314,7 +314,7 @@
           "Support",
           "Guard",
           "TBD",
-          "TBD",
+          4,
           "{hex:3}",
           "TBD",
           "TBD",
@@ -337,7 +337,7 @@
           "Scout",
           "Guard",
           "TBD",
-          "TBD",
+          3,
           "{hex:4}",
           "TBD",
           "TBD",
@@ -360,7 +360,7 @@
           "",
           "",
           "",
-          "",
+          4,
           "{hex:4}",
           "",
           "",
@@ -415,84 +415,7 @@
           "After an enemy attacks an ally within {hex:3}, I may move up to {hex:3} toward the attacker."
         ]
       ]
-    },
-    {
-      "name": "Rules & notes",
-      "id": 866234048,
-      "rows": [
-        [
-          "Topic",
-          "Rule / guidance"
-        ],
-        [
-          "Authority",
-          "This workbook is the source of truth for Battlescrap hero identities, stats, costs, abilities, availability and hero-specific clarifications going forward. Update it first; synchronize cards, documents and implementation from it."
-        ],
-        [
-          "Design values",
-          "TEST values are playtest defaults; TBD means undecided, never zero. Hero Move: slow {hex:2}, normal {hex:3}, fast {hex:4}. All unique and regional abilities use the hero’s first person: I, me, my."
-        ],
-        [
-          "Source",
-          "https://docs.google.com/document/d/1PlwHc5BWQdSv77xgSlSmNEiZIhgJ40cii22NKibvcFM/edit"
-        ],
-        [
-          "Implementation reference",
-          "https://docs.google.com/document/d/16-weAaDa4W7e4gC2jeiv_NN0cSAS_bcd_WATxPcDSAU/edit"
-        ],
-        [
-          "Ability timing",
-          "Default: active hero’s own activation outside combat. Card-only abilities repeat for another matching card without AP. Paid abilities have their own escalating counter: base 1 AP costs 1/2/3 on successive uses."
-        ],
-        [
-          "Ability attacks",
-          "Enter normal combat. They are not basic Attack for equipment or basic-Attack counters."
-        ],
-        [
-          "Ability movement",
-          "Does not interact with other movements / costs."
-        ],
-        [
-          "Push / Pull",
-          "Each legal step strictly increases / reduces distance from the source by {hex:1}. Unit resolving ability chooses steps unless otherwise noted. Stop at occupied, impassable or out-of-bounds hexes or defeat. "
-        ],
-        [
-          "Range",
-          "Ordinary ranged: extended range up to twice printed range at −2 Attack die. Exactly {hex:2}: only distance {hex:2}, no extended range or Sighting Lens extension. Melee range is {hex:1}."
-        ],
-        [
-          "Presentation",
-          "Attack dice and range, e.g. 4 ({hex:3}). Every number measuring board spaces uses {hex:x}, including Move and Attack range columns, ability movement, targeting, Push/Pull and exact range. Render each token as a flat-top hex with black outline, cream fill and centered black number. Keep verbs and qualifiers: Move {hex:3}; within {hex:2}; exactly {hex:2}. Omit redundant “spaces” after a token. Dice, damage, HP, costs, unit counts and queue slots remain ordinary numbers. Attack red #c83135; ranged red #c83135; Defense blue #2878c2; distance hexes always use black/cream. This standard applies throughout all future prototype outputs."
-        ],
-        [
-          "Assets",
-          "Approved portraits retained. Original masters: assets/heroes/approved-v9; new starters: assets/heroes/new-starters."
-        ],
-        [
-          "Ongoing abilities",
-          "Ongoing abilities: discard the corresponding tactic card and pay any printed AP cost to activate an ongoing ability. After its Cancel response window resolves successfully, place an ability token on that ability; its ongoing effect applies only while it has an ability token. At the start of that character’s next activation, discard all ability tokens from that character before resolving its start-of-activation abilities or taking actions. Actions during the current activation and other characters’ activations do not remove these tokens. Ability tokens mark activation, not additional stacks of the buff. Instant abilities and unconditional passives do not require ability tokens unless specified. These markers are separate from the five status types. Ongoing ability presentation: place the ability-token icon in a consistent position immediately to the left of each ongoing ability’s text on the card. The icon must match the physical ability token and digital active marker. Show whether the token is present, and explain “Active until my next activation starts.” Include this rule in the player reference."
-        ],
-        [
-          "Hero elements",
-          "One element per hero per game, assigned through its standee holder; action-card holder and tableau element token must match. Abilities have a generic rainbow ? icon and cost a tactic matching the assigned hero element; AP costs are separate."
-        ],
-        [
-          "Faction elements",
-          "Concord: Fire red, Lightning yellow, Metal silver, Smoke black. Wildmoon: Ice white, Wind sky blue, Water turquoise, Earth brown. TEST opposed pairs Fire/Ice; Lightning/Wind; Metal/Water; Smoke/Earth."
-        ],
-        [
-          "Mirrored tactics",
-          "Separate faction draw/discard piles; identical mechanical distributions. TEST: 9 cards per active element, 27 per faction in 3v3; 36 in 4v4. Three unique elements in 3v3 (choose omitted pair); all four in 4v4. Printed tactic use needs no hero match; ability payment does."
-        ],
-        [
-          "Tactic upgrades",
-          "Recruitment Points may buy opposed-element slash cards between scenarios. TEST: 2 RP to replace one basic card with the same effect at +1 magnitude; one upgraded card per effect/element pair, no upgrade-of-upgrade. Cancel, counterattack and Recruit assault are not upgraded in this test."
-        ],
-        [
-          "Attack icons",
-          "Melee = red sword; ranged = red bow. Elements = black silhouette on colored background in black square frame. Generic element = ? on rainbow background in matching frame."
-        ]
-      ]
     }
-  ]
+  ],
+  "version": "shared-elements-v15"
 }

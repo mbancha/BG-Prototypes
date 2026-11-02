@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "sim": "vite-node scripts/sim.ts",
-    "smoke": "vite-node scripts/fixtures.ts && node scripts/smoke.mjs",
+    "smoke": "node scripts/current-ui-check.mjs",
     "assets": "node scripts/assets.mjs",
     "verify": "npm test && npm run build && npm run assets && npm run smoke"
   },

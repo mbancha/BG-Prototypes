@@ -9,7 +9,7 @@ for(let game=0;game<50;game++){
  const s=newGame(seed,config);let commands=0,maxBurst=0,cardUse=0;
  while(s.phase!=='results'&&commands<2500){const legal=actions(s);if(!legal.length)throw Error('No legal actions seed '+seed+' '+s.phase+' '+JSON.stringify(s.pending));const e=dispatch(s,bot({...playerView(s,owner(s)),decisionOwner:owner(s)},legal));if(e)throw Error(e);commands++;
  const occupied=s.units.filter(u=>u.hex).map(u=>u.hex);if(new Set(occupied).size!==occupied.length||s.players.some(p=>p.pp<0)||s.ap<0||s.rap<0)throw Error('Invariant failure seed '+seed);
- if(s.queue.length)for(const p of s.players){const all=[...p.deck,...p.hand,...p.discard];if(new Set(all).size!==all.length||all.length!==s.config.heroCount*9)throw Error('Card conservation');}}
+ if(s.queue.length){const all=[...s.deck,...s.discard,...s.players.flatMap(p=>p.hand)];if(new Set(all).size!==all.length||all.length!==s.config.heroCount*9)throw Error('Card conservation');}}
  if(s.phase!=='results')throw Error('Seed '+seed+' stalled');
  if(seed<=5&&JSON.stringify(replay(seed,s.config,s.history))!==JSON.stringify(s))throw Error('Replay mismatch');
  for(const line of s.log){const m=line.match(/hits for (\d+)/);if(m)maxBurst=Math.max(maxBurst,+m[1]);}

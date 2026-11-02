@@ -1,7 +1,7 @@
 # Battlescrap continuation
-Read START-HERE.md, the repository AGENTS.md and prototyping skill. Current implementation is **holder-elements-v13**, schema 2.
+Read START-HERE.md, the repository AGENTS.md and prototyping skill. Current implementation is **shared-elements-v15**, schema 2.
 
-The live Battlescrap spreadsheet is authoritative for hero identities, stats, costs, effects, availability and regional wording. Read Heroes, Regions and Rules & notes before coding and before delivery. Match stable IDs and header names, preserve designer edits, and capture a versioned implementation snapshot. Flag conflicting sheet entries instead of silently substituting old values.
+The live Battlescrap spreadsheet is authoritative for hero identities, stats, costs, effects, availability and regional wording. Read Heroes, Regions and the card-content tabs before coding and before delivery. Match stable IDs and header names, preserve designer edits, and capture a versioned implementation snapshot. Flag conflicting sheet entries instead of silently substituting old values.
 
 The Design Draft owns general rules and its Rules Quick Sheet tab is the concise player reference. The Build Specification owns contracts and acceptance. Keep Google files in the existing Battlescrap folder; approved art masters under assets/. Current implementation and source checks are documented in ARCHITECTURE.md, DECISIONS.md, SOURCE_AUDIT.md and VERIFICATION.md.
 

@@ -1,9 +1,9 @@
-# Battlescrap architecture — holder-elements-v13
+# Battlescrap architecture — shared-elements-v15
 Verified against the current live sources on 30 October 2026. General rules live in the linked documents; this file describes implementation rather than duplicating them.
 
 ## Modules
 - `src/data/config.ts`: tunable budgets, both queue curves, faction element pairs/colors, modifiers, rewards and upgrade cost.
-- `src/data/hero-snapshot.json`: current Heroes/Regions/Rules & notes snapshot from the authoritative sheet, with source URL/date.
+- `src/data/hero-snapshot.json`: current hero and regional content snapshot from the authoritative sheet, with source URL/date.
 - `src/content.ts`: header-position snapshot adapter, ten complete starters, mirrored elemental tactic definitions, upgrades, objectives, equipment and calibrated full-hex map.
 - `src/engine.ts`: serializable state, seeded RNG, authoritative actions/validation, bidding, setup, AP/RAP, combat, status/terrain resolution, effect/Cancel queues, objectives, campaign settlement/upgrades, projection, bots and replay.
 - `src/icons.tsx`: shared red sword/bow, element silhouettes and rainbow generic icon, distance hexes, HP/status rendering.
@@ -11,7 +11,7 @@ Verified against the current live sources on 30 October 2026. General rules live
 - `src/simulation*`: worker-backed optional analysis; `scripts/` runs simulations, fixtures, assets and browser acceptance.
 
 ## Contracts
-`newGame(seed, config)` and `applyAction/dispatch(state, action)` form the engine API. `legalActions/actions` enumerates decisions for UI, bots and tests. Validate a clone before committing; rejected actions leave the input unchanged. All random choices use state RNG. Effects, multi-target movement, combat, response stacks and overflow are serializable. Saves are schema 2/version holder-elements-v13; incompatible versions are rejected.
+`newGame(seed, config)` and `applyAction/dispatch(state, action)` form the engine API. `legalActions/actions` enumerates decisions for UI, bots and tests. Validate a clone before committing; rejected actions leave the input unchanged. All random choices use state RNG. Effects, multi-target movement, combat, response stacks and overflow are serializable. Saves are schema 2/version shared-elements-v15; incompatible versions are rejected.
 
 State separates faction draw/discard/hand piles, objective deck, per-game holder elements, AP/RAP, hero action counters, shared Recruit counters, ongoing tokens, five statuses, modifier/Wind state, permanent Xs, traps/stones and persistent campaign RP/wins/upgrades. Cards have stable instance IDs and one owning faction zone. PP/RP use integer half-units; other numeric resources use native integers.
 
@@ -24,3 +24,8 @@ Local 1v1 and shared-faction 1v2/2v2 tests, three/four heroes per faction, ten c
 
 ## Migration
 30 October 2026: replaced the older turn-rules-v8 engine/content and UI rule descriptions with the full current rules. Removed linked hero cards, suit-for-AP discard, group queue cards, basic Push/Cleanse, old statuses, heavy attack halving and old objectives. Added the holder-element rules and current sheet abilities. Historical v8 fixtures are archived in `sources/tests-v8/`; current regression coverage is in `tests/current.test.ts`.
+
+## 30 October 2026 shared-elements-v15 implementation
+The four elements Fire, Water, Earth and Wind are shared by both factions. One state-level draw/discard pair serves both private hands: 27 cards with three active elements or 36 with four. Each faction independently receives a seeded permutation of the same active set at roster lock. Tactic faces use element/effect text from src/data/tactics.json; no named tactics or tactic upgrades exist. Existing equipment and Recruit group upgrades remain.
+Only heroes may Grab or automatically collect stones. Spawn geometry includes twelve full blue hexes and eight full stone hexes, including upper-edge full hexes within pixel tolerance. Bot movement targets adjacent fire-control spaces and penalizes the actual path’s hazards; Recruits do not seek stones.
+App.tsx renders compact queue/map/action panels and one private tactic row. ALT inspection renders current wounds, statuses, equipment and ability markers; selected-unit Inspect supports click/keyboard. The How to play brief contains general rules; scenario/objective details live in the expandable decision panel. Portrait browser copies use approved-v9 masters and the current identity-correct Bisti file. Save content version v15 rejects incompatible prior versions.
