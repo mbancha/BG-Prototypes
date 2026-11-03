@@ -190,3 +190,8 @@ Use the acceptance checklist in [PLAYER_EXPERIENCE.md](../../../docs/PLAYER_EXPE
 Record the real human journey, automatic bot response, privacy and Undo checks,
 and inspected desktop/tablet screenshots in the game verification notes. A menu
 of engine actions alone is not a completed playable interface.
+
+## Every new game uses its own repository
+
+Always create a dedicated Git repository for a new game. Select and copy relevant architecture, template code, guidance and tooling from BG-Prototypes into that repository, then adapt them to the game. Keep source, assets, tests, print tooling and deployment in the game's repository. Never add a new game beneath BG-Prototypes/games/. Verify its own playable deployment before delivery.
+

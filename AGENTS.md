@@ -13,3 +13,8 @@ Read the game's ARCHITECTURE.md and DECISIONS.md before changing it. Keep games
 standalone. Preserve private information. Do not migrate unrelated games or
 change print outputs without explicit scope. A documentation update does not
 certify existing games or the starter template as meeting the new standard.
+
+## Every new game uses its own repository
+
+Always create a dedicated Git repository for a new game. Select and copy relevant architecture, template code, guidance and tooling from BG-Prototypes into that repository, then adapt them to the game. Keep source, assets, tests, print tooling and deployment in the game's repository. Never add a new game beneath BG-Prototypes/games/. Verify its own playable deployment before delivery.
+

@@ -65,3 +65,8 @@ row has a runnable micro-game in `kernel/template/tests/mechanisms.test.ts`.
   blocks npm scripts by default); they update with `git pull`.
 - Pushing to `main` publishes every game to GitHub Pages (see
   `.github/workflows/deploy.yml`), which is how playtesters get a link.
+
+## Every new game uses its own repository
+
+Always create a dedicated Git repository for a new game. Select and copy relevant architecture, template code, guidance and tooling from BG-Prototypes into that repository, then adapt them to the game. Keep source, assets, tests, print tooling and deployment in the game's repository. Never add a new game beneath BG-Prototypes/games/. Verify its own playable deployment before delivery.
+
