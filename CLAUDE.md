@@ -7,9 +7,9 @@ is shared at runtime.
 ## Player experience requirement
 
 Read [docs/PLAYER_EXPERIENCE.md](docs/PLAYER_EXPERIENCE.md). Its component, card,
-icon, direct-interaction, automatic-turn and accessibility standards are required
+icon, writing, print, direct-interaction, automatic-turn and accessibility standards are required
 for new prototypes and changed UI flows. Record browser and visual acceptance
-evidence; do not defer basic usability as polish. See also [AGENTS.md](AGENTS.md).
+evidence alongside the first usable implementation. See also [AGENTS.md](AGENTS.md).
 
 ## Default for every session
 
@@ -30,7 +30,7 @@ architecture rules, required artifacts and verification steps live there.
 | `games/spypunk/` | SPYPUNK — 2–4p domino-placement influence game. 60 unique ability cards, symbol matching, enclosure scoring. Also contains a stripped-down **color-groups** mode for testing the core loop without abilities, with variant toggles and a 10k-game simulator. |
 
 `kernel/template/` is the starting point for a **new** prototype: copy it to
-`games/<name>/`, rename it, build on top. It is a runnable hotseat game with
+a dedicated game repository, rename it, and build on top. It is a runnable hotseat game with
 undo, bots, player prompts, seeded simulation, replay and telemetry already
 wired up, on top of a **kernel** of board-game primitives (`src/kernel/`:
 turn flow, zones, board topologies, decisions, resources, scoring, fuzzing).
@@ -66,7 +66,6 @@ row has a runnable micro-game in `kernel/template/tests/mechanisms.test.ts`.
 - Pushing to `main` publishes every game to GitHub Pages (see
   `.github/workflows/deploy.yml`), which is how playtesters get a link.
 
-## Every new game uses its own repository
+## Game ownership
 
-Always create a dedicated Git repository for a new game. Select and copy relevant architecture, template code, guidance and tooling from BG-Prototypes into that repository, then adapt them to the game. Keep source, assets, tests, print tooling and deployment in the game's repository. Never add a new game beneath BG-Prototypes/games/. Verify its own playable deployment before delivery.
-
+Each new game has a dedicated repository containing its source, assets, tests, print tooling and deployment. Select and adapt the relevant BG-Prototypes template and tooling, then verify that game's playable deployment. Existing games listed above retain their current homes.
