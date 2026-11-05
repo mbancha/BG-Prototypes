@@ -17,12 +17,10 @@ core mechanic". Optimize for **iteration speed and legibility**, with usable com
    built, module map, recipes) and skim `DECISIONS.md` (rulings already
    made). These replace the conversation you weren't part of. Do not
    re-derive the rules from code.
-3. For a new game, copy `kernel/template/` to `games/<name>/` — it is a
-   runnable hotseat prototype (snapshot undo, bots, seeded simulation,
-   pan/zoom board, prompts, telemetry dump, replay, fuzz tests) with the
-   game-specific parts marked `TODO`. Rename it in `package.json` and
-   `index.html`, then build the real rules on top. Don't start from scratch;
-   don't import across games — copy and diverge.
+3. For a new game, create its dedicated repository and copy the relevant
+   `kernel/template/` code and tooling into it. Adapt its runnable hotseat
+   shell, undo, bots, seeded simulation, prompts and replay to the design.
+   Keep source, assets, tests, print tooling and deployment together.
 
 ## The architecture (non-negotiable parts)
 
@@ -120,8 +118,8 @@ the conformance tests that plays to completion under the fuzzer.
 | `src/data/config.ts` | Every tunable number in one file. No game-numeric literals anywhere else. |
 | Component data file (`cards.json` etc.) | Data-driven pieces; derive what can be derived (points from symbols, etc.) rather than storing it twice. |
 | `legalActions(state)` | The action space. Bots, fuzzing and simulation all depend on it. |
-| `ARCHITECTURE.md` | Rules as built + module map + dated rule-change list. The next session's context. |
-| `DECISIONS.md` | Numbered rulings where the spec was silent, with the reasoning. Mark superseded ones "(amended)". |
+| `ARCHITECTURE.md` | Current rules as built + module map. The next session's context. |
+| `DECISIONS.md` | Numbered rulings where the spec was silent, with the reasoning. Keep the active ruling and reasoning; Git retains earlier revisions. |
 | Tests | Targeted rules cases, plus `fuzz()` with invariants checked after every action, plus a replay test. |
 | Simulation | Seeded headless runs answering balance questions ("does seat 1 win too much?"). |
 | Telemetry dump | A button that exports config + counters + log + **seed and action log** as JSON. |
@@ -165,24 +163,15 @@ Build order for a new game (each step playable before the next):
 place-a-piece → scoring → end condition → the special rules → bots →
 simulation → polish.
 
-## Anti-patterns
+## Implementation principles
 
-- Rebuilding the shell (setup screen, undo, hotseat, bots, prompts) per game
-  instead of copying the template.
-- A "generic" engine **shared across games** — prototypes diverge fast, and
-  coupling them makes every change a compatibility problem. (Copying the
-  kernel into each game is the opposite of this: after the copy it is that
-  game's code, to edit or delete.)
-- Randomness from `Math.random`, or from a `rnd` function passed into the
-  engine — both break undo and replay. It goes in the state.
-- Deep-cloning state inside the engine, or hiding rules in React components.
-- Bots that call internal helpers instead of emitting actions, or that read
-  from anywhere other than `legalActions`.
-- Balance claims from vibes when a 10,000-game simulation takes 90 seconds.
-- Shipping a rule change without a fuzz run — the invariant checks catch the
-  wedge you didn't think of.
-- Delaying readable components or usable turn flow until final polish. Keep art
-  lightweight while mechanics change, but verify actual player usability.
+- Adapt the template shell and keep each game's engine independently owned.
+- Store seeded randomness in state and keep rules in the engine.
+- Let the app own snapshot cloning; let bots emit the same legal actions as people.
+- Support balance claims with paired seeded simulations and stated limits.
+- Exercise changed rules with focused cases, fuzz invariants and replay checks.
+- Review readable component graphics and usable turn flow at each playable stage.
+- Maintain current-state rulings and instructions, with revision history in Git.
 
 ## Player experience acceptance
 
@@ -190,8 +179,4 @@ Use the acceptance checklist in [PLAYER_EXPERIENCE.md](../../../docs/PLAYER_EXPE
 Record the real human journey, automatic bot response, privacy and Undo checks,
 and inspected desktop/tablet screenshots in the game verification notes. A menu
 of engine actions alone is not a completed playable interface.
-
-## Every new game uses its own repository
-
-Always create a dedicated Git repository for a new game. Select and copy relevant architecture, template code, guidance and tooling from BG-Prototypes into that repository, then adapt them to the game. Keep source, assets, tests, print tooling and deployment in the game's repository. Never add a new game beneath BG-Prototypes/games/. Verify its own playable deployment before delivery.
 
